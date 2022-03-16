@@ -1,0 +1,3 @@
+- /.venv/
+- /.mypy_cache/
+- /mimic3_tts/.mypy_cache/

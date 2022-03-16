@@ -1,0 +1,7 @@
+dataclasses-json<1.0
+espeak-phonemizer>=1.0,<2.0
+gruut[en,de,es,nl,it,fr,sw]>=2.2.2,<3.0
+numpy<2.0
+onnxruntime>=1.6,<2.0
+phonemes2ids<2.0
+opentts_abc<1.0

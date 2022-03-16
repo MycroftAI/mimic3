@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="Mimic 3 text to speech server">
+        <meta name="author" content="Michael Hansen">
+
+        <title>Mimic 3</title>
+
+        <!-- Bootstrap core CSS -->
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- Custom styles for this template -->
+        <style>
+         body {
+             padding-top: 0;
+         }
+         @media (min-width: 992px) {
+             body {
+                 padding-top: 0;
+             }
+         }
+
+         #mimic-logo {
+             height: 5rem;
+         }
+
+         #mycroft-logo {
+             height: 2rem;
+             margin-left: auto;
+             margin-right: auto;
+         }
+        </style>
+    </head>
+
+    <body>
+        <!-- Page Content -->
+        <div id="main" class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                  <h1>
+                    <img id="mimic-logo" src="img/Mimic_color.png" />
+                    Mimic 3
+                  </h1>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col">
+                    <textarea id="text" placeholder="Type here..." class="form-control" rows="3" name="text" alt="Text to generate speech from"></textarea>
+                </div>
+                <div class="col-auto">
+                    <button id="speak-button" name="speak" class="btn btn-lg btn-primary" alt="Generate speech">Speak</button>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-auto">
+                    <label for="voice-list" title="Voice name">Voice:</label>
+                    <select id="voice-list" name="voices">
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <label for="speaker-id" title="Index of speaker">Speaker:</label>
+                    <input type="number" id="speaker-id" name="speaker_id" size="5" min="0" value="0">
+                </div>
+            </div>
+            <div id="audio-message" class="row mt-3" hidden>
+                <div class="col">
+                    <audio id="audio" preload="none" controls autoplay hidden></audio>
+                    <p id="message"></p>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-auto">
+                    <label for="noise-scale" title="Voice volatility">Noise:</label>
+                    <input type="number" id="noise-scale" name="noiseScale" size="5" min="0" max="1" step="0.001" value="0.333">
+                    <label for="noise-w" class="ml-2" title="Voice volatility 2">Noise W:</label>
+                    <input type="number" id="noise-w" name="noiseW" size="5" min="0" max="1" step="0.001" value="1.0">
+                    <label for="length-scale" class="ml-2" title="Voice speed (< 1 is faster)">Length:</label>
+                    <input type="number" id="length-scale" name="lengthScale" size="5" min="0" step="0.001" value="1">
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-auto">
+                    <label for="text-language" title="Text Language">Text Language:</label>
+                    <input type="text" id="text-language" name="textLanguage" size="8" placeholder="lang code">
+                </div>
+            </div>
+            <hr class="mt-5" />
+            <div class="row mt-5">
+              <img id="mycroft-logo" src="img/Mycroft_logo_two_typeonly.png" />
+            </div>
+        </div>
+
+        <!-- Bootstrap core JavaScript -->
+        <script>
+         var voicesInfo = {}
+
+         function q(selector) {return document.querySelector(selector)}
+         q('#text').focus()
+
+         function do_tts(e) {
+             text = q('#text').value
+             if (text) {
+                 q('#message').textContent = 'Synthesizing...'
+                 q('#speak-button').disabled = true
+                 q('#audio').hidden = true
+                 synthesize(text)
+             }
+             e.preventDefault()
+             return false
+         }
+
+         q('#speak-button').addEventListener('click', do_tts)
+
+         async function synthesize(text) {
+             var voiceList = q('#voice-list')
+             var voice = voiceList.options[voiceList.selectedIndex].value
+
+             var noiseScale = q('#noise-scale').value || '0.333'
+             var noiseW = q('#noise-w').value || '1.0'
+             var lengthScale = q('#length-scale').value || '1.0'
+             var speakerId = q('#speaker-id').value || '0'
+             var textLanguage = q('#text-language').value || ''
+
+             q('#audio-message').hidden = false
+
+             var startTime = performance.now()
+
+             res = await fetch(
+                 'api/tts?text=' + encodeURIComponent(text) +
+                 '&voice=' + encodeURIComponent(voice) +
+                 '&noiseScale=' + encodeURIComponent(noiseScale) +
+                 '&noiseW=' + encodeURIComponent(noiseW) +
+                 '&lengthScale=' + encodeURIComponent(lengthScale) +
+                 '&textLanguage=' + encodeURIComponent(textLanguage) +
+                 '&speakerId=' + encodeURIComponent(speakerId),
+                 {cache: 'no-cache'})
+
+             if (res.ok) {
+                 blob = await res.blob()
+                 var elapsedTime = performance.now() - startTime
+
+                 q('#message').textContent = (elapsedTime / 1000) + ' second(s)'
+                 q('#speak-button').disabled = false
+                 q('#audio').src = URL.createObjectURL(blob)
+                 q('#audio').hidden = false
+             } else {
+                 message = await res.text()
+                 q('#message').textContent = message
+                 q('#speak-button').disabled = false
+             }
+         }
+
+         function voiceChanged() {
+             var voiceList = q('#voice-list')
+
+             // Reset audio
+             q('#audio-message').hidden = true
+             q('#message').textContent = ''
+             q('#audio').hidden = true
+             q('#audio').autoplay = true
+         }
+
+         q('#voice-list').addEventListener('change', voiceChanged)
+
+         function loadVoices() {
+             voicesInfo = {}
+
+             // Remove previous voices
+             var voiceList = q('#voice-list')
+             for (var i = voiceList.options.length - 1; i >= 0; i--) {
+                 voiceList.options[i].remove()
+             }
+
+             fetch('api/voices')
+                 .then(function(res) {
+                     if (!res.ok) throw Error(res.statusText)
+                     return res.json()
+                 }).then(function(voices) {
+                     voicesInfo = voices
+
+                     // Populate select
+                     var indexToSelect = -1
+
+                     voices.forEach(function(voice) {
+                         voiceList.insertAdjacentHTML(
+                             'beforeend', '<option value="' + voice + '">' + voice + '</option>'
+                         )
+                     })
+
+                     voiceChanged()
+                 }).catch(function(err) {
+                     q('#message').textContent = 'Error: ' + err.message
+                     q('#speak-button').disabled = false
+                 })
+         }
+
+         window.addEventListener('load', function() {
+             loadVoices()
+         })
+        </script>
+
+    </body>
+
+</html>

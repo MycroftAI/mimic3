@@ -1,0 +1,3 @@
+- /.venv/
+- /.mypy_cache/
+- /opentts_abc/.mypy_cache/
