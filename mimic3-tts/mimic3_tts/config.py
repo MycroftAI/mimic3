@@ -1,18 +1,4 @@
 """Configuration classes"""
-# Copyright 2021 Mycroft AI Inc.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#    http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
 import collections
 import json
 import typing
@@ -20,6 +6,7 @@ from dataclasses import dataclass, field
 from enum import Enum
 from pathlib import Path
 
+import numpy as np
 from dataclasses_json import DataClassJsonMixin
 from gruut_ipa import IPA
 from phonemes2ids import BlankBetween
@@ -59,6 +46,51 @@ class AudioConfig(DataClassJsonMixin):
         if self.mel_fmax is not None:
             assert self.mel_fmax <= self.sample_rate // 2
 
+    # -------------------------------------------------------------------------
+    # Normalization
+    # -------------------------------------------------------------------------
+
+    def normalize(self, mel_db: np.ndarray) -> np.ndarray:
+        """Put values in [0, max_norm] or [-max_norm, max_norm]"""
+        mel_norm = ((mel_db - self.ref_level_db) - self.min_level_db) / (
+            -self.min_level_db
+        )
+        if self.symmetric_norm:
+            # Symmetric norm
+            mel_norm = ((2 * self.max_norm) * mel_norm) - self.max_norm
+            if self.clip_norm:
+                mel_norm = np.clip(mel_norm, -self.max_norm, self.max_norm)
+        else:
+            # Asymmetric norm
+            mel_norm = self.max_norm * mel_norm
+            if self.clip_norm:
+                mel_norm = np.clip(mel_norm, 0, self.max_norm)
+
+        return mel_norm
+
+    def denormalize(self, mel_db: np.ndarray) -> np.ndarray:
+        """Pull values out of [0, max_norm] or [-max_norm, max_norm]"""
+        if self.symmetric_norm:
+            # Symmetric norm
+            if self.clip_norm:
+                mel_denorm = np.clip(mel_db, -self.max_norm, self.max_norm)
+
+            mel_denorm = (
+                (mel_denorm + self.max_norm) * -self.min_level_db / (2 * self.max_norm)
+            ) + self.min_level_db
+        else:
+            # Asymmetric norm
+            if self.clip_norm:
+                mel_denorm = np.clip(mel_db, 0, self.max_norm)
+
+            mel_denorm = (
+                mel_denorm * -self.min_level_db / self.max_norm
+            ) + self.min_level_db
+
+        mel_denorm += self.ref_level_db
+
+        return mel_denorm
+
 
 @dataclass
 class ModelConfig(DataClassJsonMixin):
@@ -84,7 +116,7 @@ class ModelConfig(DataClassJsonMixin):
     upsample_kernel_sizes: typing.Tuple[int, ...] = (16, 16, 4, 4)
     n_layers_q: int = 3
     use_spectral_norm: bool = False
-    gin_channels: int = 256
+    gin_channels: int = 0  # single speaker
     use_sdp: bool = True  # StochasticDurationPredictor
 
     @property
@@ -100,7 +132,7 @@ class PhonemesConfig(DataClassJsonMixin):
     word_separator: str = "#"
     """Separator between word phonemes in CSV input (must not match phoneme_separator)"""
 
-    phoneme_to_id: typing.Optional[typing.Mapping[str, int]] = None
+    phoneme_to_id: typing.Optional[typing.Dict[str, int]] = None
     pad: typing.Optional[str] = "_"
     bos: typing.Optional[str] = None
     eos: typing.Optional[str] = None
@@ -110,15 +142,18 @@ class PhonemesConfig(DataClassJsonMixin):
     blank_at_start: bool = True
     blank_at_end: bool = True
     simple_punctuation: bool = True
-    punctuation_map: typing.Optional[typing.Mapping[str, str]] = None
+    punctuation_map: typing.Optional[typing.Dict[str, str]] = None
     separate: typing.Optional[typing.List[str]] = None
     separate_graphemes: bool = False
     separate_tones: bool = False
     tone_before: bool = False
-    phoneme_map: typing.Optional[typing.Mapping[str, str]] = None
+    phoneme_map: typing.Optional[typing.Dict[str, str]] = None
     auto_bos_eos: bool = False
     minor_break: typing.Optional[str] = IPA.BREAK_MINOR.value
     major_break: typing.Optional[str] = IPA.BREAK_MAJOR.value
+    break_phonemes_into_graphemes: bool = False
+    drop_stress: bool = False
+    symbols: typing.Optional[typing.List[str]] = None
 
     def split_word_phonemes(self, phonemes_str: str) -> typing.List[typing.List[str]]:
         """Split phonemes string into a list of lists (outer is words, inner is individual phonemes in each word)"""
@@ -158,8 +193,7 @@ class MetadataFormat(str, Enum):
 @dataclass
 class DatasetConfig:
     name: str
-    metadata_path: typing.Optional[typing.Union[str, Path]] = None
-    train_path: typing.Optional[typing.Union[str, Path]] = None
+    metadata_format: MetadataFormat = MetadataFormat.TEXT
     multispeaker: bool = False
     text_language: typing.Optional[str] = None
     audio_dir: typing.Optional[typing.Union[str, Path]] = None
@@ -181,6 +215,13 @@ class DatasetConfig:
 class AlignerConfig:
     aligner: typing.Optional[Aligner] = None
     casing: typing.Optional[TextCasing] = None
+
+
+@dataclass
+class InferenceConfig:
+    length_scale: float = 1.0
+    noise_scale: float = 0.667
+    noise_w: float = 0.8
 
 
 @dataclass
@@ -206,6 +247,8 @@ class TrainingConfig(DataClassJsonMixin):
     min_spec_length: typing.Optional[int] = None
     max_spec_length: typing.Optional[int] = None
 
+    min_speaker_utterances: typing.Optional[int] = None
+
     last_epoch: int = 1
     global_step: int = 1
     best_loss: typing.Optional[float] = None
@@ -216,21 +259,30 @@ class TrainingConfig(DataClassJsonMixin):
     text_language: typing.Optional[str] = None
     phonemizer: typing.Optional[Phonemizer] = None
     datasets: typing.List[DatasetConfig] = field(default_factory=list)
-    dataset_format: MetadataFormat = MetadataFormat.TEXT
+    inference: InferenceConfig = field(default_factory=InferenceConfig)
 
     version: int = 1
     git_commit: str = ""
 
     @property
     def is_multispeaker(self):
-        return (
-            self.model.is_multispeaker
-            or any(d.multispeaker for d in self.datasets)
-        )
+        return self.model.is_multispeaker or any(d.multispeaker for d in self.datasets)
 
     def save(self, config_file: typing.TextIO):
         """Save config as JSON to a file"""
         json.dump(self.to_dict(), config_file, indent=4)
+
+    def get_speaker_id(self, dataset_name: str, speaker_name: str) -> int:
+        if self.speaker_id_map is None:
+            self.speaker_id_map = {}
+
+        full_speaker_name = f"{dataset_name}_{speaker_name}"
+        speaker_id = self.speaker_id_map.get(full_speaker_name)
+        if speaker_id is None:
+            speaker_id = len(self.speaker_id_map)
+            self.speaker_id_map[full_speaker_name] = speaker_id
+
+        return speaker_id
 
     @staticmethod
     def load(config_file: typing.TextIO) -> "TrainingConfig":

@@ -1,2 +1,3 @@
-from .tts import Mimic3TextToSpeechSystem, Mimic3Settings
 from opentts_abc import AudioResult, MarkResult
+
+from .tts import Mimic3Settings, Mimic3TextToSpeechSystem

@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
-import dataclasses
 import logging
 import time
 import typing
-from abc import ABCMeta
-from dataclasses import dataclass, field
 from copy import deepcopy
+from dataclasses import dataclass, field
 from pathlib import Path
 from xml.sax.saxutils import escape as xmlescape
 
@@ -14,22 +12,22 @@ import numpy as np
 import onnxruntime
 import phonemes2ids
 from gruut.const import LookupPhonemes, WordRole
-from gruut_ipa import guess_phonemes, IPA, Phonemes, Phoneme
-
+from gruut_ipa import IPA, Phoneme, guess_phonemes
 from opentts_abc import (
-    TextToSpeechSystem,
-    Voice,
-    BaseToken,
-    BaseResult,
-    MarkResult,
     AudioResult,
-    Word,
+    BaseResult,
+    BaseToken,
+    MarkResult,
     Phonemes,
     SayAs,
+    TextToSpeechSystem,
+    Voice,
+    Word,
 )
 
 from mimic3_tts.config import TrainingConfig
 from mimic3_tts.utils import audio_float_to_int16
+from mimic3_tts.voice import Mimic3Voice
 
 _DIR = Path(__file__).parent
 
@@ -51,18 +49,10 @@ class Mimic3Settings:
     voices_directories: typing.Optional[typing.Iterable[typing.Union[str, Path]]] = None
     speaker_id: typing.Optional[int] = None
     length_scale: float = 1.0
-    noise_scale: float = 0.333
-    noise_w: float = 1.0
+    noise_scale: float = 0.667
+    noise_w: float = 0.8
     text_language: typing.Optional[str] = None
     sample_rate: int = 22050
-
-
-@dataclass
-class LoadedVoice:
-    config: TrainingConfig
-    onnx_model: onnxruntime.InferenceSession
-    phoneme_to_id: typing.Mapping[str, int]
-    phoneme_map: typing.Optional[typing.Dict[str, typing.List[str]]] = None
 
 
 @dataclass
@@ -80,12 +70,9 @@ class Mimic3TextToSpeechSystem(TextToSpeechSystem):
     def __init__(self, settings: Mimic3Settings):
         self.settings = settings
 
-        # self._current_voice: typing.Optional[LoadedVoice] = None
-        # self._current_settings = self.settings
-
         self._results: typing.List[typing.Union[BaseResult, Mimic3Phonemes]] = []
 
-        self.loaded_voices: typing.Dict[str, LoadedVoice] = {}
+        self.loaded_voices: typing.Dict[str, Mimic3Voice] = {}
 
     @property
     def voice(self) -> str:
@@ -107,10 +94,6 @@ class Mimic3TextToSpeechSystem(TextToSpeechSystem):
             # TODO: Use speaker map
             self.speaker_id = int(speaker_id_str)
 
-        # self._current_voice = self._get_or_load_voice(
-        #     self.settings.voice or DEFAULT_VOICE
-        # )
-
     @property
     def speaker_id(self) -> typing.Optional[int]:
         return self.settings.speaker_id
@@ -130,27 +113,6 @@ class Mimic3TextToSpeechSystem(TextToSpeechSystem):
     @staticmethod
     def get_default_voices_directories() -> typing.List[Path]:
         return [_DIR.parent.parent / "voices"]
-
-    # @property
-    # def text_lang(self) -> str:
-    #     return (
-    #         self.settings.text_language
-    #         or self.settings.language
-    #         or (
-    #             self._current_voice.config.text_language
-    #             if self._current_voice
-    #             else None
-    #         )
-    #         or "en_US"
-    #     )
-
-    # @property
-    # def sample_rate(self) -> int:
-    #     return (
-    #         self._current_voice.config.audio.sample_rate
-    #         if self._current_voice
-    #         else self.settings.sample_rate
-    #     )
 
     def get_voices(self) -> typing.Iterable[Voice]:
         voices_dirs = (
@@ -185,146 +147,71 @@ class Mimic3TextToSpeechSystem(TextToSpeechSystem):
 
     def begin_utterance(self):
         self._results.clear()
-        # self._current_settings = deepcopy(self.settings)
 
     def speak_text(self, text: str, text_language: typing.Optional[str] = None):
-        text_language = text_language or self.language
-        for sentence in gruut.sentences(text, lang=text_language):
-            sent_phonemes = [w.phonemes for w in sentence if w.phonemes]
+        voice = self._get_or_load_voice(self.voice)
+
+        for sent_phonemes in voice.text_to_phonemes(text, text_language=text_language):
             self._results.append(
                 Mimic3Phonemes(
-                    current_settings=deepcopy(self.settings),
-                    phonemes=sent_phonemes,
+                    current_settings=deepcopy(self.settings), phonemes=sent_phonemes,
                 )
             )
 
     def _speak_sentence_phonemes(
-        self,
-        sent_phonemes,
-        text: typing.Optional[str] = None,
-        settings: typing.Optional[Mimic3Settings] = None,
+        self, sent_phonemes, settings: typing.Optional[Mimic3Settings] = None,
     ) -> AudioResult:
         settings = settings or self.settings
-        current_voice = self._get_or_load_voice(settings.voice or DEFAULT_VOICE)
+        voice = self._get_or_load_voice(settings.voice or self.voice)
+        sent_phoneme_ids = voice.phonemes_to_ids(sent_phonemes)
 
-        config = current_voice.config
-        onnx_model = current_voice.onnx_model
-        phoneme_to_id = current_voice.phoneme_to_id
-        phoneme_map = current_voice.phoneme_map or config.phonemes.phoneme_map
+        _LOGGER.debug("phonemes=%s, ids=%s", sent_phonemes, sent_phoneme_ids)
 
-        sent_phoneme_ids = phonemes2ids.phonemes2ids(
-            word_phonemes=sent_phonemes,
-            phoneme_to_id=phoneme_to_id,
-            pad=config.phonemes.pad,
-            bos=config.phonemes.bos,
-            eos=config.phonemes.eos,
-            auto_bos_eos=config.phonemes.auto_bos_eos,
-            blank=config.phonemes.blank,
-            blank_word=config.phonemes.blank_word,
-            blank_between=config.phonemes.blank_between,
-            blank_at_start=config.phonemes.blank_at_start,
-            blank_at_end=config.phonemes.blank_at_end,
-            simple_punctuation=config.phonemes.simple_punctuation,
-            punctuation_map=config.phonemes.punctuation_map,
-            separate=config.phonemes.separate,
-            separate_graphemes=config.phonemes.separate_graphemes,
-            separate_tones=config.phonemes.separate_tones,
-            tone_before=config.phonemes.tone_before,
-            phoneme_map=phoneme_map,
-            fail_on_missing=False,
+        audio = voice.ids_to_audio(
+            sent_phoneme_ids,
+            speaker=self.speaker_id,
+            length_scale=settings.length_scale,
+            noise_scale=settings.noise_scale,
+            noise_w=settings.noise_w,
         )
-
-        if text:
-            _LOGGER.debug("%s %s %s", text, sent_phonemes, sent_phoneme_ids)
-        else:
-            _LOGGER.debug("%s %s", sent_phonemes, sent_phoneme_ids)
-
-        # Create model inputs
-        text_array = np.expand_dims(np.array(sent_phoneme_ids, dtype=np.int64), 0)
-        text_lengths_array = np.array([text_array.shape[1]], dtype=np.int64)
-        scales_array = np.array(
-            [
-                settings.noise_scale,
-                settings.length_scale,
-                settings.noise_w,
-            ],
-            dtype=np.float32,
-        )
-
-        inputs = {
-            "input": text_array,
-            "input_lengths": text_lengths_array,
-            "scales": scales_array,
-        }
-
-        if config.is_multispeaker:
-            speaker_id = settings.speaker_id if settings.speaker_id is not None else 0
-            speaker_id_array = np.array([speaker_id], dtype=np.int64)
-            inputs["sid"] = speaker_id_array
-
-        # Infer audio from phonemes
-        start_time = time.perf_counter()
-        audio = onnx_model.run(None, inputs)[0].squeeze()
-        audio = audio_float_to_int16(audio)
-        end_time = time.perf_counter()
-
-        # Compute real-time factor
-        audio_duration_sec = audio.shape[-1] / config.audio.sample_rate
-        infer_sec = end_time - start_time
-        real_time_factor = (
-            infer_sec / audio_duration_sec if audio_duration_sec > 0 else 0.0
-        )
-
-        _LOGGER.debug("RTF: %s", real_time_factor)
 
         audio_bytes = audio.tobytes()
         return AudioResult(
-            sample_rate_hz=config.audio.sample_rate,
+            sample_rate_hz=voice.config.audio.sample_rate,
             audio_bytes=audio_bytes,
             # 16-bit mono
             sample_width_bytes=2,
             num_channels=1,
         )
 
-    def speak_tokens(self, tokens: typing.Iterable[BaseToken]):
+    def speak_tokens(
+        self,
+        tokens: typing.Iterable[BaseToken],
+        text_language: typing.Optional[str] = None,
+    ):
+        voice = self._get_or_load_voice(self.voice)
         token_phonemes: PHONEMES_LIST = []
 
         for token in tokens:
             if isinstance(token, Word):
-                word_role = xmlescape(token.role) if token.role else ""
-                word_text = xmlescape(token.text)
-
-                sentence = next(
-                    iter(
-                        gruut.sentences(
-                            f'<w role="{word_role}">{word_text}</w>', ssml=True
-                        )
-                    )
+                word_phonemes = voice.word_to_phonemes(
+                    token.text, word_role=token.role, text_language=text_language
                 )
-                token_phonemes.extend(w.phonemes for w in sentence if w.phonemes)
+                token_phonemes.append(word_phonemes)
             elif isinstance(token, Phonemes):
                 phoneme_str = token.text.strip()
                 if " " in phoneme_str:
                     token_phonemes.append(phoneme_str.split())
                 else:
-                    token_phonemes.append(list(phoneme_str))
+                    token_phonemes.append(list(IPA.graphemes(phoneme_str)))
             elif isinstance(token, SayAs):
-                word_text = xmlescape(token.text)
-                interpret_as = xmlescape(token.interpret_as)
-                format_attr = (
-                    f'format="{xmlescape(token.format)}"' if token.format else ""
+                say_as_phonemes = voice.say_as_to_phonemes(
+                    token.text,
+                    interpret_as=token.interpret_as,
+                    say_format=token.format,
+                    text_language=text_language,
                 )
-
-                sentence = next(
-                    iter(
-                        gruut.sentences(
-                            f'<say-as interpret-as="{interpret_as}" {format_attr}>{word_text}</say-as>',
-                            ssml=True,
-                        )
-                    )
-                )
-
-                token_phonemes.extend(w.phonemes for w in sentence if w.phonemes)
+                token_phonemes.extend(say_as_phonemes)
 
         if token_phonemes:
             self._results.append(
@@ -379,7 +266,7 @@ class Mimic3TextToSpeechSystem(TextToSpeechSystem):
         if sent_phonemes:
             yield self._speak_sentence_phonemes(sent_phonemes)
 
-    def _get_or_load_voice(self, voice_key: str) -> LoadedVoice:
+    def _get_or_load_voice(self, voice_key: str) -> Mimic3Voice:
         existing_voice = self.loaded_voices.get(voice_key)
         if existing_voice is not None:
             return existing_voice
@@ -399,57 +286,7 @@ class Mimic3TextToSpeechSystem(TextToSpeechSystem):
 
             return existing_voice
 
-        _LOGGER.debug("Loading voice from %s", model_dir)
-
-        config_path = model_dir / "config.json"
-        _LOGGER.debug("Loading model config from %s", config_path)
-
-        with open(config_path, "r", encoding="utf-8") as config_file:
-            config = TrainingConfig.load(config_file)
-
-        # phoneme -> id
-        phoneme_ids_path = model_dir / "phonemes.txt"
-        _LOGGER.debug("Loading model phonemes from %s", phoneme_ids_path)
-        with open(phoneme_ids_path, "r", encoding="utf-8") as ids_file:
-            phoneme_to_id = phonemes2ids.load_phoneme_ids(ids_file)
-
-        generator_path = model_dir / "generator.onnx"
-        _LOGGER.debug("Loading model from %s", generator_path)
-
-        sess_options = onnxruntime.SessionOptions()
-        # sess_options.enable_cpu_mem_arena = False
-        # sess_options.enable_mem_pattern = False
-        # sess_options.enable_mem_reuse = False
-
-        onnx_model = onnxruntime.InferenceSession(
-            str(generator_path), sess_options=sess_options
-        )
-
-        voice = LoadedVoice(
-            config=config, onnx_model=onnx_model, phoneme_to_id=phoneme_to_id
-        )
-
-        # valid_phonemes = []
-        # for phoneme_str in self._phoneme_to_id:
-        #     maybe_phoneme = Phoneme(phoneme_str)
-        #     if any(
-        #         [
-        #             maybe_phoneme.vowel,
-        #             maybe_phoneme.consonant,
-        #             maybe_phoneme.dipthong,
-        #             maybe_phoneme.schwa,
-        #         ]
-        #     ):
-        #         valid_phonemes.append(maybe_phoneme)
-
-        # self._voice_phonemes = Phonemes(phonemes=valid_phonemes)
-
-        # phoneme -> phoneme, phoneme, ...
-        phoneme_map_path = model_dir / "phoneme_map.txt"
-        if phoneme_map_path.is_file():
-            _LOGGER.debug("Loading phoneme map from %s", phoneme_map_path)
-            with open(phoneme_map_path, "r", encoding="utf-8") as map_file:
-                voice.phoneme_map = phonemes2ids.utils.load_phoneme_map(map_file)
+        voice = Mimic3Voice.load_from_directory(model_dir)
 
         _LOGGER.info("Loaded voice from %s", model_dir)
 
