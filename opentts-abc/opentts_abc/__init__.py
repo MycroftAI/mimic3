@@ -90,7 +90,12 @@ class Voice:
     name: str
     language: str
     description: str
+    speakers: typing.Optional[typing.Sequence[str]] = None
     properties: typing.Optional[typing.Mapping[str, typing.Any]] = None
+
+    @property
+    def is_multispeaker(self) -> bool:
+        return (self.speakers is not None) and (len(self.speakers) > 1)
 
 
 # @dataclass

@@ -21,6 +21,7 @@ import io
 import wave
 import tempfile
 import typing
+import dataclasses
 from dataclasses import dataclass
 from pathlib import Path
 from urllib.parse import parse_qs
@@ -62,9 +63,7 @@ parser.add_argument(
 parser.add_argument(
     "--port", type=int, default=59125, help="Port of HTTP server (default: 59125)"
 )
-parser.add_argument(
-    "--speaker-id", type=int, default=0, help="Default speaker id to use"
-)
+parser.add_argument("--speaker", type=int, help="Default speaker to use (name or id)")
 parser.add_argument(
     "--length-scale", type=float, default=1.0, help="Speed of speech (> 1 is slower)"
 )
@@ -114,7 +113,6 @@ _LOGGER.debug(args)
 class TextToWavParams:
     text: str
     voice: str = args.voice
-    speaker_id: int = args.speaker_id
     noise_scale: float = args.noise_scale
     noise_w: float = args.noise_w
     length_scale: float = args.length_scale
@@ -139,7 +137,7 @@ _WAV_CACHE: typing.Dict[TextToWavParams, Path] = {}
 mimic3 = Mimic3TextToSpeechSystem(
     Mimic3Settings(
         voice=args.voice,
-        speaker_id=args.speaker_id,
+        speaker=args.speaker,
         length_scale=args.length_scale,
         noise_scale=args.noise_scale,
         noise_w=args.noise_w,
@@ -160,7 +158,6 @@ def text_to_wav(params: TextToWavParams, no_cache: bool = False) -> bytes:
             return wav_bytes
 
     mimic3.voice = params.voice
-    mimic3.speaker_id = params.speaker_id
 
     mimic3.settings.length_scale = params.length_scale
     mimic3.settings.noise_scale = params.noise_scale
@@ -242,10 +239,6 @@ async def app_tts() -> Response:
     if voice is not None:
         tts_args["voice"] = str(voice)
 
-    speaker_id = request.args.get("speakerId")
-    if speaker_id is not None:
-        tts_args["speaker_id"] = int(speaker_id)
-
     # TTS settings
     noise_scale = request.args.get("noiseScale")
     if noise_scale is not None:
@@ -286,9 +279,7 @@ async def app_tts() -> Response:
 
 @app.route("/api/voices", methods=["GET"])
 async def api_voices():
-    voices = mimic3.get_voices()
-    voice_ids = sorted([v.name for v in voices])
-    return jsonify(voice_ids)
+    return jsonify([dataclasses.asdict(v) for v in mimic3.get_voices()])
 
 
 @app.route("/process", methods=["GET", "POST"])
@@ -308,20 +299,14 @@ async def api_process():
 
     voice = voice or args.voice
 
-    speaker_id = args.speaker_id
-    if "#" in voice:
-        voice, speaker_id_str = voice.split("#", maxsplit=1)
-        speaker_id = int(speaker_id_str)
-
     # Assume SSML if text begins with an angle bracket
     ssml = text.strip().startswith("<")
 
-    _LOGGER.debug("Speaking with voice '%s (speaker=%s)': %s", voice, speaker_id, text)
+    _LOGGER.debug("Speaking with voice '%s': %s", voice, text)
     wav_bytes = text_to_wav(
         TextToWavParams(
             text=text,
             voice=voice,
-            speaker_id=speaker_id,
             ssml=ssml,
             length_scale=args.length_scale,
             noise_scale=args.noise_scale,

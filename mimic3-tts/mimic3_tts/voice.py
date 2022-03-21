@@ -212,17 +212,18 @@ class Mimic3Voice(metaclass=ABCMeta):
             with open(phoneme_map_path, "r", encoding="utf-8") as map_file:
                 phoneme_map = phonemes2ids.utils.load_phoneme_map(map_file)
 
-        # id -> speaker | alias | alias ...
+        # id -> speaker
         speaker_map: typing.Optional[SPEAKER_MAP_TYPE] = None
         speaker_map_path = voice_dir / "speaker_map.csv"
         if speaker_map_path.is_file():
             _LOGGER.debug("Loading speaker map from %s", speaker_map_path)
             with open(speaker_map_path, "r", encoding="utf-8") as map_file:
+                # id | dataset | name | [alias] | [alias] ...
                 reader = csv.reader(map_file, delimiter="|")
                 speaker_map = {}
                 for row in reader:
                     speaker_id = int(row[0])
-                    for alias in row[1:]:
+                    for alias in row[2:]:
                         speaker_map[alias] = speaker_id
 
         if config.phonemizer == Phonemizer.GRUUT:

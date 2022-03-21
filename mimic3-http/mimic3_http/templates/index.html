@@ -62,8 +62,9 @@
                     </select>
                 </div>
                 <div class="col-auto">
-                    <label for="speaker-id" title="Index of speaker">Speaker:</label>
-                    <input type="number" id="speaker-id" name="speaker_id" size="5" min="0" value="0">
+                    <label for="speaker" title="Name of speaker">Speaker:</label>
+                    <select id="speaker-list" name="speaker">
+                    </select>
                 </div>
             </div>
             <div id="audio-message" class="row mt-3" hidden>
@@ -122,7 +123,13 @@
              var noiseScale = q('#noise-scale').value || '0.333'
              var noiseW = q('#noise-w').value || '1.0'
              var lengthScale = q('#length-scale').value || '1.0'
-             var speakerId = q('#speaker-id').value || '0'
+
+             var speakerList = q('#speaker-list')
+             var speaker = speakerList.options[speakerList.selectedIndex].value
+             if (speaker.length > 0) {
+                 voice = voice + "#" + speaker
+             }
+
              var textLanguage = q('#text-language').value || ''
 
              q('#audio-message').hidden = false
@@ -135,8 +142,7 @@
                  '&noiseScale=' + encodeURIComponent(noiseScale) +
                  '&noiseW=' + encodeURIComponent(noiseW) +
                  '&lengthScale=' + encodeURIComponent(lengthScale) +
-                 '&textLanguage=' + encodeURIComponent(textLanguage) +
-                 '&speakerId=' + encodeURIComponent(speakerId),
+                 '&textLanguage=' + encodeURIComponent(textLanguage),
                  {cache: 'no-cache'})
 
              if (res.ok) {
@@ -162,6 +168,29 @@
              q('#message').textContent = ''
              q('#audio').hidden = true
              q('#audio').autoplay = true
+
+             // Reset speakers
+             var speakerList = q('#speaker-list')
+             for (var i = speakerList.options.length - 1; i >= 0; i--) {
+                 speakerList.options[i].remove()
+             }
+
+             var voiceKey = voiceList.options[voiceList.selectedIndex].value
+             var voice = voicesInfo[voiceKey]
+
+             if (voice.speakers) {
+                 voice.speakers.forEach(function(speaker) {
+                    speakerList.insertAdjacentHTML(
+                        'beforeend', '<option value="' + speaker + '">' + speaker + '</option>'
+                    )
+                 })
+                 
+             } else {
+                 // Add default speaker
+                speakerList.insertAdjacentHTML(
+                    'beforeend', '<option value="">default</option>'
+                )
+             }
          }
 
          q('#voice-list').addEventListener('change', voiceChanged)
@@ -180,14 +209,15 @@
                      if (!res.ok) throw Error(res.statusText)
                      return res.json()
                  }).then(function(voices) {
-                     voicesInfo = voices
+                     voicesInfo = {}
 
                      // Populate select
                      var indexToSelect = -1
 
                      voices.forEach(function(voice) {
+                         voicesInfo[voice.key] = voice
                          voiceList.insertAdjacentHTML(
-                             'beforeend', '<option value="' + voice + '">' + voice + '</option>'
+                             'beforeend', '<option value="' + voice.key + '">' + voice.language + '/' + voice.name + '</option>'
                          )
                      })
 

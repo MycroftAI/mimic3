@@ -135,12 +135,25 @@ class Mimic3TextToSpeechSystem(TextToSpeechSystem):
 
                     voice_lang = lang_dir.name
                     voice_name = voice_dir.name
+                    speakers: typing.Optional[typing.Sequence[str]] = None
+
+                    speakers_path = voice_dir / "speakers.txt"
+                    if speakers_path.is_file():
+                        speakers = []
+                        with open(
+                            speakers_path, "r", encoding="utf-8"
+                        ) as speakers_file:
+                            for line in speakers_file:
+                                line = line.strip()
+                                if line:
+                                    speakers.append(line)
 
                     yield Voice(
                         key=str(voice_dir.absolute()),
                         name=voice_name,
                         language=voice_lang,
                         description="",
+                        speakers=speakers,
                     )
 
     def begin_utterance(self):
