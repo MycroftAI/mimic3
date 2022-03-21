@@ -9,6 +9,7 @@ import string
 import subprocess
 import sys
 import threading
+import tempfile
 import time
 import typing
 import urllib.parse
@@ -29,6 +30,7 @@ _PACKAGE = "mimic3_cli"
 
 _LOGGER = logging.getLogger(_PACKAGE)
 
+
 # -----------------------------------------------------------------------------
 
 
@@ -44,7 +46,7 @@ class CommandLineInterfaceState:
     sample_width_bytes: int = 2
     num_channels: int = 1
 
-    raw_queue: typing.Optional["Queue[bytes]"] = None
+    raw_queue: typing.Optional["Queue[typing.Optional[bytes]]"] = None
     raw_stream_thread: typing.Optional[threading.Thread] = None
 
 
@@ -202,6 +204,9 @@ def initialize_tts(state: CommandLineInterfaceState):
     # TODO: voice/speaker
     state.tts = Mimic3TextToSpeechSystem(Mimic3Settings())
 
+    if state.args.voice:
+        state.tts.voice = state.args.voice
+
     # max_thread_workers: typing.Optional[int] = None
 
     # if args.max_thread_workers is not None:
@@ -241,20 +246,6 @@ def initialize_tts(state: CommandLineInterfaceState):
         )
         state.raw_stream_thread.start()
 
-    # all_audios: typing.List[np.ndarray] = []
-    # sample_rate: int = 22050
-    # wav_data: typing.Optional[bytes] = None
-    # play_command = shlex.split(args.play_command)
-
-    # # Settings for TTS and vocoder
-    # tts_settings: typing.Dict[str, typing.Any] = {
-    #     "noise_scale": args.noise_scale,
-    #     "length_scale": args.length_scale,
-    # }
-    # vocoder_settings: typing.Dict[str, typing.Any] = {
-    #     "denoiser_strength": args.denoiser_strength,
-    # }
-
 
 def process_line(line_id: str, line: str, state: CommandLineInterfaceState):
     from mimic3_tts import AudioResult, MarkResult
@@ -284,8 +275,7 @@ def process_line(line_id: str, line: str, state: CommandLineInterfaceState):
                     if not wav_bytes:
                         wav_bytes = result.to_wav_bytes()
 
-                    # play_audio(wav_bytes)
-                    pass
+                    play_wav_bytes(wav_bytes)
 
                 if args.output_dir:
                     if not wav_bytes:
@@ -314,12 +304,12 @@ def process_line(line_id: str, line: str, state: CommandLineInterfaceState):
                     wav_path.write_bytes(wav_bytes)
 
                     _LOGGER.debug("Wrote %s", wav_path)
-                else:
-                    # Combine all audio and output to stdout at the end
-                    state.all_audio += result.audio_bytes
-                    state.sample_rate_hz = result.sample_rate_hz
-                    state.sample_width_bytes = result.sample_width_bytes
-                    state.num_channels = result.num_channels
+            else:
+                # Combine all audio and output to stdout at the end
+                state.all_audio += result.audio_bytes
+                state.sample_rate_hz = result.sample_rate_hz
+                state.sample_width_bytes = result.sample_width_bytes
+                state.num_channels = result.num_channels
 
             result_idx += 1
         elif isinstance(result, MarkResult):
@@ -417,20 +407,43 @@ def process_lines(state: CommandLineInterfaceState):
     if state.all_audio:
         _LOGGER.debug("Writing WAV audio to stdout")
 
-        wav_file: wave.Wave_write = wave.open(sys.stdout.buffer, "wb")
-        with wav_file:
-            wav_file.setframerate(state.sample_rate_hz)
-            wav_file.setsampwidth(state.sample_width_bytes)
-            wav_file.setnchannels(state.num_channels)
-            wav_file.writeframes(state.all_audio)
+        if sys.stdout.isatty() and (not state.args.stdout):
+            with io.BytesIO() as wav_io:
+                wav_file_play: wave.Wave_write = wave.open(wav_io, "wb")
+                with wav_file_play:
+                    wav_file_play.setframerate(state.sample_rate_hz)
+                    wav_file_play.setsampwidth(state.sample_width_bytes)
+                    wav_file_play.setnchannels(state.num_channels)
+                    wav_file_play.writeframes(state.all_audio)
 
-        sys.stdout.buffer.flush()
+                play_wav_bytes(wav_io.getvalue())
+        else:
+            # Write output directly to stdout
+            wav_file_write: wave.Wave_write = wave.open(sys.stdout.buffer, "wb")
+            with wav_file_write:
+                wav_file_write.setframerate(state.sample_rate_hz)
+                wav_file_write.setsampwidth(state.sample_width_bytes)
+                wav_file_write.setnchannels(state.num_channels)
+                wav_file_write.writeframes(state.all_audio)
+
+            sys.stdout.buffer.flush()
 
 
 def shutdown_tts(state: CommandLineInterfaceState):
     if state.tts is not None:
         state.tts.shutdown()
         state.tts = None
+
+
+def play_wav_bytes(wav_bytes: bytes):
+    from playsound import playsound
+
+    with tempfile.NamedTemporaryFile(mode="wb+", suffix=".wav") as wav_file:
+        wav_file.write(wav_bytes)
+        wav_file.seek(0)
+
+        _LOGGER.debug("Playing WAV file: %s", wav_file.name)
+        playsound(wav_file.name)
 
 
 # -----------------------------------------------------------------------------
@@ -451,12 +464,11 @@ def get_args():
         default=StdinFormat.AUTO,
         help="Format of stdin text (default: auto)",
     )
-    # parser.add_argument(
-    #     "--voice",
-    #     "-v",
-    #     default="en-us",
-    #     help="Name of voice (expected in <voices-dir>/<language>)",
-    # )
+    parser.add_argument(
+        "--voice",
+        "-v",
+        help="Name of voice (expected in <voices-dir>/<language>)",
+    )
     # parser.add_argument(
     #     "--voices-dir",
     #     help="Directory with voices (format is <language>/<name_model-type>)",
@@ -512,11 +524,6 @@ def get_args():
         type=int,
         help="Maximum number of threads to concurrently load models and run sentences through TTS/Vocoder",
     )
-    # parser.add_argument(
-    #     "--play-command",
-    #     default="play -",
-    #     help="Shell command used to play audio in interactive model (default: play -)",
-    # )
     parser.add_argument(
         "--raw-stream",
         action="store_true",
@@ -533,12 +540,6 @@ def get_args():
         help="Process text only after encountering a blank line",
     )
     parser.add_argument("--ssml", action="store_true", help="Input text is SSML")
-    # parser.add_argument("--cuda", action="store_true", help="Use CUDA if available")
-    # parser.add_argument(
-    #     "--half",
-    #     action="store_true",
-    #     help="Use faster FP16 for inference (requires --cuda)",
-    # )
     # parser.add_argument(
     #     "--optimizations",
     #     choices=["auto", "on", "off"],
@@ -546,12 +547,11 @@ def get_args():
     #     help="Enable/disable Onnx optimizations (auto=disable on armv7l)",
     # )
 
-    # parser.add_argument(
-    #     "--backend",
-    #     choices=[v.value for v in InferenceBackend],
-    #     help="Force use of specific inference backend (default: prefer onnx)",
-    # )
-
+    parser.add_argument(
+        "--stdout",
+        action="store_true",
+        help="Force audio output to stdout even if a tty is detected",
+    )
     parser.add_argument("--seed", type=int, help="Set random seed (default: not set)")
     # parser.add_argument("--version", action="store_true", help="Print version and exit")
     parser.add_argument(
