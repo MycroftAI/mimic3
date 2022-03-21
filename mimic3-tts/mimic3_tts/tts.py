@@ -134,6 +134,21 @@ class Mimic3TextToSpeechSystem(TextToSpeechSystem):
                         continue
 
                     voice_lang = lang_dir.name
+
+                    # Load config
+                    config_path = voice_dir / "config.json"
+                    _LOGGER.debug("Loading config from %s", config_path)
+
+                    with open(config_path, "r", encoding="utf-8") as config_file:
+                        config = TrainingConfig.load(config_file)
+
+                    properties: typing.Dict[str, typing.Any] = {
+                        "length_scale": config.inference.length_scale,
+                        "noise_scale": config.inference.noise_scale,
+                        "noise_w": config.inference.noise_w,
+                    }
+
+                    # Load speaker names
                     voice_name = voice_dir.name
                     speakers: typing.Optional[typing.Sequence[str]] = None
 
@@ -154,6 +169,7 @@ class Mimic3TextToSpeechSystem(TextToSpeechSystem):
                         language=voice_lang,
                         description="",
                         speakers=speakers,
+                        properties=properties,
                     )
 
     def begin_utterance(self):
