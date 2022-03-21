@@ -21,7 +21,23 @@ speaker = SSMLSpeaker(tts)
 # ssml = '<speak><voice name="uk_UK/m-ailabs_low"><s><w>бажав</w></s></voice></speak>'
 # ssml = '<speak><s><w>Hello</w><w>World</w></s></speak>'
 # ssml = '<speak><s>Hello world</s></speak>'
-ssml = '<speak><s><voice name="el_GR/rapunzelina_low"><say-as interpret-as="characters">12</say-as></voice></s></speak>'
+# ssml = '<speak><s><voice name="el_GR/rapunzelina_low"><say-as interpret-as="characters">12</say-as></voice></s></speak>'
+ssml = '''
+<speak>
+<voice name="en_US/amy_low">
+  <s>
+    Today is 1/2.
+    <break time="1s" />
+  </s>
+</voice>
+
+
+<voice name="es_ES/carlfm_low">
+  <s>Soy el <say-as interpret-as="number" format="ordinal">1</say-as>.</s>
+</voice>
+</speak>
+'''
+
 
 wav_file: wave.Wave_write = wave.open("out.wav", "wb")
 params_set = False

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import csv
 import itertools
 import logging
 import time
@@ -24,6 +25,7 @@ PHONEME_MAP_TYPE = typing.Dict[PHONEME_TYPE, typing.List[PHONEME_TYPE]]
 
 SPEAKER_NAME_TYPE = str
 SPEAKER_ID_TYPE = int
+SPEAKER_TYPE = typing.Union[SPEAKER_NAME_TYPE, SPEAKER_ID_TYPE]
 SPEAKER_MAP_TYPE = typing.Dict[SPEAKER_NAME_TYPE, SPEAKER_ID_TYPE]
 
 DEFAULT_LANGUAGE = "en_US"
@@ -137,7 +139,19 @@ class Mimic3Voice(metaclass=ABCMeta):
             speaker_id = 0
             if isinstance(speaker, SPEAKER_NAME_TYPE):
                 if self.speaker_map:
-                    speaker_id = self.speaker_map.get(speaker, speaker_id)
+                    maybe_speaker_id = self.speaker_map.get(speaker)
+                    if maybe_speaker_id is None:
+                        try:
+                            # Interpret as speaker id
+                            speaker_id = int(speaker)
+                        except ValueError:
+                            _LOGGER.warning(
+                                "Unable to find a speaker with the name '%s'. Falling back to first speaker.",
+                                speaker,
+                            )
+                            pass
+                    else:
+                        speaker_id = maybe_speaker_id
             elif speaker is not None:
                 speaker_id = speaker
 
@@ -198,7 +212,18 @@ class Mimic3Voice(metaclass=ABCMeta):
             with open(phoneme_map_path, "r", encoding="utf-8") as map_file:
                 phoneme_map = phonemes2ids.utils.load_phoneme_map(map_file)
 
-        # TODO: Load speaker map
+        # id -> speaker | alias | alias ...
+        speaker_map: typing.Optional[SPEAKER_MAP_TYPE] = None
+        speaker_map_path = voice_dir / "speaker_map.csv"
+        if speaker_map_path.is_file():
+            _LOGGER.debug("Loading speaker map from %s", speaker_map_path)
+            with open(speaker_map_path, "r", encoding="utf-8") as map_file:
+                reader = csv.reader(map_file, delimiter="|")
+                speaker_map = {}
+                for row in reader:
+                    speaker_id = int(row[0])
+                    for alias in row[1:]:
+                        speaker_map[alias] = speaker_id
 
         if config.phonemizer == Phonemizer.GRUUT:
             return GruutVoice(
@@ -206,6 +231,7 @@ class Mimic3Voice(metaclass=ABCMeta):
                 onnx_model=onnx_model,
                 phoneme_to_id=phoneme_to_id,
                 phoneme_map=phoneme_map,
+                speaker_map=speaker_map,
             )
 
         if config.phonemizer == Phonemizer.ESPEAK:
@@ -214,6 +240,7 @@ class Mimic3Voice(metaclass=ABCMeta):
                 onnx_model=onnx_model,
                 phoneme_to_id=phoneme_to_id,
                 phoneme_map=phoneme_map,
+                speaker_map=speaker_map,
             )
         if config.phonemizer == Phonemizer.SYMBOLS:
             return SymbolsVoice(
@@ -221,6 +248,7 @@ class Mimic3Voice(metaclass=ABCMeta):
                 onnx_model=onnx_model,
                 phoneme_to_id=phoneme_to_id,
                 phoneme_map=phoneme_map,
+                speaker_map=speaker_map,
             )
 
         raise ValueError(f"Unsupported phonemizer: {config.phonemizer}")

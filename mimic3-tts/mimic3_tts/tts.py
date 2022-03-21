@@ -27,7 +27,7 @@ from opentts_abc import (
 
 from mimic3_tts.config import TrainingConfig
 from mimic3_tts.utils import audio_float_to_int16
-from mimic3_tts.voice import Mimic3Voice
+from mimic3_tts.voice import Mimic3Voice, SPEAKER_TYPE
 
 _DIR = Path(__file__).parent
 
@@ -47,7 +47,7 @@ class Mimic3Settings:
     voice: typing.Optional[str] = None
     language: typing.Optional[str] = None
     voices_directories: typing.Optional[typing.Iterable[typing.Union[str, Path]]] = None
-    speaker_id: typing.Optional[int] = None
+    speaker: typing.Optional[SPEAKER_TYPE] = None
     length_scale: float = 1.0
     noise_scale: float = 0.667
     noise_w: float = 0.8
@@ -81,26 +81,24 @@ class Mimic3TextToSpeechSystem(TextToSpeechSystem):
     @voice.setter
     def voice(self, new_voice: str):
         if new_voice != self.settings.voice:
-            # Clear speaker id on voice change
-            self.speaker_id = None
+            # Clear speaker on voice change
+            self.speaker = None
 
         self.settings.voice = new_voice
 
         if "#" in self.settings.voice:
             # Split
-            voice, speaker_id_str = self.settings.voice.split("#", maxsplit=1)
+            voice, speaker = self.settings.voice.split("#", maxsplit=1)
             self.settings.voice = voice
-
-            # TODO: Use speaker map
-            self.speaker_id = int(speaker_id_str)
+            self.speaker = speaker
 
     @property
-    def speaker_id(self) -> typing.Optional[int]:
-        return self.settings.speaker_id
+    def speaker(self) -> typing.Optional[SPEAKER_TYPE]:
+        return self.settings.speaker
 
-    @speaker_id.setter
-    def speaker_id(self, new_speaker_id: typing.Optional[int]):
-        self.settings.speaker_id = new_speaker_id
+    @speaker.setter
+    def speaker(self, new_speaker: typing.Optional[SPEAKER_TYPE]):
+        self.settings.speaker = new_speaker
 
     @property
     def language(self) -> str:
@@ -154,12 +152,15 @@ class Mimic3TextToSpeechSystem(TextToSpeechSystem):
         for sent_phonemes in voice.text_to_phonemes(text, text_language=text_language):
             self._results.append(
                 Mimic3Phonemes(
-                    current_settings=deepcopy(self.settings), phonemes=sent_phonemes,
+                    current_settings=deepcopy(self.settings),
+                    phonemes=sent_phonemes,
                 )
             )
 
     def _speak_sentence_phonemes(
-        self, sent_phonemes, settings: typing.Optional[Mimic3Settings] = None,
+        self,
+        sent_phonemes,
+        settings: typing.Optional[Mimic3Settings] = None,
     ) -> AudioResult:
         settings = settings or self.settings
         voice = self._get_or_load_voice(settings.voice or self.voice)
@@ -169,7 +170,7 @@ class Mimic3TextToSpeechSystem(TextToSpeechSystem):
 
         audio = voice.ids_to_audio(
             sent_phoneme_ids,
-            speaker=self.speaker_id,
+            speaker=self.speaker,
             length_scale=settings.length_scale,
             noise_scale=settings.noise_scale,
             noise_w=settings.noise_w,
