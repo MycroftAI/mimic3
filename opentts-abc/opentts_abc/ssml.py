@@ -111,6 +111,8 @@ class SSMLSpeaker:
                     pass
                 elif end_tag in {"metadata", "meta"}:
                     self.handle_end_metadata()
+                elif end_tag == "speak":
+                    yield from self.handle_end_speak()
                 else:
                     LOG.debug("Ignoring end tag: %s", end_tag)
             else:
@@ -275,6 +277,12 @@ class SSMLSpeaker:
         LOG.debug("end sentence")
         assert self.state in {ParsingState.IN_SENTENCE}, self.state
         self.pop_state()
+
+        yield from self.tts.end_utterance()
+
+    def handle_end_speak(self) -> typing.Iterable[BaseResult]:
+        LOG.debug("end speak")
+        assert self.state in {ParsingState.DEFAULT}, self.state
 
         yield from self.tts.end_utterance()
 

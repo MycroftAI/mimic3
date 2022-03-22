@@ -117,15 +117,29 @@ class Mimic3Voice(metaclass=ABCMeta):
         speaker: typing.Optional[
             typing.Union[SPEAKER_NAME_TYPE, SPEAKER_ID_TYPE]
         ] = None,
-        length_scale: float = 1.0,
-        noise_scale: float = 0.333,
-        noise_w: float = 1.0,
+        length_scale: typing.Optional[float] = None,
+        noise_scale: typing.Optional[float] = None,
+        noise_w: typing.Optional[float] = None,
     ) -> np.ndarray:
+        if length_scale is None:
+            length_scale = self.config.inference.length_scale
+
+        if noise_scale is None:
+            noise_scale = self.config.inference.noise_scale
+
+        if noise_w is None:
+            noise_w = self.config.inference.noise_w
+
         # Create model inputs
         text_array = np.expand_dims(np.array(phoneme_ids, dtype=np.int64), 0)
         text_lengths_array = np.array([text_array.shape[1]], dtype=np.int64)
         scales_array = np.array(
-            [noise_scale, length_scale, noise_w,], dtype=np.float32,
+            [
+                noise_scale,
+                length_scale,
+                noise_w,
+            ],
+            dtype=np.float32,
         )
 
         # TODO: Use settings from voice config
@@ -135,8 +149,8 @@ class Mimic3Voice(metaclass=ABCMeta):
             "scales": scales_array,
         }
 
+        speaker_id = 0
         if self.config.is_multispeaker:
-            speaker_id = 0
             if isinstance(speaker, SPEAKER_NAME_TYPE):
                 if self.speaker_map:
                     maybe_speaker_id = self.speaker_map.get(speaker)
@@ -157,6 +171,14 @@ class Mimic3Voice(metaclass=ABCMeta):
 
             speaker_id_array = np.array([speaker_id], dtype=np.int64)
             inputs["sid"] = speaker_id_array
+
+        _LOGGER.debug(
+            "TTS settings: speaker-id=%s, length-scale=%s, noise-scale=%s, noise-w=%s",
+            speaker_id,
+            length_scale,
+            noise_scale,
+            noise_w,
+        )
 
         # Infer audio from phonemes
         start_time = time.perf_counter()

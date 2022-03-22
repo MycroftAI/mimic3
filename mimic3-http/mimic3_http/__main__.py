@@ -15,13 +15,13 @@
 #
 import argparse
 import asyncio
+import dataclasses
+import io
 import logging
 import sys
-import io
-import wave
 import tempfile
 import typing
-import dataclasses
+import wave
 from dataclasses import dataclass
 from pathlib import Path
 from urllib.parse import parse_qs
@@ -29,6 +29,7 @@ from uuid import uuid4
 
 import hypercorn
 import quart_cors
+from mimic3_tts import AudioResult, Mimic3Settings, Mimic3TextToSpeechSystem
 from quart import (
     Quart,
     Response,
@@ -37,8 +38,6 @@ from quart import (
     request,
     send_from_directory,
 )
-
-from mimic3_tts import Mimic3TextToSpeechSystem, Mimic3Settings, AudioResult
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -78,6 +77,9 @@ parser.add_argument(
     nargs="?",
     default=_MISSING,
     help="Enable WAV cache with optional directory (default: no cache)",
+)
+parser.add_argument(
+    "--preload-voice", action="append", help="Preload voice when starting up"
 )
 # parser.add_argument(
 #     "--max-loaded-models",
@@ -132,7 +134,6 @@ _WAV_CACHE: typing.Dict[TextToWavParams, Path] = {}
 
 # TODO: XDG voice directories
 # TODO: args.voices_dir
-# TODO: Preload voice
 
 mimic3 = Mimic3TextToSpeechSystem(
     Mimic3Settings(
@@ -143,6 +144,11 @@ mimic3 = Mimic3TextToSpeechSystem(
         noise_w=args.noise_w,
     )
 )
+
+if args.preload_voice:
+    for voice_key in args.preload_voice:
+        _LOGGER.debug("Preloading voice: %s", voice_key)
+        mimic3.preload_voice(voice_key)
 
 
 def text_to_wav(params: TextToWavParams, no_cache: bool = False) -> bytes:
