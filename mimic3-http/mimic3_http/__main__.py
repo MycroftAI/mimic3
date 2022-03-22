@@ -18,7 +18,7 @@ import asyncio
 import dataclasses
 import io
 import logging
-import sys
+import hashlib
 import tempfile
 import typing
 import wave
@@ -64,13 +64,19 @@ parser.add_argument(
 )
 parser.add_argument("--speaker", type=int, help="Default speaker to use (name or id)")
 parser.add_argument(
-    "--length-scale", type=float, default=1.0, help="Speed of speech (> 1 is slower)"
+    "--noise-scale",
+    type=float,
+    help="Noise scale [0-1], default is 0.667",
 )
 parser.add_argument(
-    "--noise-scale", type=float, default=0.333, help="Noise source for audio (0-1)"
+    "--length-scale",
+    type=float,
+    help="Length scale (1.0 is default speed, 0.5 is 2x faster)",
 )
 parser.add_argument(
-    "--noise-w", type=float, default=1.0, help="Variation in cadence (0-1)"
+    "--noise-w",
+    type=float,
+    help="Variation in cadence [0-1], default is 0.8",
 )
 parser.add_argument(
     "--cache-dir",
@@ -121,6 +127,10 @@ class TextToWavParams:
     ssml: bool = False
     text_language: typing.Optional[str] = None
 
+    @property
+    def cache_key(self) -> str:
+        return hashlib.md5(repr(self).encode()).hexdigest()
+
 
 # params -> Path
 _WAV_CACHE: typing.Dict[TextToWavParams, Path] = {}
@@ -157,7 +167,7 @@ def text_to_wav(params: TextToWavParams, no_cache: bool = False) -> bytes:
 
     if _TEMP_DIR and (not no_cache):
         # Look up in cache
-        maybe_wav_path = _TEMP_DIR / f"{hash(params)}.wav"
+        maybe_wav_path = _TEMP_DIR / f"{params.cache_key}.wav"
         if maybe_wav_path.is_file():
             _LOGGER.debug("Loading WAV from cache: %s", maybe_wav_path)
             wav_bytes = maybe_wav_path.read_bytes()
@@ -190,7 +200,16 @@ def text_to_wav(params: TextToWavParams, no_cache: bool = False) -> bytes:
 
                     wav_file.writeframes(result.audio_bytes)
 
-        return wav_io.getvalue()
+        wav_bytes = wav_io.getvalue()
+
+        if _TEMP_DIR and (not no_cache):
+            # Store in cache
+            wav_path = _TEMP_DIR / f"{params.cache_key}.wav"
+            wav_path.write_bytes(wav_bytes)
+
+            _LOGGER.debug("Cached WAV at %s", wav_path.absolute())
+
+        return wav_bytes
 
 
 # -----------------------------------------------------------------------------
@@ -239,7 +258,7 @@ async def app_tts() -> Response:
     """Speak text to WAV."""
     tts_args: typing.Dict[str, typing.Any] = {}
 
-    _LOGGER.debug(request.args)
+    _LOGGER.debug("Request args: %s", request.args)
 
     voice = request.args.get("voice")
     if voice is not None:
@@ -258,9 +277,12 @@ async def app_tts() -> Response:
     if length_scale is not None:
         tts_args["length_scale"] = float(length_scale)
 
+    # Set SSML flag either from arg or content type
     ssml_str = request.args.get("ssml")
     if ssml_str is not None:
         tts_args["ssml"] = _to_bool(ssml_str)
+    elif request.content_type == "application/ssml+xml":
+        tts_args["ssml"] = True
 
     text_language = request.args.get("textLanguage")
     if text_language is not None:
