@@ -34,7 +34,7 @@ disable=
   missing-class-docstring,
   missing-function-docstring,
   import-error,
-  relative-import-beyond-top-level
+  relative-beyond-top-level
 
 [FORMAT]
 expected-line-ending-format=LF

@@ -156,6 +156,9 @@ class Voice:
     description: str
     """Human-readable description of the voice"""
 
+    location: str
+    """File path or URI where the voice exists"""
+
     speakers: typing.Optional[typing.Sequence[str]] = None
     """List of speakers within the voice model if multi-speaker"""
 

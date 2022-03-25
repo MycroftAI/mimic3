@@ -42,6 +42,25 @@ with open(version_path, "r", encoding="utf-8") as version_file:
 
 # -----------------------------------------------------------------------------
 
+# dependency => [tags]
+extras = {}
+
+# Create language-specific extras
+for lang in [
+    "de",
+    "es",
+    "fr",
+    "it",
+    "nl",
+    "pt",
+    "ru",
+    "sv",
+    "sw",
+]:
+    extras[f"gruut[{lang}]"] = [lang]
+
+# -----------------------------------------------------------------------------
+
 setup(
     name="mimic3_tts",
     version=version,
@@ -53,7 +72,8 @@ setup(
     packages=setuptools.find_packages(),
     package_data={"mimic3_tts": ["VERSION", "py.typed"]},
     install_requires=requirements,
-    extras_require={':python_version<"3.9"': ["importlib_resources"]},
+    extras_require={':python_version<"3.9"': ["importlib_resources"], **extras},
+    entry_points={"console_scripts": ["mimic3 = mimic3_cli.__main__:main"]},
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",

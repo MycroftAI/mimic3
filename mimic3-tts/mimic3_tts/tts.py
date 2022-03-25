@@ -187,11 +187,12 @@ class Mimic3TextToSpeechSystem(TextToSpeechSystem):
                                     speakers.append(line)
 
                     yield Voice(
-                        key=str(voice_dir.absolute()),
+                        key=f"{voice_lang}/{voice_name}",
                         name=voice_name,
                         language=voice_lang,
                         description="",
                         speakers=speakers,
+                        location=str(voice_dir.absolute()),
                         properties=properties,
                     )
 
@@ -380,14 +381,15 @@ class Mimic3TextToSpeechSystem(TextToSpeechSystem):
         model_dir: typing.Optional[Path] = None
         for maybe_voice in self.get_voices():
             if maybe_voice.key.endswith(voice_key):
-                model_dir = Path(maybe_voice.key)
+                model_dir = Path(maybe_voice.location)
                 break
 
         if model_dir is None:
             raise VoiceNotFoundError(voice_key)
 
-        # Full path to voice model directory
-        canonical_key = str(model_dir.absolute())
+        voice_lang = model_dir.parent.name
+        voice_name = model_dir.name
+        canonical_key = f"{voice_lang}/{voice_name}"
 
         existing_voice = self._loaded_voices.get(canonical_key)
         if existing_voice is not None:
