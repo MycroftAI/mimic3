@@ -138,9 +138,6 @@ _WAV_CACHE: typing.Dict[TextToWavParams, Path] = {}
 
 # -----------------------------------------------------------------------------
 
-# _TTS: typing.Dict[str, Mimic3] = {}
-# _VOICE: str = args.voice
-
 
 # TODO: XDG voice directories
 # TODO: args.voices_dir

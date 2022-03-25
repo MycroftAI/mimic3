@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import argparse
+import csv
 import io
 import logging
 import os
@@ -40,6 +41,7 @@ class CommandLineInterfaceState:
     texts: typing.Optional[typing.Iterable[str]] = None
     mark_writer: typing.Optional[typing.TextIO] = None
     tts: typing.Optional["Mimic3TextToSpeechSystem"] = None
+    text_from_stdin: bool = False
 
     all_audio: bytes = field(default_factory=bytes)
     sample_rate_hz: int = 22050
@@ -85,39 +87,32 @@ def main():
     """Main entry point"""
     args = get_args()
 
-    # TODO: Print version
+    if args.debug:
+        logging.basicConfig(level=logging.DEBUG)
+    else:
+        logging.basicConfig(level=logging.INFO)
 
-    # TODO: CUDA support
-    # if args.cuda:
-    #     import torch
+    if args.version:
+        # Print version and exit
+        from . import __version__
 
-    #     args.cuda = torch.cuda.is_available()
-    #     if not args.cuda:
-    #         args.half = False
-    #         _LOGGER.warning("CUDA is not available")
-
-    # TODO: Disable Onnx optimizations
-    # Handle optimizations.
-    # onnxruntime crashes on armv7l if optimizations are enabled.
-    # setattr(args, "no_optimizations", False)
-    # if args.optimizations == "off":
-    #     args.no_optimizations = True
-    # elif args.optimizations == "auto":
-    #     if platform.machine() == "armv7l":
-    #         # Enabling optimizations on 32-bit ARM crashes
-    #         args.no_optimizations = True
-
-    # TODO: Backend selection
-    # backend: typing.Optional[InferenceBackend] = None
-    # if args.backend:
-    #     backend = InferenceBackend(args.backend)
+        print(__version__)
+        sys.exit(0)
 
     state = CommandLineInterfaceState(args=args)
     initialize_args(state)
     initialize_tts(state)
 
     try:
-        process_lines(state)
+        if args.voices:
+            # Print voices and exit
+            print_voices(state)
+        else:
+            # Process user input
+            if os.isatty(sys.stdin.fileno()):
+                print("Reading text from stdin...", file=sys.stderr)
+
+            process_lines(state)
     finally:
         shutdown_tts(state)
 
@@ -158,6 +153,7 @@ def initialize_args(state: CommandLineInterfaceState):
         state.texts = args.text
     else:
         # Use stdin
+        state.text_from_stdin = True
         stdin_format = StdinFormat.LINES
 
         if (args.stdin_format == StdinFormat.AUTO) and args.ssml:
@@ -170,9 +166,6 @@ def initialize_args(state: CommandLineInterfaceState):
         else:
             # Multiple lines
             state.texts = sys.stdin
-
-        if os.isatty(sys.stdin.fileno()):
-            print("Reading text from stdin...", file=sys.stderr)
 
     assert state.texts is not None
 
@@ -211,6 +204,10 @@ def initialize_tts(state: CommandLineInterfaceState):
     args = state.args
 
     state.tts = Mimic3TextToSpeechSystem(Mimic3Settings())
+
+    if args.voices:
+        # Don't bother with the rest of the initialization
+        return
 
     if state.args.voice:
         # Set default voice
@@ -414,6 +411,18 @@ def play_wav_bytes(wav_bytes: bytes):
         playsound(wav_file.name)
 
 
+def print_voices(state: CommandLineInterfaceState):
+    assert state.tts is not None
+
+    voices = list(state.tts.get_voices())
+    voices = sorted(voices, key=lambda v: v.key)
+
+    writer = csv.writer(sys.stdout, delimiter="\t")
+    writer.writerow(("KEY", "LANGUAGE", "NAME", "DESCRIPTION"))
+    for voice in voices:
+        writer.writerow((voice.key, voice.language, voice.name, voice.description))
+
+
 # -----------------------------------------------------------------------------
 
 
@@ -441,9 +450,7 @@ def get_args():
     #     "--voices-dir",
     #     help="Directory with voices (format is <language>/<name_model-type>)",
     # )
-    # parser.add_argument(
-    #     "--list", action="store_true", help="List available voices/vocoders"
-    # )
+    parser.add_argument("--voices", action="store_true", help="List available voices")
     parser.add_argument("--output-dir", help="Directory to write WAV file(s)")
     parser.add_argument(
         "--output-naming",
@@ -511,29 +518,12 @@ def get_args():
         "--preload-voice", action="append", help="Preload voice when starting up"
     )
     parser.add_argument("--seed", type=int, help="Set random seed (default: not set)")
-    # parser.add_argument("--version", action="store_true", help="Print version and exit")
+    parser.add_argument("--version", action="store_true", help="Print version and exit")
     parser.add_argument(
         "--debug", action="store_true", help="Print DEBUG messages to the console"
     )
-    args = parser.parse_args()
 
-    if args.debug:
-        logging.basicConfig(level=logging.DEBUG)
-    else:
-        logging.basicConfig(level=logging.INFO)
-
-    # -------------------------------------------------------------------------
-
-    # if args.version:
-    #     # Print version and exit
-    #     from larynx import __version__
-
-    #     print(__version__)
-    #     sys.exit(0)
-
-    # -------------------------------------------------------------------------
-
-    return args
+    return parser.parse_args()
 
 
 # -----------------------------------------------------------------------------
