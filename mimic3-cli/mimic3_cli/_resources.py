@@ -13,6 +13,22 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-from ._resources import __version__
+"""Shared access to package resources"""
+import os
+import typing
+from pathlib import Path
 
-__author__ = "Michael Hansen"
+try:
+    import importlib.resources
+
+    files = importlib.resources.files
+except (ImportError, AttributeError):
+    # Backport for Python < 3.9
+    import importlib_resources  # type: ignore
+
+    files = importlib_resources.files
+
+_PACKAGE = "mimic3_http"
+_DIR = Path(typing.cast(os.PathLike, files(_PACKAGE)))
+
+__version__ = (_DIR / "VERSION").read_text(encoding="utf-8").strip()

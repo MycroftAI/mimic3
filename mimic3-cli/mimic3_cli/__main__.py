@@ -1,29 +1,38 @@
 #!/usr/bin/env python3
+# Copyright 2022 Mycroft AI Inc.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
 import argparse
 import csv
 import io
 import logging
 import os
-import platform
-import shlex
 import string
-import subprocess
 import sys
 import threading
 import tempfile
 import time
 import typing
-import urllib.parse
-import urllib.request
 import wave
-from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
 from enum import Enum
 from pathlib import Path
 from queue import Queue
 
 if typing.TYPE_CHECKING:
-    from mimic3_tts import Mimic3TextToSpeechSystem, BaseResult
+    from mimic3_tts import Mimic3TextToSpeechSystem, BaseResult  # noqa: F401
 
 
 _DIR = Path(__file__).parent

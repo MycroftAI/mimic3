@@ -1,11 +1,26 @@
 #!/usr/bin/env python3
+# Copyright 2022 Mycroft AI Inc.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
 from pathlib import Path
 
 import setuptools
 from setuptools import setup
 
 this_dir = Path(__file__).parent
-module_dir = this_dir / "mimic3"
+module_dir = this_dir / "mimic3_cli"
 
 # -----------------------------------------------------------------------------
 
@@ -27,28 +42,32 @@ with open(version_path, "r", encoding="utf-8") as version_file:
 
 # -----------------------------------------------------------------------------
 
-PLUGIN_ENTRY_POINT = "mimic3_tts_plug = mimic3.plugin:Mimic3TTSPlugin"
 setup(
-    name="mimic3",
+    name="mimic3_cli",
     version=version,
-    description="An offline text to speech system for Mycroft",
+    description="A command-line interface for Mycroft's Mimic 3 text to speech system",
     url="http://github.com/MycroftAI/mimic3",
     author="Michael Hansen",
     author_email="michael.hansen@mycroft.ai",
-    license="Apache-2.0",
+    license="AGPLv3+",
     packages=setuptools.find_packages(),
-    package_data={"mimic3": ["VERSION", "py.typed", "templates", "css", "img"]},
+    package_data={"mimic3_cli": ["VERSION", "py.typed"]},
     install_requires=requirements,
     extras_require={':python_version<"3.9"': ["importlib_resources"]},
+    entry_points={
+        "console_scripts": [
+            "mimic3 = mimic3_cli.__main__:main",
+        ]
+    },
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
         "Topic :: Text Processing :: Linguistic",
-        "License :: OSI Approved :: Apache Software License",
+        "License :: OSI Approved :: GNU Affero General Public License v3",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
     ],
-    keywords="mycroft plugin tts mimic",
-    entry_points={"mycroft.plugin.tts": PLUGIN_ENTRY_POINT},
+    keywords="mycroft tts mimic cli",
 )
