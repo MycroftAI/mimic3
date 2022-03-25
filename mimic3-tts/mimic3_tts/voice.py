@@ -1,4 +1,18 @@
-#!/usr/bin/env python3
+# Copyright 2022 Mycroft AI Inc.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
 import csv
 import logging
 import time
@@ -37,6 +51,8 @@ _LOGGER = logging.getLogger(__name__)
 
 
 class Mimic3Voice(metaclass=ABCMeta):
+    """Base class for Mimic 3 voice implementations"""
+
     def __init__(
         self,
         config: TrainingConfig,
@@ -55,7 +71,7 @@ class Mimic3Voice(metaclass=ABCMeta):
     def text_to_phonemes(
         self, text: str, text_language: typing.Optional[str] = None
     ) -> typing.Iterable[WORD_PHONEMES_TYPE]:
-        pass
+        """Convert text into phonemes"""
 
     def word_to_phonemes(
         self,
@@ -63,6 +79,7 @@ class Mimic3Voice(metaclass=ABCMeta):
         word_role: typing.Optional[str] = None,
         text_language: typing.Optional[str] = None,
     ) -> typing.List[PHONEME_TYPE]:
+        """Convert a single word (with optional role) into phonemes"""
         word_phonemes = []
         for sent_phonemes in self.text_to_phonemes(
             word_text, text_language=text_language
@@ -79,6 +96,7 @@ class Mimic3Voice(metaclass=ABCMeta):
         say_format: typing.Optional[str] = None,
         text_language: typing.Optional[str] = None,
     ) -> WORD_PHONEMES_TYPE:
+        """Speak a word or phrase with a specific interpretation/format"""
         word_phonemes = []
         for sent_phonemes in self.text_to_phonemes(text, text_language=text_language):
             word_phonemes.extend(sent_phonemes)
@@ -88,6 +106,7 @@ class Mimic3Voice(metaclass=ABCMeta):
     def phonemes_to_ids(
         self, phonemes: WORD_PHONEMES_TYPE
     ) -> typing.Sequence[PHONEME_ID_TYPE]:
+        """Convert phonemes to ids for a voice model (see phonemes.txt)"""
         phoneme_map = self.phoneme_map or self.config.phonemes.phoneme_map
 
         return phonemes2ids.phonemes2ids(
@@ -122,6 +141,7 @@ class Mimic3Voice(metaclass=ABCMeta):
         noise_scale: typing.Optional[float] = None,
         noise_w: typing.Optional[float] = None,
     ) -> np.ndarray:
+        """Synthesize audio from phoneme ids usng Onnx voice model (see generator.onnx)"""
         if length_scale is None:
             length_scale = self.config.inference.length_scale
 
@@ -143,7 +163,6 @@ class Mimic3Voice(metaclass=ABCMeta):
             dtype=np.float32,
         )
 
-        # TODO: Use settings from voice config
         inputs = {
             "input": text_array,
             "input_lengths": text_lengths_array,
@@ -203,6 +222,7 @@ class Mimic3Voice(metaclass=ABCMeta):
         voice_dir: typing.Union[str, Path],
         session_options: typing.Optional[onnxruntime.SessionOptions] = None,
     ) -> "Mimic3Voice":
+        """Load a Mimic 3 voice from a directory"""
         voice_dir = Path(voice_dir)
         _LOGGER.debug("Loading voice from %s", voice_dir)
 
@@ -250,6 +270,7 @@ class Mimic3Voice(metaclass=ABCMeta):
                         speaker_map[alias] = speaker_id
 
         if config.phonemizer == Phonemizer.GRUUT:
+            # Phonemes from gruut: https://github.com/rhasspy/gruut/
             return GruutVoice(
                 config=config,
                 onnx_model=onnx_model,
@@ -259,6 +280,7 @@ class Mimic3Voice(metaclass=ABCMeta):
             )
 
         if config.phonemizer == Phonemizer.ESPEAK:
+            # Phonemes from eSpeak-ng: https://github.com/espeak-ng/espeak-ng
             return EspeakVoice(
                 config=config,
                 onnx_model=onnx_model,
@@ -267,6 +289,7 @@ class Mimic3Voice(metaclass=ABCMeta):
                 speaker_map=speaker_map,
             )
         if config.phonemizer == Phonemizer.SYMBOLS:
+            # Phonemes are characters from an alphabet
             return SymbolsVoice(
                 config=config,
                 onnx_model=onnx_model,
@@ -282,6 +305,8 @@ class Mimic3Voice(metaclass=ABCMeta):
 
 
 class GruutVoice(Mimic3Voice):
+    """Voice whose phonemes come from gruut (https://github.com/rhasspy/gruut/)"""
+
     def text_to_phonemes(
         self, text: str, text_language: typing.Optional[str] = None
     ) -> typing.Iterable[WORD_PHONEMES_TYPE]:
@@ -347,6 +372,8 @@ class GruutVoice(Mimic3Voice):
 
 
 class EspeakVoice(Mimic3Voice):
+    """Voice whose phonemes come from eSpeak-NG (https://github.com/espeak-ng/espeak-ng)"""
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._phonemizer = espeak_phonemizer.Phonemizer()
@@ -437,6 +464,7 @@ class EspeakVoice(Mimic3Voice):
         return word_phonemes
 
     def _language_to_voice(self, language: str) -> str:
+        """Make voice name from language name"""
         # en_US -> en-us
         return language.strip().lower().replace("_", "-")
 
@@ -445,6 +473,8 @@ class EspeakVoice(Mimic3Voice):
 
 
 class SymbolsVoice(Mimic3Voice):
+    """Voice whose phonemes are characters in an alphabet"""
+
     def text_to_phonemes(
         self, text: str, text_language: typing.Optional[str] = None
     ) -> typing.Iterable[WORD_PHONEMES_TYPE]:

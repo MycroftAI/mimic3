@@ -1,6 +1,6 @@
 # Mimic 3
 
-A fast and local neural text to speech system for Mycroft.
+A fast and local neural text to speech system for [Mycroft](https://mycroft.ai/) and the [Mark II](https://mycroft.ai/product/mark-ii/).
 
 
 ## Architecture
