@@ -12,3 +12,5 @@ htmlcov
 __pycache__/
 .mypy_cache/
 *.egg-info/
+
+flycheck_*.py

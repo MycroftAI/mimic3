@@ -33,7 +33,8 @@ disable=
   missing-module-docstring,
   missing-class-docstring,
   missing-function-docstring,
-  import-error
+  import-error,
+  relative-beyond-top-level
 
 [FORMAT]
 expected-line-ending-format=LF
