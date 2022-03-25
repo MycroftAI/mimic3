@@ -1,18 +1,13 @@
 #!/usr/bin/env python3
+"""Implementation of OpenTTS for Mimic 3"""
+import itertools
 import logging
-import time
 import typing
 from copy import deepcopy
 from dataclasses import dataclass, field
 from pathlib import Path
-from xml.sax.saxutils import escape as xmlescape
 
-import gruut
-import numpy as np
-import onnxruntime
-import phonemes2ids
-from gruut.const import LookupPhonemes, WordRole
-from gruut_ipa import IPA, Phoneme, guess_phonemes
+from gruut_ipa import IPA
 from opentts_abc import (
     AudioResult,
     BaseResult,
@@ -24,15 +19,16 @@ from opentts_abc import (
     Voice,
     Word,
 )
+from xdgenvpy import XDG
 
-from mimic3_tts.config import TrainingConfig
-from mimic3_tts.voice import Mimic3Voice, SPEAKER_TYPE
+from .config import TrainingConfig
+from .voice import SPEAKER_TYPE, Mimic3Voice
 
 _DIR = Path(__file__).parent
 
 _LOGGER = logging.getLogger(__name__)
 
-PHONEMES_LIST = typing.List[typing.List[str]]
+PHONEMES_LIST_TYPE = typing.List[typing.List[str]]
 
 DEFAULT_VOICE = "en_US/vctk_low"
 DEFAULT_LANGUAGE = "en_US"
@@ -43,25 +39,53 @@ DEFAULT_LANGUAGE = "en_US"
 
 @dataclass
 class Mimic3Settings:
+    """Settings for Mimic 3 text to speech system"""
+
     voice: typing.Optional[str] = None
+    """Default voice key"""
+
     language: typing.Optional[str] = None
+    """Default language (e.g., "en_US")"""
+
     voices_directories: typing.Optional[typing.Iterable[typing.Union[str, Path]]] = None
+    """Directories to search for voices (<lang>/<voice>)"""
+
     speaker: typing.Optional[SPEAKER_TYPE] = None
+    """Default speaker name or id"""
+
     length_scale: typing.Optional[float] = None
+    """Default length scale (use voice config if None)"""
+
     noise_scale: typing.Optional[float] = None
+    """Default noise scale (use voice config if None)"""
+
     noise_w: typing.Optional[float] = None
+    """Default noise W (use voice config if None)"""
+
     text_language: typing.Optional[str] = None
+    """Language of text (use voice language if None)"""
+
     sample_rate: int = 22050
+    """Sample rate of silence from add_break() in Hertz"""
 
 
 @dataclass
 class Mimic3Phonemes:
+    """Pending task to synthesize audio from phonemes with specific settings"""
+
     current_settings: Mimic3Settings
+    """Settings used to synthesize audio"""
+
     phonemes: typing.List[typing.List[str]] = field(default_factory=list)
+    """Phonemes for synthesis"""
+
     is_utterance: bool = True
+    """True if this is the end of a full utterance"""
 
 
 class VoiceNotFoundError(Exception):
+    """Raised if a voice cannot be found"""
+
     def __init__(self, voice: str):
         super().__init__(f"Voice not found: {voice}")
 
@@ -78,56 +102,36 @@ class Mimic3TextToSpeechSystem(TextToSpeechSystem):
         self._results: typing.List[typing.Union[BaseResult, Mimic3Phonemes]] = []
         self._loaded_voices: typing.Dict[str, Mimic3Voice] = {}
 
-    @property
-    def voice(self) -> str:
-        return self.settings.voice or DEFAULT_VOICE
-
-    @voice.setter
-    def voice(self, new_voice: str):
-        if new_voice != self.settings.voice:
-            # Clear speaker on voice change
-            self.speaker = None
-
-        self.settings.voice = new_voice
-
-        if "#" in self.settings.voice:
-            # Split
-            voice, speaker = self.settings.voice.split("#", maxsplit=1)
-            self.settings.voice = voice
-            self.speaker = speaker
-
-    @property
-    def speaker(self) -> typing.Optional[SPEAKER_TYPE]:
-        return self.settings.speaker
-
-    @speaker.setter
-    def speaker(self, new_speaker: typing.Optional[SPEAKER_TYPE]):
-        self.settings.speaker = new_speaker
-
-    @property
-    def language(self) -> str:
-        return self.settings.language or DEFAULT_LANGUAGE
-
-    @language.setter
-    def language(self, new_language: str):
-        self.settings.language = new_language
-
     @staticmethod
     def get_default_voices_directories() -> typing.List[Path]:
-        return [_DIR.parent.parent / "voices"]
+        """Get list of directories to search for voices by default.
+
+        On Linux, this is typically:
+            - $HOME/.local/share/mimic3
+            - /usr/local/share/mimic3
+            - /usr/share/mimic3
+        """
+        data_dirs = [Path(d) / "mimic3" for d in XDG().XDG_DATA_DIRS.split(":")]
+        return [_DIR.parent.parent / "voices"] + data_dirs
 
     def get_voices(self) -> typing.Iterable[Voice]:
-        voices_dirs = (
-            self.settings.voices_directories
-            or Mimic3TextToSpeechSystem.get_default_voices_directories()
-        )
+        """Returns an iterable of all available voices"""
+        voices_dirs: typing.Iterable[
+            typing.Union[str, Path]
+        ] = Mimic3TextToSpeechSystem.get_default_voices_directories()
+
+        if self.settings.voices_directories is not None:
+            voices_dirs = itertools.chain(self.settings.voices_directories, voices_dirs)
 
         # voices/<language>/<voice>/
         for voices_dir in voices_dirs:
             voices_dir = Path(voices_dir)
 
             if not voices_dir.is_dir():
+                _LOGGER.debug("Skipping voice directory %s", voices_dir)
                 continue
+
+            _LOGGER.debug("Searching %s for voices", voices_dir)
 
             for lang_dir in voices_dir.iterdir():
                 if not lang_dir.is_dir():
@@ -137,6 +141,7 @@ class Mimic3TextToSpeechSystem(TextToSpeechSystem):
                     if not voice_dir.is_dir():
                         continue
 
+                    _LOGGER.debug("Voice found in %s", voice_dir)
                     voice_lang = lang_dir.name
 
                     # Load config
@@ -176,9 +181,50 @@ class Mimic3TextToSpeechSystem(TextToSpeechSystem):
                         properties=properties,
                     )
 
+    def preload_voice(self, voice_key: str):
+        """Ensure voice is loaded in memory before synthesis"""
+        self._get_or_load_voice(voice_key)
+
+    # -------------------------------------------------------------------------
+
+    @property
+    def voice(self) -> str:
+        return self.settings.voice or DEFAULT_VOICE
+
+    @voice.setter
+    def voice(self, new_voice: str):
+        if new_voice != self.settings.voice:
+            # Clear speaker on voice change
+            self.speaker = None
+
+        self.settings.voice = new_voice
+
+        if "#" in self.settings.voice:
+            # Split
+            voice, speaker = self.settings.voice.split("#", maxsplit=1)
+            self.settings.voice = voice
+            self.speaker = speaker
+
+    @property
+    def speaker(self) -> typing.Optional[SPEAKER_TYPE]:
+        return self.settings.speaker
+
+    @speaker.setter
+    def speaker(self, new_speaker: typing.Optional[SPEAKER_TYPE]):
+        self.settings.speaker = new_speaker
+
+    @property
+    def language(self) -> str:
+        return self.settings.language or DEFAULT_LANGUAGE
+
+    @language.setter
+    def language(self, new_language: str):
+        self.settings.language = new_language
+
     def begin_utterance(self):
         pass
 
+    # pylint: disable=arguments-differ
     def speak_text(self, text: str, text_language: typing.Optional[str] = None):
         voice = self._get_or_load_voice(self.voice)
 
@@ -187,44 +233,18 @@ class Mimic3TextToSpeechSystem(TextToSpeechSystem):
                 Mimic3Phonemes(
                     current_settings=deepcopy(self.settings),
                     phonemes=sent_phonemes,
+                    is_utterance=False,
                 )
             )
 
-    def _speak_sentence_phonemes(
-        self,
-        sent_phonemes,
-        settings: typing.Optional[Mimic3Settings] = None,
-    ) -> AudioResult:
-        settings = settings or self.settings
-        voice = self._get_or_load_voice(settings.voice or self.voice)
-        sent_phoneme_ids = voice.phonemes_to_ids(sent_phonemes)
-
-        _LOGGER.debug("phonemes=%s, ids=%s", sent_phonemes, sent_phoneme_ids)
-
-        audio = voice.ids_to_audio(
-            sent_phoneme_ids,
-            speaker=self.speaker,
-            length_scale=settings.length_scale,
-            noise_scale=settings.noise_scale,
-            noise_w=settings.noise_w,
-        )
-
-        audio_bytes = audio.tobytes()
-        return AudioResult(
-            sample_rate_hz=voice.config.audio.sample_rate,
-            audio_bytes=audio_bytes,
-            # 16-bit mono
-            sample_width_bytes=2,
-            num_channels=1,
-        )
-
+    # pylint: disable=arguments-differ
     def speak_tokens(
         self,
         tokens: typing.Iterable[BaseToken],
         text_language: typing.Optional[str] = None,
     ):
         voice = self._get_or_load_voice(self.voice)
-        token_phonemes: PHONEMES_LIST = []
+        token_phonemes: PHONEMES_LIST_TYPE = []
 
         for token in tokens:
             if isinstance(token, Word):
@@ -250,7 +270,9 @@ class Mimic3TextToSpeechSystem(TextToSpeechSystem):
         if token_phonemes:
             self._results.append(
                 Mimic3Phonemes(
-                    current_settings=deepcopy(self.settings), phonemes=token_phonemes
+                    current_settings=deepcopy(self.settings),
+                    phonemes=token_phonemes,
+                    is_utterance=False,
                 )
             )
 
@@ -275,7 +297,7 @@ class Mimic3TextToSpeechSystem(TextToSpeechSystem):
     def end_utterance(self) -> typing.Iterable[BaseResult]:
         last_settings = self.settings
 
-        sent_phonemes: PHONEMES_LIST = []
+        sent_phonemes: PHONEMES_LIST_TYPE = []
 
         for result in self._results:
             if isinstance(result, Mimic3Phonemes):
@@ -298,15 +320,44 @@ class Mimic3TextToSpeechSystem(TextToSpeechSystem):
                 yield result
 
         if sent_phonemes:
-            yield self._speak_sentence_phonemes(sent_phonemes)
+            yield self._speak_sentence_phonemes(sent_phonemes, settings=last_settings)
             sent_phonemes.clear()
 
         self._results.clear()
 
-    def preload_voice(self, voice_key: str):
-        self._get_or_load_voice(voice_key)
+    # -------------------------------------------------------------------------
+
+    def _speak_sentence_phonemes(
+        self,
+        sent_phonemes,
+        settings: typing.Optional[Mimic3Settings] = None,
+    ) -> AudioResult:
+        """Synthesize audio from phonemes using given setings"""
+        settings = settings or self.settings
+        voice = self._get_or_load_voice(settings.voice or self.voice)
+        sent_phoneme_ids = voice.phonemes_to_ids(sent_phonemes)
+
+        _LOGGER.debug("phonemes=%s, ids=%s", sent_phonemes, sent_phoneme_ids)
+
+        audio = voice.ids_to_audio(
+            sent_phoneme_ids,
+            speaker=self.speaker,
+            length_scale=settings.length_scale,
+            noise_scale=settings.noise_scale,
+            noise_w=settings.noise_w,
+        )
+
+        audio_bytes = audio.tobytes()
+        return AudioResult(
+            sample_rate_hz=voice.config.audio.sample_rate,
+            audio_bytes=audio_bytes,
+            # 16-bit mono
+            sample_width_bytes=2,
+            num_channels=1,
+        )
 
     def _get_or_load_voice(self, voice_key: str) -> Mimic3Voice:
+        """Get a loaded voice or load from the file system"""
         existing_voice = self._loaded_voices.get(voice_key)
         if existing_voice is not None:
             return existing_voice

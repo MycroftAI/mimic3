@@ -62,6 +62,9 @@ class SSMLSpeaker:
         self._say_as_format: typing.Optional[str] = None
         self.tts = tts
 
+        self._default_voice = self.tts.voice
+        self._default_lang = self.tts.language
+
     def speak(
         self, ssml: typing.Union[str, etree.Element]
     ) -> typing.Iterable[BaseResult]:
@@ -97,6 +100,8 @@ class SSMLSpeaker:
                     self._handle_end_voice()
                 elif end_tag == "say-as":
                     self._handle_end_say_as()
+                elif end_tag == "lang":
+                    self._handle_end_lang()
                 elif end_tag in {"sub"}:
                     # Handled in handle_text
                     pass
@@ -138,6 +143,8 @@ class SSMLSpeaker:
                     self._handle_begin_voice(elem)
                 elif elem_tag == "say-as":
                     self._handle_begin_say_as(elem)
+                elif elem_tag == "lang":
+                    self._handle_begin_lang(elem)
                 elif elem_tag in {"metadata", "meta"}:
                     self._handle_begin_metadata()
                 else:
@@ -287,6 +294,9 @@ class SSMLSpeaker:
     def _handle_end_speak(self) -> typing.Iterable[BaseResult]:
         """Handle </speak>"""
         LOG.debug("end speak")
+        if self._state == ParsingState.IN_SENTENCE:
+            yield from self._handle_end_sentence()
+
         assert self._state in {ParsingState.DEFAULT}, self._state
 
         yield from self.tts.end_utterance()
@@ -305,10 +315,11 @@ class SSMLSpeaker:
     def _handle_end_voice(self):
         """Handle </voice>"""
         LOG.debug("end voice")
-        voice_name = self._pop_voice()
+        self._pop_voice()
 
         # Restore voice
-        self.tts.voice = voice_name
+        self.tts.voice = self._voice
+        LOG.debug("voice: %s", self._voice)
 
     def _handle_break(self, elem: etree.Element):
         """Handle <break>"""
@@ -347,6 +358,21 @@ class SSMLSpeaker:
         self._interpret_as = None
         self._say_as_format = None
         self._pop_state()
+
+    def _handle_begin_lang(self, elem: etree.Element):
+        """Handle <lang>"""
+        LOG.debug("begin lang")
+        lang = attrib_no_namespace(elem, "lang")
+
+        LOG.debug("language: %s", lang)
+        self._push_lang(lang)
+
+    def _handle_end_lang(self):
+        """Handle </lang>"""
+        LOG.debug("end lang")
+        self._pop_lang()
+
+        LOG.debug("language: %s", self._lang)
 
     # -------------------------------------------------------------------------
 
@@ -394,7 +420,7 @@ class SSMLSpeaker:
         if self._lang_stack:
             return self._lang_stack[-1]
 
-        return self.tts.language
+        return self._default_lang
 
     def _push_lang(self, new_lang: str):
         """Push new language on to the stack"""
@@ -405,7 +431,7 @@ class SSMLSpeaker:
         if self._lang_stack:
             return self._lang_stack.pop()
 
-        return self.tts.language
+        return self._default_lang
 
     @property
     def _voice(self) -> typing.Optional[str]:
@@ -413,7 +439,7 @@ class SSMLSpeaker:
         if self._voice_stack:
             return self._voice_stack[-1]
 
-        return self.tts.voice
+        return self._default_voice
 
     def _push_voice(self, new_voice: str):
         """Push new voice on to the stack"""
@@ -424,7 +450,7 @@ class SSMLSpeaker:
         if self._voice_stack:
             return self._voice_stack.pop()
 
-        return self.tts.voice
+        return self._default_voice
 
 
 # -----------------------------------------------------------------------------

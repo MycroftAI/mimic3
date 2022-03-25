@@ -272,18 +272,6 @@ class TrainingConfig(DataClassJsonMixin):
         """Save config as JSON to a file"""
         json.dump(self.to_dict(), config_file, indent=4)
 
-    def get_speaker_id(self, dataset_name: str, speaker_name: str) -> int:
-        if self.speaker_id_map is None:
-            self.speaker_id_map = {}
-
-        full_speaker_name = f"{dataset_name}_{speaker_name}"
-        speaker_id = self.speaker_id_map.get(full_speaker_name)
-        if speaker_id is None:
-            speaker_id = len(self.speaker_id_map)
-            self.speaker_id_map[full_speaker_name] = speaker_id
-
-        return speaker_id
-
     @staticmethod
     def load(config_file: typing.TextIO) -> "TrainingConfig":
         """Load config from a JSON file"""

@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import csv
-import itertools
 import logging
 import time
 import typing
@@ -17,6 +16,8 @@ from gruut_ipa import IPA
 
 from mimic3_tts.config import Phonemizer, TrainingConfig
 from mimic3_tts.utils import audio_float_to_int16
+
+# -----------------------------------------------------------------------------
 
 PHONEME_TYPE = str
 PHONEME_ID_TYPE = int

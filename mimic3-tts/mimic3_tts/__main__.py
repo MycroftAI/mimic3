@@ -2,16 +2,11 @@
 import logging
 import wave
 
-logging.basicConfig(level=logging.DEBUG)
-
 from opentts_abc.ssml import SSMLSpeaker
 
-from mimic3_tts.tts import (
-    AudioResult,
-    MarkResult,
-    Mimic3Settings,
-    Mimic3TextToSpeechSystem,
-)
+from .tts import AudioResult, MarkResult, Mimic3Settings, Mimic3TextToSpeechSystem
+
+logging.basicConfig(level=logging.DEBUG)
 
 settings = Mimic3Settings()
 tts = Mimic3TextToSpeechSystem(settings)
@@ -22,21 +17,21 @@ speaker = SSMLSpeaker(tts)
 # ssml = '<speak><s><w>Hello</w><w>World</w></s></speak>'
 # ssml = '<speak><s>Hello world</s></speak>'
 # ssml = '<speak><s><voice name="el_GR/rapunzelina_low"><say-as interpret-as="characters">12</say-as></voice></s></speak>'
-ssml = '''
+ssml = """
 <speak>
 <voice name="en_US/amy_low">
-  <s>
-    Today is 1/2.
-    <break time="1s" />
-  </s>
+  Today is a test.
+  This is another test.
 </voice>
 
 
 <voice name="es_ES/carlfm_low">
-  <s>Soy el <say-as interpret-as="number" format="ordinal">1</say-as>.</s>
+  <lang xml:lang="es_ES">
+    Soy el <say-as interpret-as="number" format="ordinal">1</say-as>.
+  </lang>
 </voice>
 </speak>
-'''
+"""
 
 
 wav_file: wave.Wave_write = wave.open("out.wav", "wb")
