@@ -310,7 +310,7 @@ class Mimic3TextToSpeechSystem(TextToSpeechSystem):
         self._results.append(MarkResult(name=name))
 
     def end_utterance(self) -> typing.Iterable[BaseResult]:
-        last_settings = self.settings
+        last_settings: typing.Optional[Mimic3Settings] = None
 
         sent_phonemes: PHONEMES_LIST_TYPE = []
 
@@ -356,7 +356,7 @@ class Mimic3TextToSpeechSystem(TextToSpeechSystem):
 
         audio = voice.ids_to_audio(
             sent_phoneme_ids,
-            speaker=self.speaker,
+            speaker=settings.speaker,
             length_scale=settings.length_scale,
             noise_scale=settings.noise_scale,
             noise_w=settings.noise_w,
