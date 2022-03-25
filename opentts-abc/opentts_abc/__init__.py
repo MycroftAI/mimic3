@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # Copyright 2022 Mycroft AI Inc.
 #
 # This program is free software: you can redistribute it and/or modify

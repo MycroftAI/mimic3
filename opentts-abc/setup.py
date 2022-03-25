@@ -53,6 +53,7 @@ setup(
     packages=setuptools.find_packages(),
     package_data={"opentts_abc": ["VERSION", "py.typed"]},
     install_requires=requirements,
+    extras_require={':python_version<"3.9"': ["importlib_resources"]},
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
