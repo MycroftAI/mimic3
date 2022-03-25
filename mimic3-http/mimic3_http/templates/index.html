@@ -66,6 +66,10 @@
                     <select id="speaker-list" name="speaker">
                     </select>
                 </div>
+                <div class="col-auto">
+                  <input type="checkbox" id="ssml">
+                  <label class="ml-1" for="ssml">SSML</label>
+                </div>
             </div>
             <div id="audio-message" class="row mt-3" hidden>
                 <div class="col">
@@ -131,6 +135,7 @@
              }
 
              var textLanguage = q('#text-language').value || ''
+             var ssml = q('#ssml').value || 'false'
 
              q('#audio-message').hidden = false
 
@@ -142,6 +147,7 @@
                  '&noiseScale=' + encodeURIComponent(noiseScale) +
                  '&noiseW=' + encodeURIComponent(noiseW) +
                  '&lengthScale=' + encodeURIComponent(lengthScale) +
+                 '&ssml=' + encodeURIComponent(ssml) +
                  '&textLanguage=' + encodeURIComponent(textLanguage),
                  {cache: 'no-cache'})
 

@@ -30,7 +30,12 @@ from uuid import uuid4
 
 import hypercorn
 import quart_cors
-from mimic3_tts import AudioResult, Mimic3Settings, Mimic3TextToSpeechSystem
+from mimic3_tts import (
+    AudioResult,
+    Mimic3Settings,
+    Mimic3TextToSpeechSystem,
+    SSMLSpeaker,
+)
 from quart import (
     Quart,
     Response,
@@ -40,21 +45,19 @@ from quart import (
     send_from_directory,
 )
 
+from ._resources import _PACKAGE, __version__, _DIR
+
 _LOGGER = logging.getLogger(__name__)
 
 _MISSING = object()
 _TEMP_DIR: typing.Optional[Path] = None
 
-_PACKAGE = "mimic3_http"
-_DIR = Path(__file__).parent
 
 # -----------------------------------------------------------------------------
 
 parser = argparse.ArgumentParser(prog=_PACKAGE)
 parser.add_argument(
-    "--voices-dir",
-    action="append",
-    help="Directory with <language>/<voice> structure",
+    "--voices-dir", action="append", help="Directory with <language>/<voice> structure",
 )
 parser.add_argument("--voice", help="Default voice (name of model directory)")
 parser.add_argument(
@@ -65,9 +68,7 @@ parser.add_argument(
 )
 parser.add_argument("--speaker", type=int, help="Default speaker to use (name or id)")
 parser.add_argument(
-    "--noise-scale",
-    type=float,
-    help="Noise scale [0-1], default is 0.667",
+    "--noise-scale", type=float, help="Noise scale [0-1], default is 0.667",
 )
 parser.add_argument(
     "--length-scale",
@@ -75,9 +76,7 @@ parser.add_argument(
     help="Length scale (1.0 is default speed, 0.5 is 2x faster)",
 )
 parser.add_argument(
-    "--noise-w",
-    type=float,
-    help="Variation in cadence [0-1], default is 0.8",
+    "--noise-w", type=float, help="Variation in cadence [0-1], default is 0.8",
 )
 parser.add_argument(
     "--cache-dir",
@@ -182,21 +181,32 @@ def text_to_wav(params: TextToWavParams, no_cache: bool = False) -> bytes:
         wav_params_set = False
 
         with wav_file:
-            # TODO: SSML
-            mimic3.begin_utterance()
-            mimic3.speak_text(params.text, text_language=params.text_language)
-            results = mimic3.end_utterance()
+            try:
+                if params.ssml:
+                    results = SSMLSpeaker(mimic3).speak(params.text)
+                else:
+                    mimic3.begin_utterance()
+                    mimic3.speak_text(params.text, text_language=params.text_language)
+                    results = mimic3.end_utterance()
 
-            for result in results:
-                # TODO: Marks
-                if isinstance(result, AudioResult):
-                    if not wav_params_set:
-                        wav_file.setframerate(result.sample_rate_hz)
-                        wav_file.setsampwidth(result.sample_width_bytes)
-                        wav_file.setnchannels(result.num_channels)
-                        wav_params_set = True
+                for result in results:
+                    # TODO: Marks
+                    if isinstance(result, AudioResult):
+                        if not wav_params_set:
+                            wav_file.setframerate(result.sample_rate_hz)
+                            wav_file.setsampwidth(result.sample_width_bytes)
+                            wav_file.setnchannels(result.num_channels)
+                            wav_params_set = True
 
-                    wav_file.writeframes(result.audio_bytes)
+                        wav_file.writeframes(result.audio_bytes)
+            except Exception as e:
+                if not wav_params_set:
+                    # Set default parameters so exception can propagate
+                    wav_file.setframerate(22050)
+                    wav_file.setsampwidth(2)
+                    wav_file.setnchannels(1)
+
+                raise e
 
         wav_bytes = wav_io.getvalue()
 
@@ -305,7 +315,9 @@ async def app_tts() -> Response:
 
 @app.route("/api/voices", methods=["GET"])
 async def api_voices():
-    return jsonify([dataclasses.asdict(v) for v in mimic3.get_voices()])
+    voices_dict = {v.key: v for v in mimic3.get_voices()}
+    voices = sorted(voices_dict.values(), key=lambda v: v.key)
+    return jsonify([dataclasses.asdict(v) for v in voices])
 
 
 @app.route("/process", methods=["GET", "POST"])

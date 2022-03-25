@@ -87,7 +87,11 @@ class SSMLSpeaker:
         if isinstance(ssml, etree.Element):
             root_element = ssml
         else:
-            root_element = etree.fromstring(ssml)
+            try:
+                root_element = etree.fromstring(ssml)
+            except etree.ParseError:
+                # Try again wrapped in <speak>
+                root_element = etree.fromstring(f"<speak>{ssml}</speak>")
 
         # Process sub-elements and text chunks
         for elem_or_text in text_and_elements(root_element):
