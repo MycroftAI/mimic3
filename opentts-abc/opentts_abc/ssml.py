@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Support for Speech Synthesis Markup Language (SSML)"""
 import enum
 import logging
 import re
@@ -6,14 +7,7 @@ import typing
 import xml.etree.ElementTree as etree
 from dataclasses import dataclass
 
-from opentts_abc import (
-    BaseResult,
-    Phonemes,
-    SayAs,
-    Settings,
-    TextToSpeechSystem,
-    Word,
-)
+from opentts_abc import BaseResult, Phonemes, SayAs, TextToSpeechSystem, Word
 
 LOG = logging.getLogger("opentts_abc.ssml")
 NO_NAMESPACE_PATTERN = re.compile(r"^{[^}]+}")
@@ -43,15 +37,6 @@ class ParsingState(int, enum.Enum):
     IN_PHONEME = enum.auto()
     """Inside <phoneme>"""
 
-    IN_LEXICON = enum.auto()
-    """Inside <lexicon>"""
-
-    IN_LEXICON_GRAPHEME = enum.auto()
-    """Inside <lexicon><grapheme>..."""
-
-    IN_LEXICON_PHONEME = enum.auto()
-    """Inside <lexicon><phoneme>..."""
-
     IN_METADATA = enum.auto()
     """Inside <metadata>"""
 
@@ -63,18 +48,24 @@ class ParsingState(int, enum.Enum):
 
 
 class SSMLSpeaker:
+    """Wrapper for TextToSpeechSystem that parses/implements SSML.
+
+    See: https://www.w3.org/TR/speech-synthesis11/
+    """
+
     def __init__(self, tts: TextToSpeechSystem):
-        self.state_stack: typing.List[ParsingState] = [ParsingState.DEFAULT]
-        self.element_stack: typing.List[etree.Element] = []
-        self.voice_stack: typing.List[str] = []
-        self.lang_stack: typing.List[str] = []
-        self.interpret_as: typing.Optional[str] = None
-        self.say_as_format: typing.Optional[str] = None
+        self._state_stack: typing.List[ParsingState] = [ParsingState.DEFAULT]
+        self._element_stack: typing.List[etree.Element] = []
+        self._voice_stack: typing.List[str] = []
+        self._lang_stack: typing.List[str] = []
+        self._interpret_as: typing.Optional[str] = None
+        self._say_as_format: typing.Optional[str] = None
         self.tts = tts
 
     def speak(
         self, ssml: typing.Union[str, etree.Element]
     ) -> typing.Iterable[BaseResult]:
+        """Parses and realizes a set of SSML utterances using the underlying TextToSpeechSystem"""
 
         if isinstance(ssml, etree.Element):
             root_element = ssml
@@ -84,39 +75,39 @@ class SSMLSpeaker:
         # Process sub-elements and text chunks
         for elem_or_text in text_and_elements(root_element):
             if isinstance(elem_or_text, str):
-                if self.state in {ParsingState.IN_METADATA}:
+                if self._state in {ParsingState.IN_METADATA}:
                     # Skip metadata text
                     continue
 
                 # Text chunk
                 text = typing.cast(str, elem_or_text)
-                self.handle_text(text)
+                self._handle_text(text)
             elif isinstance(elem_or_text, EndElement):
                 # End of an element (e.g., </w>)
                 end_elem = typing.cast(EndElement, elem_or_text)
                 end_tag = tag_no_namespace(end_elem.element.tag)
 
                 if end_tag == "s":
-                    yield from self.handle_end_sentence()
+                    yield from self._handle_end_sentence()
                 elif end_tag in {"w", "token"}:
-                    self.handle_end_word()
+                    self._handle_end_word()
                 elif end_tag in {"phoneme"}:
-                    self.handle_end_phoneme()
+                    self._handle_end_phoneme()
                 elif end_tag == "voice":
-                    self.handle_end_voice()
+                    self._handle_end_voice()
                 elif end_tag == "say-as":
-                    self.handle_end_say_as()
+                    self._handle_end_say_as()
                 elif end_tag in {"sub"}:
                     # Handled in handle_text
                     pass
                 elif end_tag in {"metadata", "meta"}:
-                    self.handle_end_metadata()
+                    self._handle_end_metadata()
                 elif end_tag == "speak":
-                    yield from self.handle_end_speak()
+                    yield from self._handle_end_speak()
                 else:
                     LOG.debug("Ignoring end tag: %s", end_tag)
             else:
-                if self.state in {ParsingState.IN_METADATA}:
+                if self._state in {ParsingState.IN_METADATA}:
                     # Skip metadata text
                     continue
 
@@ -132,86 +123,90 @@ class SSMLSpeaker:
                 elem_tag = tag_no_namespace(elem.tag)
 
                 if elem_tag == "s":
-                    self.handle_begin_sentence()
+                    self._handle_begin_sentence()
                 elif elem_tag in {"w", "token"}:
-                    self.handle_begin_word(elem)
+                    self._handle_begin_word(elem)
                 elif elem_tag == "sub":
-                    self.handle_begin_sub(elem)
+                    self._handle_begin_sub(elem)
                 elif elem_tag == "phoneme":
-                    self.handle_begin_phoneme(elem)
+                    self._handle_begin_phoneme(elem)
                 elif elem_tag == "break":
-                    self.handle_break(elem)
+                    self._handle_break(elem)
                 elif elem_tag == "mark":
-                    self.handle_mark(elem)
+                    self._handle_mark(elem)
                 elif elem_tag == "voice":
-                    self.handle_begin_voice(elem)
+                    self._handle_begin_voice(elem)
                 elif elem_tag == "say-as":
-                    self.handle_begin_say_as(elem)
+                    self._handle_begin_say_as(elem)
                 elif elem_tag in {"metadata", "meta"}:
-                    self.handle_begin_metadata()
+                    self._handle_begin_metadata()
                 else:
                     LOG.debug("Ignoring start tag: %s", elem_tag)
 
-        assert self.state in {
+        assert self._state in {
             ParsingState.IN_SENTENCE,
             ParsingState.DEFAULT,
-        }, self.state
-        if self.state in {ParsingState.IN_SENTENCE}:
-            yield from self.handle_end_sentence()
+        }, self._state
+
+        if self._state in {ParsingState.IN_SENTENCE}:
+            yield from self._handle_end_sentence()
 
     # -------------------------------------------------------------------------
 
-    def handle_text(self, text: str):
-        assert self.state in {
+    def _handle_text(self, text: str):
+        """Handle sentence/word text"""
+        assert self._state in {
             ParsingState.DEFAULT,
             ParsingState.IN_SENTENCE,
             ParsingState.IN_WORD,
             ParsingState.IN_SUB,
             ParsingState.IN_PHONEME,
             ParsingState.IN_SAY_AS,
-        }, self.state
+        }, self._state
 
-        if self.state == ParsingState.IN_PHONEME:
+        if self._state == ParsingState.IN_PHONEME:
             # Phonemes were emitted in handle_begin_phoneme
             return
 
-        if self.state == ParsingState.IN_SUB:
+        if self._state == ParsingState.IN_SUB:
             # Substitute text
-            assert self.element is not None
-            text = attrib_no_namespace(self.element, "alias", "")
+            assert self._element is not None
+            text = attrib_no_namespace(self._element, "alias", "")
             LOG.debug("alias text: %s", text)
 
             # Terminate <sub> early
-            self.handle_end_sub()
+            self._handle_end_sub()
 
-        if self.state == ParsingState.DEFAULT:
-            self.handle_begin_sentence()
+        if self._state == ParsingState.DEFAULT:
+            self._handle_begin_sentence()
 
         LOG.debug("text: %s", text)
 
-        if self.state == ParsingState.IN_WORD:
-            self.handle_word(text, self.element)
-        elif self.state == ParsingState.IN_SAY_AS:
-            assert self.interpret_as is not None
+        if self._state == ParsingState.IN_WORD:
+            self._handle_word(text, self._element)
+        elif self._state == ParsingState.IN_SAY_AS:
+            assert self._interpret_as is not None
             self.tts.speak_tokens(
                 [
                     SayAs(
                         text=text,
-                        interpret_as=self.interpret_as,
-                        format=self.say_as_format,
+                        interpret_as=self._interpret_as,
+                        format=self._say_as_format,
                     )
                 ]
             )
         else:
             self.tts.speak_text(text)
 
-    def handle_begin_word(self, elem: etree.Element):
+    def _handle_begin_word(self, elem: etree.Element):
+        """Handle <w> or <t>"""
         LOG.debug("begin word")
-        self.push_element(elem)
-        self.push_state(ParsingState.IN_WORD)
+        self._push_element(elem)
+        self._push_state(ParsingState.IN_WORD)
 
-    def handle_word(self, text: str, elem: typing.Optional[etree.Element] = None):
-        assert self.state in {ParsingState.IN_WORD}, self.state
+    def _handle_word(self, text: str, elem: typing.Optional[etree.Element] = None):
+        """Handle text from word"""
+        assert self._state in {ParsingState.IN_WORD}, self._state
 
         role: typing.Optional[str] = None
         if elem is not None:
@@ -219,28 +214,32 @@ class SSMLSpeaker:
 
         self.tts.speak_tokens([Word(text, role=role)])
 
-    def handle_end_word(self):
+    def _handle_end_word(self):
+        """Handle </w> or </t>"""
         LOG.debug("end word")
-        assert self.state in {ParsingState.IN_WORD}, self.state
-        self.pop_state()
-        self.pop_element()
+        assert self._state in {ParsingState.IN_WORD}, self._state
+        self._pop_state()
+        self._pop_element()
 
-    def handle_begin_sub(self, elem: etree.Element):
+    def _handle_begin_sub(self, elem: etree.Element):
+        """Handle <sub>"""
         LOG.debug("begin sub")
-        self.push_element(elem)
-        self.push_state(ParsingState.IN_SUB)
+        self._push_element(elem)
+        self._push_state(ParsingState.IN_SUB)
 
-    def handle_end_sub(self):
+    def _handle_end_sub(self):
+        """Handle </sub>"""
         LOG.debug("end sub")
-        assert self.state in {ParsingState.IN_SUB}, self.state
-        self.pop_state()
-        self.pop_element()
+        assert self._state in {ParsingState.IN_SUB}, self._state
+        self._pop_state()
+        self._pop_element()
 
-    def handle_begin_phoneme(self, elem: etree.Element):
+    def _handle_begin_phoneme(self, elem: etree.Element):
+        """Handle <phoneme>"""
         LOG.debug("begin phoneme")
 
-        if self.state == ParsingState.DEFAULT:
-            self.handle_begin_sentence()
+        if self._state == ParsingState.DEFAULT:
+            self._handle_begin_sentence()
 
         phonemes = attrib_no_namespace(elem, "ph", "")
         alphabet = attrib_no_namespace(elem, "alphabet", "")
@@ -249,61 +248,70 @@ class SSMLSpeaker:
 
         self.tts.speak_tokens([Phonemes(text=phonemes, alphabet=alphabet)])
 
-        self.push_element(elem)
-        self.push_state(ParsingState.IN_PHONEME)
+        self._push_element(elem)
+        self._push_state(ParsingState.IN_PHONEME)
 
-    def handle_end_phoneme(self):
+    def _handle_end_phoneme(self):
+        """Handle </phoneme>"""
         LOG.debug("end phoneme")
-        assert self.state in {ParsingState.IN_PHONEME}, self.state
-        self.pop_state()
-        self.pop_element()
+        assert self._state in {ParsingState.IN_PHONEME}, self._state
+        self._pop_state()
+        self._pop_element()
 
-    def handle_begin_metadata(self):
+    def _handle_begin_metadata(self):
+        """Handle <metadata>"""
         LOG.debug("begin metadata")
-        self.push_state(ParsingState.IN_METADATA)
+        self._push_state(ParsingState.IN_METADATA)
 
-    def handle_end_metadata(self):
+    def _handle_end_metadata(self):
+        """Handle </metadata>"""
         LOG.debug("end metadata")
-        assert self.state in {ParsingState.IN_METADATA}, self.state
-        self.pop_state()
+        assert self._state in {ParsingState.IN_METADATA}, self._state
+        self._pop_state()
 
-    def handle_begin_sentence(self):
+    def _handle_begin_sentence(self):
+        """Handle <s>"""
         LOG.debug("begin sentence")
-        assert self.state in {ParsingState.DEFAULT}, self.state
-        self.push_state(ParsingState.IN_SENTENCE)
+        assert self._state in {ParsingState.DEFAULT}, self._state
+        self._push_state(ParsingState.IN_SENTENCE)
         self.tts.begin_utterance()
 
-    def handle_end_sentence(self) -> typing.Iterable[BaseResult]:
+    def _handle_end_sentence(self) -> typing.Iterable[BaseResult]:
+        """Handle </s>"""
         LOG.debug("end sentence")
-        assert self.state in {ParsingState.IN_SENTENCE}, self.state
-        self.pop_state()
+        assert self._state in {ParsingState.IN_SENTENCE}, self._state
+        self._pop_state()
 
         yield from self.tts.end_utterance()
 
-    def handle_end_speak(self) -> typing.Iterable[BaseResult]:
+    def _handle_end_speak(self) -> typing.Iterable[BaseResult]:
+        """Handle </speak>"""
         LOG.debug("end speak")
-        assert self.state in {ParsingState.DEFAULT}, self.state
+        assert self._state in {ParsingState.DEFAULT}, self._state
 
         yield from self.tts.end_utterance()
 
-    def handle_begin_voice(self, elem: etree.Element):
+    def _handle_begin_voice(self, elem: etree.Element):
+        """Handle <voice>"""
         LOG.debug("begin voice")
         voice_name = attrib_no_namespace(elem, "name")
 
         LOG.debug("voice: %s", voice_name)
-        self.push_voice(voice_name)
+        self._push_voice(voice_name)
 
         # Set new voice
         self.tts.voice = voice_name
 
-    def handle_end_voice(self):
+    def _handle_end_voice(self):
+        """Handle </voice>"""
         LOG.debug("end voice")
-        voice_name = self.pop_voice()
+        voice_name = self._pop_voice()
 
         # Restore voice
         self.tts.voice = voice_name
 
-    def handle_break(self, elem: etree.Element):
+    def _handle_break(self, elem: etree.Element):
+        """Handle <break>"""
         time_str = attrib_no_namespace(elem, "time", "").strip()
         time_ms: int = 0
 
@@ -316,90 +324,105 @@ class SSMLSpeaker:
             LOG.debug("Break: %s ms", time_ms)
             self.tts.add_break(time_ms)
 
-    def handle_mark(self, elem: etree.Element):
+    def _handle_mark(self, elem: etree.Element):
+        """Handle <mark>"""
         name = attrib_no_namespace(elem, "name", "")
 
         LOG.debug("Mark: %s", name)
         self.tts.set_mark(name)
 
-    def handle_begin_say_as(self, elem: etree.Element):
+    def _handle_begin_say_as(self, elem: etree.Element):
+        """Handle <say-as>"""
         LOG.debug("begin say-as")
-        self.interpret_as = attrib_no_namespace(elem, "interpret-as", "")
-        self.say_as_format = attrib_no_namespace(elem, "format", "")
+        self._interpret_as = attrib_no_namespace(elem, "interpret-as", "")
+        self._say_as_format = attrib_no_namespace(elem, "format", "")
 
-        LOG.debug("Say as %s, format=%s", self.interpret_as, self.say_as_format)
-        self.push_state(ParsingState.IN_SAY_AS)
+        LOG.debug("Say as %s, format=%s", self._interpret_as, self._say_as_format)
+        self._push_state(ParsingState.IN_SAY_AS)
 
-    def handle_end_say_as(self):
+    def _handle_end_say_as(self):
+        """Handle </say-as>"""
         LOG.debug("end say-as")
-        assert self.state in {ParsingState.IN_SAY_AS}
-        self.interpret_as = None
-        self.say_as_format = None
-        self.pop_state()
+        assert self._state in {ParsingState.IN_SAY_AS}
+        self._interpret_as = None
+        self._say_as_format = None
+        self._pop_state()
 
     # -------------------------------------------------------------------------
 
     @property
-    def state(self) -> ParsingState:
-        if self.state_stack:
-            return self.state_stack[-1]
+    def _state(self) -> ParsingState:
+        """Get state at the top of the stack"""
+        if self._state_stack:
+            return self._state_stack[-1]
 
         return ParsingState.DEFAULT
 
-    def push_state(self, new_state: ParsingState):
-        self.state_stack.append(new_state)
+    def _push_state(self, new_state: ParsingState):
+        """Push new state on to the stack"""
+        self._state_stack.append(new_state)
 
-    def pop_state(self) -> ParsingState:
-        if self.state_stack:
-            return self.state_stack.pop()
+    def _pop_state(self) -> ParsingState:
+        """Pop state off the stack"""
+        if self._state_stack:
+            return self._state_stack.pop()
 
         return ParsingState.DEFAULT
 
     @property
-    def element(self) -> typing.Optional[etree.Element]:
-        if self.element_stack:
-            return self.element_stack[-1]
+    def _element(self) -> typing.Optional[etree.Element]:
+        """Get XML element at the top of the stack"""
+        if self._element_stack:
+            return self._element_stack[-1]
 
         return None
 
-    def push_element(self, new_element: etree.Element):
-        self.element_stack.append(new_element)
+    def _push_element(self, new_element: etree.Element):
+        """Push new XML element on to the stack"""
+        self._element_stack.append(new_element)
 
-    def pop_element(self) -> typing.Optional[etree.Element]:
-        if self.element_stack:
-            return self.element_stack.pop()
+    def _pop_element(self) -> typing.Optional[etree.Element]:
+        """Pop XML element off the stack"""
+        if self._element_stack:
+            return self._element_stack.pop()
 
         return None
 
     @property
-    def lang(self) -> typing.Optional[str]:
-        if self.lang_stack:
-            return self.lang_stack[-1]
+    def _lang(self) -> typing.Optional[str]:
+        """Get language at the top of the stack"""
+        if self._lang_stack:
+            return self._lang_stack[-1]
 
         return self.tts.language
 
-    def push_lang(self, new_lang: str):
-        self.lang_stack.append(new_lang)
+    def _push_lang(self, new_lang: str):
+        """Push new language on to the stack"""
+        self._lang_stack.append(new_lang)
 
-    def pop_lang(self) -> typing.Optional[str]:
-        if self.lang_stack:
-            return self.lang_stack.pop()
+    def _pop_lang(self) -> typing.Optional[str]:
+        """Pop language off the stop of the stack"""
+        if self._lang_stack:
+            return self._lang_stack.pop()
 
         return self.tts.language
 
     @property
-    def voice(self) -> typing.Optional[str]:
-        if self.voice_stack:
-            return self.voice_stack[-1]
+    def _voice(self) -> typing.Optional[str]:
+        """Get voice at the top of the stack"""
+        if self._voice_stack:
+            return self._voice_stack[-1]
 
         return self.tts.voice
 
-    def push_voice(self, new_voice: str):
-        self.voice_stack.append(new_voice)
+    def _push_voice(self, new_voice: str):
+        """Push new voice on to the stack"""
+        self._voice_stack.append(new_voice)
 
-    def pop_voice(self) -> typing.Optional[str]:
-        if self.voice_stack:
-            return self.voice_stack.pop()
+    def _pop_voice(self) -> typing.Optional[str]:
+        """Pop voice off the top of the stack"""
+        if self._voice_stack:
+            return self._voice_stack.pop()
 
         return self.tts.voice
 
