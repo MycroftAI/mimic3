@@ -1,0 +1,78 @@
+#!/usr/bin/env bash
+# Copyright 2022 Mycroft AI Inc.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+# Run mimic3 --update to update Docker image
+
+args=()
+repo='mycroftai/mimic3'
+tag='latest'
+docker='docker'
+
+while [[ -n "$1" ]]; do
+    if [[ "$1" == '--update' ]]; then
+        # Update Docker image
+        update='1'
+        args+=("$1")
+    else
+        args+=("$1")
+    fi
+
+    shift 1
+done
+
+if [[ -n "${update}" ]]; then
+    docker pull "${repo}:${tag}"
+fi
+
+docker_run_args=()
+
+if [[ -d /etc/ssl/certs ]]; then
+    # This directory seems to usually have symlinks to other directories
+    docker_run_args+=('-v' '/etc/ssl/certs:/etc/ssl/certs:ro')
+
+    # Create temp file with all certificate directories found
+    cert_dirs_file="$(mktemp)"
+    function finish {
+        rm -rf "${cert_dirs_file}"
+    }
+    trap finish EXIT
+
+    while read -r cert_path; do
+        # Follow symlinks and record directory paths
+        cert_path="$(readlink -f "${cert_path}")"
+        cert_dir="$(dirname "${cert_path}")"
+        echo $cert_dir >> "${cert_dirs_file}"
+    done < <(find /etc/ssl/certs -name '*.pem' -type l)
+
+    # Map unique certificate directories
+    while read -r cert_dir; do
+        docker_run_args+=('-v' "${cert_dir}:${cert_dir}:ro")
+    done < <(sort < "${cert_dirs_file}" | uniq)
+fi
+
+"${docker}" run \
+            -i \
+            -e "HOME=${HOME}" \
+            -v "$HOME:${HOME}" \
+            -w "${PWD}" \
+            --device /dev/snd:/dev/snd \
+            --user "$(id -u):$(id -g)" "${docker_run_args[@]}" \
+            --entrypoint '/home/mimic3/app/.venv/bin/python3' \
+            "${repo}:${tag}" \
+            -m mimic3_tts \
+            --stdout \
+            "${args[@]}"
