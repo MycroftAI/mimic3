@@ -7,6 +7,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <meta name="description" content="Mimic 3 text to speech server">
         <meta name="author" content="Michael Hansen">
+        <link rel="icon" type="image/png" href="img/favicon.png" />
 
         <title>Mimic 3</title>
 
@@ -94,8 +95,13 @@
                 </div>
             </div>
             <hr class="mt-5" />
-            <div class="row mt-5">
-              <img id="mycroft-logo" src="img/Mycroft_logo_two_typeonly.png" />
+            <div class="row mt-5 justify-content-center">
+              <a href="https://mycroft.ai" title="Mycroft AI">
+                <img id="mycroft-logo" src="img/Mycroft_logo_two_typeonly.png" />
+              </a>
+            </div>
+            <div class="row mt-3 justify-content-center">
+              <a href="https://www.gnu.org/licenses/agpl-3.0.en.html" title="AGPLv3">License</a>
             </div>
         </div>
 
@@ -184,7 +190,7 @@
              var voiceKey = voiceList.options[voiceList.selectedIndex].value
              var voice = voicesInfo[voiceKey]
 
-             if (voice.speakers) {
+             if (voice.speakers && voice.speakers.length > 0) {
                  voice.speakers.forEach(function(speaker) {
                     speakerList.insertAdjacentHTML(
                         'beforeend', '<option value="' + speaker + '">' + speaker + '</option>'
