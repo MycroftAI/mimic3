@@ -14,6 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 """Shared access to package resources"""
+import json
 import os
 import typing
 from pathlib import Path
@@ -32,3 +33,19 @@ _PACKAGE = "mimic3_tts"
 _DIR = Path(typing.cast(os.PathLike, files(_PACKAGE)))
 
 __version__ = (_DIR / "VERSION").read_text(encoding="utf-8").strip()
+
+# Load voices.json
+# {
+#   "<lang>/<voice>": {
+#     "files": {
+#       "relative/path": {
+#         "size_bytes": size in bytes,
+#         "sha256_sum": sha256 hash
+#       }
+#     },
+#     "speakers": [],
+#     "properties": {}
+#   }
+# }
+with open(_DIR / "voices.json", "r", encoding="utf-8") as voices_file:
+    _VOICES = json.load(voices_file)

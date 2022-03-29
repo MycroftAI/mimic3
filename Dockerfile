@@ -67,7 +67,7 @@ RUN --mount=type=cache,id=apt-run,target=/var/cache/apt \
     mkdir -p /var/cache/apt/${TARGETARCH}${TARGETVARIANT}/archives/partial && \
     apt-get update && \
     apt-get install --yes --no-install-recommends \
-        python3 ca-certificates
+        python3 ca-certificates libespeak-ng1
 
 RUN useradd -ms /bin/bash mimic3
 

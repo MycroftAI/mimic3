@@ -35,7 +35,15 @@ from opentts_abc import (
 )
 from xdgenvpy import XDG
 
+from ._resources import _VOICES
 from .config import TrainingConfig
+from .const import (
+    DEFAULT_LANGUAGE,
+    DEFAULT_VOICE,
+    DEFAULT_VOICES_DOWNLOAD_DIR,
+    DEFAULT_VOICES_URL_FORMAT,
+)
+from .download import VoiceFile, download_voice
 from .voice import SPEAKER_TYPE, Mimic3Voice
 
 _DIR = Path(__file__).parent
@@ -43,9 +51,6 @@ _DIR = Path(__file__).parent
 _LOGGER = logging.getLogger(__name__)
 
 PHONEMES_LIST_TYPE = typing.List[typing.List[str]]
-
-DEFAULT_VOICE = "en_US/vctk_low"
-DEFAULT_LANGUAGE = "en_US"
 
 
 # -----------------------------------------------------------------------------
@@ -64,6 +69,15 @@ class Mimic3Settings:
     voices_directories: typing.Optional[typing.Iterable[typing.Union[str, Path]]] = None
     """Directories to search for voices (<lang>/<voice>)"""
 
+    voices_url_format: str = DEFAULT_VOICES_URL_FORMAT
+    """URL format string for a voice directory.
+
+    May contain:
+      * {key} - unique voice key
+      * {lang} - voice language
+      * {name} - voice name
+    """
+
     speaker: typing.Optional[SPEAKER_TYPE] = None
     """Default speaker name or id"""
 
@@ -81,6 +95,12 @@ class Mimic3Settings:
 
     sample_rate: int = 22050
     """Sample rate of silence from add_break() in Hertz"""
+
+    voices_download_dir: typing.Union[str, Path] = DEFAULT_VOICES_DOWNLOAD_DIR
+    """Directory to download voices to"""
+
+    no_download: bool = False
+    """Do not download voices automatically"""
 
 
 @dataclass
@@ -125,8 +145,7 @@ class Mimic3TextToSpeechSystem(TextToSpeechSystem):
             - /usr/local/share/mimic3
             - /usr/share/mimic3
         """
-        data_dirs = [Path(d) / "mimic3" for d in XDG().XDG_DATA_DIRS.split(":")]
-        return [_DIR.parent.parent / "voices"] + data_dirs
+        return [Path(d) / "mimic3" for d in XDG().XDG_DATA_DIRS.split(":")]
 
     def get_voices(self) -> typing.Iterable[Voice]:
         """Returns an iterable of all available voices"""
@@ -137,29 +156,34 @@ class Mimic3TextToSpeechSystem(TextToSpeechSystem):
         if self.settings.voices_directories is not None:
             voices_dirs = itertools.chain(self.settings.voices_directories, voices_dirs)
 
+        known_voices = set(_VOICES.keys())
+
         # voices/<language>/<voice>/
         for voices_dir in voices_dirs:
             voices_dir = Path(voices_dir)
 
-            if not voices_dir.is_dir():
+            if not voices_dir.is_dir() or voices_dir.name.startswith("."):
                 _LOGGER.debug("Skipping voice directory %s", voices_dir)
                 continue
 
             _LOGGER.debug("Searching %s for voices", voices_dir)
 
             for lang_dir in voices_dir.iterdir():
-                if not lang_dir.is_dir():
+                if not lang_dir.is_dir() or lang_dir.name.startswith("."):
                     continue
 
                 for voice_dir in lang_dir.iterdir():
-                    if not voice_dir.is_dir():
+                    if not voice_dir.is_dir() or voice_dir.name.startswith("."):
+                        continue
+
+                    config_path = voice_dir / "config.json"
+                    if not config_path.is_file():
                         continue
 
                     _LOGGER.debug("Voice found in %s", voice_dir)
                     voice_lang = lang_dir.name
 
                     # Load config
-                    config_path = voice_dir / "config.json"
                     _LOGGER.debug("Loading config from %s", config_path)
 
                     with open(config_path, "r", encoding="utf-8") as config_file:
@@ -186,8 +210,10 @@ class Mimic3TextToSpeechSystem(TextToSpeechSystem):
                                 if line:
                                     speakers.append(line)
 
+                    voice_key = f"{voice_lang}/{voice_name}"
+
                     yield Voice(
-                        key=f"{voice_lang}/{voice_name}",
+                        key=voice_key,
                         name=voice_name,
                         language=voice_lang,
                         description="",
@@ -195,6 +221,30 @@ class Mimic3TextToSpeechSystem(TextToSpeechSystem):
                         location=str(voice_dir.absolute()),
                         properties=properties,
                     )
+
+                    known_voices.discard(voice_key)
+
+        # Yield voices that haven't yet been downloaded
+        for voice_key in known_voices:
+            voice_lang, voice_name = voice_key.split("/", maxsplit=1)
+            voice_info = _VOICES.get(voice_key, {})
+            speakers = voice_info.get("speakers", [])
+            properties = voice_info.get("properties", {})
+
+            yield Voice(
+                key=voice_key,
+                name=voice_name,
+                language=voice_lang,
+                description="",
+                speakers=speakers,
+                location=str.format(
+                    self.settings.voices_url_format,
+                    lang=voice_lang,
+                    name=voice_name,
+                    key=voice_key,
+                ),
+                properties=properties,
+            )
 
     def preload_voice(self, voice_key: str):
         """Ensure voice is loaded in memory before synthesis"""
@@ -381,8 +431,16 @@ class Mimic3TextToSpeechSystem(TextToSpeechSystem):
         model_dir: typing.Optional[Path] = None
         for maybe_voice in self.get_voices():
             if maybe_voice.key.endswith(voice_key):
-                model_dir = Path(maybe_voice.location)
-                break
+                maybe_model_dir = Path(maybe_voice.location)
+
+                if (not maybe_model_dir.is_dir()) and (not self.settings.no_download):
+                    # Download voice
+                    maybe_model_dir = self._download_voice(voice_key)
+
+                if maybe_model_dir.is_dir():
+                    # Voice found
+                    model_dir = maybe_model_dir
+                    break
 
         if model_dir is None:
             raise VoiceNotFoundError(voice_key)
@@ -407,3 +465,25 @@ class Mimic3TextToSpeechSystem(TextToSpeechSystem):
         self._loaded_voices[canonical_key] = voice
 
         return voice
+
+    def _download_voice(self, voice_key: str) -> Path:
+        """Downloads a voice by key"""
+        voice_lang, voice_name = voice_key.split("/", maxsplit=1)
+        voice_info = _VOICES[voice_key]
+        voice_url = str.format(
+            self.settings.voices_url_format,
+            key=voice_key,
+            lang=voice_lang,
+            name=voice_name,
+        )
+        voice_files = voice_info["files"]
+        download_voice(
+            voice_key=voice_key,
+            url_base=voice_url,
+            voice_files=[VoiceFile(file_key) for file_key in voice_files.keys()],
+            voices_dir=self.settings.voices_download_dir,
+        )
+
+        voice_dir = Path(self.settings.voices_download_dir) / voice_key
+
+        return voice_dir

@@ -16,17 +16,15 @@
 import argparse
 import json
 import logging
-import shutil
 import sys
-import tempfile
 import typing
 import urllib.request
+from dataclasses import dataclass
 from pathlib import Path
 from urllib.error import HTTPError
 
-from xdgenvpy import XDG
-
-from ._resources import _DIR, _PACKAGE
+from ._resources import _PACKAGE, _VOICES
+from .const import DEFAULT_VOICES_DOWNLOAD_DIR, DEFAULT_VOICES_URL_FORMAT
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -37,69 +35,61 @@ class VoiceDownloadError(Exception):
     """Occurs when a voice fails to download"""
 
 
-def download_voice(voices_dir: typing.Union[str, Path], link: str) -> Path:
-    """Download and extract a voice (or vocoder)"""
+@dataclass
+class VoiceFile:
+    """File associated with a voice to download"""
+
+    relative_path: str
+    size_bytes: typing.Optional[int] = None
+    sha256_sum: typing.Optional[str] = None
+
+
+def download_voice(
+    voice_key: str,
+    url_base: str,
+    voice_files: typing.Iterable[VoiceFile],
+    voices_dir: typing.Union[str, Path],
+    chunk_bytes: int = 4096,
+):
+    """Downloads a voice to a directory"""
     from tqdm.auto import tqdm
 
-    voice_name = link.split("/")[-1]
-    voices_dir = Path(voices_dir)
-    voices_dir.mkdir(parents=True, exist_ok=True)
+    if url_base.endswith("/"):
+        # Remove final slash
+        url_base = url_base[:-1]
 
-    _LOGGER.debug("Downloading voice to %s from %s", voices_dir, link)
+    voice_dir = Path(voices_dir) / voice_key
+    voice_dir.mkdir(parents=True, exist_ok=True)
 
-    try:
-        with urllib.request.urlopen(link) as response:
-            with tempfile.NamedTemporaryFile(mode="wb+", suffix=".tar.gz") as temp_file:
-                with tqdm(
-                    unit="B",
-                    unit_scale=True,
-                    unit_divisor=1024,
-                    miniters=1,
-                    desc=voice_name,
-                    total=int(response.headers.get("content-length", 0)),
-                ) as pbar:
-                    chunk = response.read(4096)
-                    while chunk:
-                        temp_file.write(chunk)
-                        pbar.update(len(chunk))
-                        chunk = response.read(4096)
+    _LOGGER.debug("Downloading voice %s to %s", voice_key, voice_dir)
 
-                temp_file.seek(0)
+    for voice_file in voice_files:
+        file_url = f"{url_base}/{voice_file.relative_path}"
+        file_path = voice_dir / voice_file.relative_path
 
-                # Extract
-                with tempfile.TemporaryDirectory() as temp_dir_str:
-                    temp_dir = Path(temp_dir_str)
-                    _LOGGER.debug("Extracting %s to %s", temp_file.name, temp_dir_str)
-                    shutil.unpack_archive(temp_file.name, temp_dir_str)
+        try:
+            with urllib.request.urlopen(file_url) as response:
+                with open(file_path, mode="wb") as dest_file:
+                    with tqdm(
+                        unit="B",
+                        unit_scale=True,
+                        unit_divisor=1024,
+                        miniters=1,
+                        desc=voice_file.relative_path,
+                        total=int(response.headers.get("content-length", 0)),
+                    ) as pbar:
+                        chunk = response.read(chunk_bytes)
+                        while chunk:
+                            dest_file.write(chunk)
+                            pbar.update(len(chunk))
+                            chunk = response.read(chunk_bytes)
 
-                    # Expecting <language>/<voice_name>
-                    lang_dir = next(temp_dir.iterdir())
-                    assert lang_dir.is_dir()
-
-                    voice_dir = next(lang_dir.iterdir())
-                    assert voice_dir.is_dir()
-
-                    # Copy to destination
-                    dest_lang_dir = voices_dir / lang_dir.name
-                    dest_lang_dir.mkdir(parents=True, exist_ok=True)
-
-                    dest_voice_dir = voices_dir / lang_dir.name / voice_dir.name
-                    if dest_voice_dir.is_dir():
-                        # Delete existing files
-                        shutil.rmtree(str(dest_voice_dir))
-
-                    # Move files
-                    _LOGGER.debug("Moving %s to %s", voice_dir, dest_voice_dir)
-                    shutil.move(str(voice_dir), str(dest_voice_dir))
-
-                    _LOGGER.info("Installed %s to %s", link, dest_voice_dir)
-
-                    return dest_voice_dir
-    except HTTPError as e:
-        _LOGGER.exception("download_voice")
-        raise VoiceDownloadError(
-            f"Failed to download voice {voice_name} from {link}: {e}"
-        ) from e
+            _LOGGER.debug("Downloaded %s", file_path)
+        except HTTPError as e:
+            _LOGGER.exception("download_voice")
+            raise VoiceDownloadError(
+                f"Failed to download file for voice {voice_key} from {file_url}: {e}"
+            ) from e
 
 
 # -----------------------------------------------------------------------------
@@ -107,19 +97,21 @@ def download_voice(voices_dir: typing.Union[str, Path], link: str) -> Path:
 
 def main():
     """Main entry point"""
-    default_voices_dir = Path(XDG().XDG_DATA_HOME) / "mimic3"
-
     parser = argparse.ArgumentParser(prog=f"{_PACKAGE}.download")
-    parser.add_argument("--url", action="append", help="URL of voice to download")
     parser.add_argument(
-        "--name",
-        action="append",
-        help="Name of voice to download (e.g., en_US/vctk_low)",
+        "key",
+        nargs="*",
+        help="Keys of voices to download (e.g., en_US/vctk_low)",
     )
     parser.add_argument(
         "--output-dir",
-        default=default_voices_dir,
-        help=f"Path to output directory (default: {default_voices_dir})",
+        default=DEFAULT_VOICES_DOWNLOAD_DIR,
+        help="Path to output directory",
+    )
+    parser.add_argument(
+        "--url-format",
+        default=DEFAULT_VOICES_URL_FORMAT,
+        help="URL format string for voices (contains {key}, {lang}, {name})",
     )
     parser.add_argument(
         "--debug", action="store_true", help="Print DEBUG messages to console"
@@ -134,34 +126,28 @@ def main():
     _LOGGER.debug(args)
 
     args.output_dir = Path(args.output_dir)
-    args.url = args.url or []
-    args.name = args.name or []
+    args.key = args.key or []
 
-    with open(_DIR / "voices.json", "r", encoding="utf-8") as voices_file:
-        voices_by_name = json.load(voices_file)
-
-    if (not args.url) and (not args.name):
+    if not args.key:
         # Print available voices and exit
-        json.dump(voices_by_name, sys.stdout, indent=4, ensure_ascii=False)
+        json.dump(_VOICES, sys.stdout, indent=4, ensure_ascii=False)
         sys.exit(0)
-
-    urls_to_download = args.url
-
-    if args.name:
-        # Gather URLs for voices by name
-
-        for voice_name in args.name:
-            voice_info = voices_by_name.get(voice_name)
-            if not voice_info:
-                _LOGGER.fatal("Voice not found: %s", voice_name)
-                sys.exit(1)
-
-            urls_to_download.append(voice_info["url"])
 
     args.output_dir.mkdir(parents=True, exist_ok=True)
 
-    for url in urls_to_download:
-        download_voice(args.output_dir, url)
+    for voice_key in args.key:
+        voice_lang, voice_name = voice_key.split("/", maxsplit=1)
+        voice_info = _VOICES[voice_key]
+        voice_url = str.format(
+            args.url_format, key=voice_key, lang=voice_lang, name=voice_name
+        )
+        voice_files = voice_info["files"]
+        download_voice(
+            voice_key=voice_key,
+            url_base=voice_url,
+            voice_files=[VoiceFile(file_key) for file_key in voice_files.keys()],
+            voices_dir=args.output_dir,
+        )
 
 
 # -----------------------------------------------------------------------------

@@ -126,6 +126,7 @@ def main():
 
 
 def initialize_args(state: CommandLineInterfaceState):
+    """Initialze CLI state from command-line arguments"""
     import numpy as np
 
     args = state.args
@@ -201,11 +202,14 @@ def initialize_args(state: CommandLineInterfaceState):
 
 
 def initialize_tts(state: CommandLineInterfaceState):
+    """Create Mimic 3 TTS from command-line arguments"""
     from mimic3_tts import Mimic3Settings, Mimic3TextToSpeechSystem  # noqa: F811
 
     args = state.args
 
-    state.tts = Mimic3TextToSpeechSystem(Mimic3Settings())
+    state.tts = Mimic3TextToSpeechSystem(
+        Mimic3Settings(voices_directories=args.voices_dir, speaker=args.speaker)
+    )
 
     if args.voices:
         # Don't bother with the rest of the initialization
@@ -433,9 +437,6 @@ def print_voices(state: CommandLineInterfaceState):
 def get_args():
     """Parse command-line arguments"""
     parser = argparse.ArgumentParser(prog=_PACKAGE)
-    # parser.add_argument(
-    #     "--language", help="Gruut language for text input (en-us, etc.)"
-    # )
     parser.add_argument(
         "text", nargs="*", help="Text to convert to speech (default: stdin)"
     )
@@ -450,10 +451,16 @@ def get_args():
         "-v",
         help="Name of voice (expected in <voices-dir>/<language>)",
     )
-    # parser.add_argument(
-    #     "--voices-dir",
-    #     help="Directory with voices (format is <language>/<name_model-type>)",
-    # )
+    parser.add_argument(
+        "--speaker",
+        "-s",
+        help="Name or number of speaker (default: first speaker)",
+    )
+    parser.add_argument(
+        "--voices-dir",
+        action="append",
+        help="Directory with voices (format is <language>/<voice_name>)",
+    )
     parser.add_argument("--voices", action="store_true", help="List available voices")
     parser.add_argument("--output-dir", help="Directory to write WAV file(s)")
     parser.add_argument(
@@ -506,13 +513,6 @@ def get_args():
         help="Process text only after encountering a blank line",
     )
     parser.add_argument("--ssml", action="store_true", help="Input text is SSML")
-    # parser.add_argument(
-    #     "--optimizations",
-    #     choices=["auto", "on", "off"],
-    #     default="auto",
-    #     help="Enable/disable Onnx optimizations (auto=disable on armv7l)",
-    # )
-
     parser.add_argument(
         "--stdout",
         action="store_true",
