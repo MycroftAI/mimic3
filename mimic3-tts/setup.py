@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
+from collections import defaultdict
 from pathlib import Path
 
 import setuptools
@@ -59,6 +60,16 @@ for lang in [
 ]:
     extras[f"gruut[{lang}]"] = [lang]
 
+# Add "all" tag
+for tags in extras.values():
+    tags.append("all")
+
+# Invert for setup
+extras_require = defaultdict(list)
+for dep, tags in extras.items():
+    for tag in tags:
+        extras_require[tag].append(dep)
+
 # -----------------------------------------------------------------------------
 
 setup(
@@ -72,7 +83,7 @@ setup(
     packages=setuptools.find_packages(),
     package_data={"mimic3_tts": ["VERSION", "py.typed"]},
     install_requires=requirements,
-    extras_require={':python_version<"3.9"': ["importlib_resources"], **extras},
+    extras_require={':python_version<"3.9"': ["importlib_resources"], **extras_require},
     entry_points={"console_scripts": ["mimic3 = mimic3_cli.__main__:main"]},
     classifiers=[
         "Development Status :: 3 - Alpha",

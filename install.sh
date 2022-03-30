@@ -26,8 +26,15 @@ echo 'Installing Python dependencies'
 pip3 ${PIP_INSTALL} --upgrade pip
 pip3 ${PIP_INSTALL} --upgrade wheel setuptools
 
-find "${this_dir}" -name 'requirements*.txt' -type f -print0 | \
-    xargs -0 -n1 pip3 ${PIP_INSTALL} -r
+# Install Mimic 3
+pip3 ${PIP_INSTALL} -e "${this_dir}/opentts-abc"
+
+# Include support for languages besides English
+pushd "${this_dir}/mimic3-tts" 2>/dev/null
+pip3 ${PIP_INSTALL} -e '.[de,fr,it,nl,ru,sw]'
+popd 2>/dev/null
+
+pip3 ${PIP_INSTALL} -e "${this_dir}/mimic3-http"
 
 # -----------------------------------------------------------------------------
 
