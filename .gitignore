@@ -9,3 +9,5 @@ build
 htmlcov
 
 dist/
+.venv/
+*.wav
