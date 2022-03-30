@@ -16,6 +16,9 @@
 # -----------------------------------------------------------------------------
 # Dockerfile for Mimic 3 (https://github.com/MycroftAI/mimic3)
 #
+# Runs an HTTP server on port 59125.
+# See scripts in docker/ directory of this repository.
+#
 # Requires Docker buildx: https://docs.docker.com/buildx/working-with-buildx/
 # -----------------------------------------------------------------------------
 

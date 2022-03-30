@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-.PHONY: dist docker
+.PHONY: dist install docker
 
 dist:
 	cd opentts-abc && python3 setup.py sdist
@@ -23,6 +23,9 @@ dist:
 	cp opentts-abc/dist/opentts_abc-*.tar.gz dist/
 	cp mimic3-tts/dist/mimic3_tts-*.tar.gz dist/
 	cp mimic3-http/dist/mimic3_http-*.tar.gz dist/
+
+install:
+	./install.sh
 
 docker:
 	docker buildx build . -f Dockerfile --tag mycroftai/mimic3 --load

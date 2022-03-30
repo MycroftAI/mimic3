@@ -1,10 +1,13 @@
 # Mimic 3 Web Server
 
 
-## Server
+## Installation
+
+
+## Running the Server
 
 ``` sh
 
 ```
 
-## Client
+## Running the Client

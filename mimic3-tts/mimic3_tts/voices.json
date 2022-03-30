@@ -536,32 +536,6 @@
         "speakers": [],
         "properties": {}
     },
-    "pt_BR/edresson_low": {
-        "files": {
-            "LICENSE": {
-                "size_bytes": 18652,
-                "sha256_sum": "cce5d01fa4a83b794271bd2c28cffdf99afd43c803e6ddefddae39b591ea7448"
-            },
-            "SOURCE": {
-                "size_bytes": 50,
-                "sha256_sum": "1ba21abad312197fbe4c9c0d449e16bad57f4c2e3e8e37e31e2d50b413faab04"
-            },
-            "config.json": {
-                "size_bytes": 3586,
-                "sha256_sum": "d19b81d56f90344e110426d5830e5b27a3af178bccd44dd6b072d811cdade750"
-            },
-            "generator.onnx": {
-                "size_bytes": 62796055,
-                "sha256_sum": "142f4a8268549a8fa148066182e548335eb60826c751228f0c311e8d49d0d938"
-            },
-            "phonemes.txt": {
-                "size_bytes": 282,
-                "sha256_sum": "270d2d069b677555c8d703afa3e3883e43e905e993ebb3e85f3481b60fe9f638"
-            }
-        },
-        "speakers": [],
-        "properties": {}
-    },
     "ru_RU/multi_low": {
         "files": {
             "config.json": {
@@ -604,40 +578,6 @@
         ],
         "properties": {}
     },
-    "sv_SE/talesyntese_low": {
-        "files": {
-            "LICENSE": {
-                "size_bytes": 51,
-                "sha256_sum": "bd1a963f2c77481f0a658b5fa7fe77c2515e73be3972f1e991741b72f6fd7d31"
-            },
-            "README.md": {
-                "size_bytes": 203,
-                "sha256_sum": "f574e3807bec86b91caa0d70b1ac8c4ef85ecc297afb49b62642f9944554cbaa"
-            },
-            "SOURCE": {
-                "size_bytes": 63,
-                "sha256_sum": "295e2c2e47edb2f156c10808efb9439714d227c5b45b60a4f8ec3adc33451a6b"
-            },
-            "config.json": {
-                "size_bytes": 3376,
-                "sha256_sum": "8e5a29c1a0ae655c9d0d56df025f22286e81ce323d1b68d07977b90bf61ee33e"
-            },
-            "generator.onnx": {
-                "size_bytes": 62802967,
-                "sha256_sum": "bd9a50a8b0d35116c0d543681c2384bb738087ea771f9abee805feb53aa5f708"
-            },
-            "phoneme_map.txt": {
-                "size_bytes": 15,
-                "sha256_sum": "4003f421fc91ed1d5a343442659db6cf9d58bd1c6d8d771abc1999cc24d7694d"
-            },
-            "phonemes.txt": {
-                "size_bytes": 360,
-                "sha256_sum": "b4d2422bcc2b2f3ea739ce3f59019e499b966a74836aa54f6300921c4fc7ae76"
-            }
-        },
-        "speakers": [],
-        "properties": {}
-    },
     "sw/lanfrica_low": {
         "files": {
             "LICENSE": {
@@ -655,10 +595,6 @@
             "generator.onnx": {
                 "size_bytes": 62787607,
                 "sha256_sum": "b470bf4b042ea96d2272162e9efaa8bd48bae4bc771d4a9996631f645e740e80"
-            },
-            "phoneme_map.txt": {
-                "size_bytes": 15,
-                "sha256_sum": "4003f421fc91ed1d5a343442659db6cf9d58bd1c6d8d771abc1999cc24d7694d"
             },
             "phonemes.txt": {
                 "size_bytes": 245,
@@ -697,9 +633,20 @@
             "speaker_map.csv": {
                 "size_bytes": 118,
                 "sha256_sum": "f74765e11fca2ac205b2acb1213bdaa3bd3f6c9235ebcab5479160bfef1b7aa0"
+            },
+            "speakers.txt": {
+                "size_bytes": 52,
+                "sha256_sum": "c1ba92bba7a9f7a058a2465c80682a25dace008d70dc8e54317801d389e01c1f"
             }
         },
-        "speakers": [],
+        "speakers": [
+            "obruchov",
+            "shepel",
+            "loboda",
+            "miskun",
+            "sumska",
+            "pysariev"
+        ],
         "properties": {}
     }
 }

@@ -19,5 +19,5 @@ from xdgenvpy import XDG
 
 DEFAULT_VOICE = "en_US/vctk_low"
 DEFAULT_LANGUAGE = "en_US"
-DEFAULT_VOICES_URL_FORMAT = "https://github.com/MycroftAI/mimic3-voices/raw/master/{lang}/{name}"
-DEFAULT_VOICES_DOWNLOAD_DIR = Path(XDG().XDG_DATA_HOME) / "mimic3"
+DEFAULT_VOICES_URL_FORMAT = "https://github.com/MycroftAI/mimic3-voices/raw/master/voices/{lang}/{name}"
+DEFAULT_VOICES_DOWNLOAD_DIR = Path(XDG().XDG_DATA_HOME) / "mimic3" / "voices"
