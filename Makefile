@@ -16,7 +16,7 @@
 .PHONY: dist install docker binaries
 
 SHELL := bash
-DOCKER_PLATFORM := linux/amd64
+DOCKER_PLATFORM ?= linux/amd64
 
 dist:
 	cd opentts-abc && python3 setup.py sdist
@@ -34,4 +34,4 @@ docker:
 	docker buildx build . -f Dockerfile --platform $(DOCKER_PLATFORM) --tag mycroftai/mimic3 --load
 
 binaries:
-	docker buildx build . -f Dockerfile.binary $(DOCKER_PLATFORM) --output type=local,dest=dist/$(DOCKER_PLATFORM)
+	docker buildx build . -f Dockerfile.binary --platform $(DOCKER_PLATFORM) --output type=local,dest=dist/$(DOCKER_PLATFORM)

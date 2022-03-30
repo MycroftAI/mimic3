@@ -373,7 +373,6 @@ def process_lines(state: CommandLineInterfaceState):
             state.result_queue.put(None)
 
         if state.result_thread is not None:
-            print("Waiting for audio to finish...", file=sys.stderr)
             state.result_thread.join()
 
     # -------------------------------------------------------------------------

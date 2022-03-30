@@ -52,7 +52,6 @@ RUN --mount=type=cache,id=pip-venv,target=/root/.cache/pip \
 
 # Create binary for command-line interface
 RUN .venv/bin/pyinstaller \
-    --onefile \
     --noconfirm \
     --name mimic3 \
     --hidden-import 'pycrfsuite._dumpparser' \
@@ -81,7 +80,6 @@ RUN .venv/bin/pyinstaller \
 
 # Create binary for web server
 RUN .venv/bin/pyinstaller \
-    --onefile \
     --noconfirm \
     --name mimic3-server \
     --hidden-import 'pycrfsuite._dumpparser' \
