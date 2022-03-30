@@ -1,5 +1,7 @@
 *
 !LICENSE
+!install.sh
+!pyinstaller/*.py
 
 # opentts-abc
 !opentts-abc/setup.py
@@ -14,6 +16,7 @@
 !mimic3-tts/MANIFEST.in
 !mimic3-tts/requirements.txt
 !mimic3-tts/mimic3_tts/*.py
+!mimic3-tts/mimic3_tts/voices.json
 !mimic3-tts/mimic3_tts/VERSION
 
 # HTTP server

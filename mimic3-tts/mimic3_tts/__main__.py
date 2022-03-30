@@ -19,7 +19,10 @@ import csv
 import io
 import logging
 import os
+import shlex
+import shutil
 import string
+import subprocess
 import sys
 import tempfile
 import threading
@@ -39,6 +42,7 @@ if typing.TYPE_CHECKING:
 
 _LOGGER = logging.getLogger(_PACKAGE)
 
+_DEFAULT_PLAY_PROGRAMS = ["paplay", "play -q", "aplay -q"]
 
 # -----------------------------------------------------------------------------
 
@@ -264,7 +268,7 @@ def process_result(state: CommandLineInterfaceState):
                                     wav_bytes = result.to_wav_bytes()
 
                                 if wav_bytes:
-                                    play_wav_bytes(wav_bytes)
+                                    play_wav_bytes(state.args, wav_bytes)
 
                         if args.output_dir:
                             if not wav_bytes:
@@ -387,7 +391,7 @@ def process_lines(state: CommandLineInterfaceState):
                     wav_file_play.setnchannels(state.num_channels)
                     wav_file_play.writeframes(state.all_audio)
 
-                play_wav_bytes(wav_io.getvalue())
+                play_wav_bytes(state.args, wav_io.getvalue())
         else:
             # Write output directly to stdout
             wav_file_write: wave.Wave_write = wave.open(sys.stdout.buffer, "wb")
@@ -406,15 +410,20 @@ def shutdown_tts(state: CommandLineInterfaceState):
         state.tts = None
 
 
-def play_wav_bytes(wav_bytes: bytes):
-    from playsound import playsound
-
+def play_wav_bytes(args: argparse.Namespace, wav_bytes: bytes):
     with tempfile.NamedTemporaryFile(mode="wb+", suffix=".wav") as wav_file:
         wav_file.write(wav_bytes)
         wav_file.seek(0)
 
-        _LOGGER.debug("Playing WAV file: %s", wav_file.name)
-        playsound(wav_file.name)
+        for play_program in reversed(args.play_program):
+            play_cmd = shlex.split(play_program)
+            if not shutil.which(play_cmd[0]):
+                continue
+
+            play_cmd.append(wav_file.name)
+            _LOGGER.debug("Playing WAV file: %s", play_cmd)
+            subprocess.check_output(play_cmd)
+            break
 
 
 def print_voices(state: CommandLineInterfaceState):
@@ -520,6 +529,12 @@ def get_args():
     )
     parser.add_argument(
         "--preload-voice", action="append", help="Preload voice when starting up"
+    )
+    parser.add_argument(
+        "--play-program",
+        action="append",
+        default=_DEFAULT_PLAY_PROGRAMS,
+        help="Program(s) used to play WAV files",
     )
     parser.add_argument("--seed", type=int, help="Set random seed (default: not set)")
     parser.add_argument("--version", action="store_true", help="Print version and exit")

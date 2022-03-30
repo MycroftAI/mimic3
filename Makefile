@@ -13,7 +13,10 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-.PHONY: dist install docker
+.PHONY: dist install docker binaries
+
+SHELL := bash
+DOCKER_PLATFORM := linux/amd64
 
 dist:
 	cd opentts-abc && python3 setup.py sdist
@@ -28,4 +31,7 @@ install:
 	./install.sh
 
 docker:
-	docker buildx build . -f Dockerfile --tag mycroftai/mimic3 --load
+	docker buildx build . -f Dockerfile --platform $(DOCKER_PLATFORM) --tag mycroftai/mimic3 --load
+
+binaries:
+	docker buildx build . -f Dockerfile.binary $(DOCKER_PLATFORM) --output type=local,dest=dist/$(DOCKER_PLATFORM)

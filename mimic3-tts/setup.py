@@ -81,7 +81,7 @@ setup(
     author_email="michael.hansen@mycroft.ai",
     license="AGPLv3+",
     packages=setuptools.find_packages(),
-    package_data={"mimic3_tts": ["VERSION", "py.typed"]},
+    package_data={"mimic3_tts": ["VERSION", "py.typed", "voices.json"]},
     install_requires=requirements,
     extras_require={':python_version<"3.9"': ["importlib_resources"], **extras_require},
     entry_points={"console_scripts": ["mimic3 = mimic3_cli.__main__:main"]},

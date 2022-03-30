@@ -38,22 +38,13 @@ RUN --mount=type=cache,id=apt-build,target=/var/cache/apt \
        python3 python3-pip python3-venv \
        build-essential python3-dev
 
-RUN mkdir -p /home/mimic3/app
 WORKDIR /home/mimic3/app
 
-# Create virtual environment
-RUN --mount=type=cache,id=pip-venv,target=/root/.cache/pip \
-   python3 -m venv .venv && \
-   .venv/bin/pip3 install --upgrade pip && \
-   .venv/bin/pip3 install --upgrade wheel setuptools
+COPY ./ ./
 
-COPY ./ /home/mimic3/app/
-
-# Install packages in order
+# Install mimic3
 RUN --mount=type=cache,id=pip-requirements,target=/root/.cache/pip \
-   .venv/bin/pip3 install -e opentts-abc && \
-   .venv/bin/pip3 install -e mimic3-tts && \
-   .venv/bin/pip3 install -e mimic3-http
+    ./install.sh
 
 # -----------------------------------------------------------------------------
 

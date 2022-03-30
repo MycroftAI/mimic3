@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # Copyright 2022 Mycroft AI Inc.
 #
 # This program is free software: you can redistribute it and/or modify
@@ -13,13 +14,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-from pathlib import Path
+"""Stub for PyInstaller"""
 
-from xdgenvpy import XDG
+from mimic3_tts.__main__ import main
 
-DEFAULT_VOICE = "en_US/vctk_low"
-DEFAULT_LANGUAGE = "en_US"
-DEFAULT_VOICES_URL_FORMAT = (
-    "https://github.com/MycroftAI/mimic3-voices/raw/master/voices/{lang}/{name}"
-)
-DEFAULT_VOICES_DOWNLOAD_DIR = Path(XDG().XDG_DATA_HOME) / "mimic3" / "voices"
+main()
