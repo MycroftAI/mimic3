@@ -84,7 +84,12 @@ setup(
     package_data={"mimic3_tts": ["VERSION", "py.typed", "voices.json"]},
     install_requires=requirements,
     extras_require={':python_version<"3.9"': ["importlib_resources"], **extras_require},
-    entry_points={"console_scripts": ["mimic3 = mimic3_cli.__main__:main"]},
+    entry_points={
+        "console_scripts": [
+            "mimic3 = mimic3_tts.__main__:main",
+            "mimic3-download = mimic3_tts.download:main",
+        ]
+    },
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
