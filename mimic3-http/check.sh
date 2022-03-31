@@ -6,10 +6,11 @@ this_dir="$( cd "$( dirname "$0" )" && pwd )"
 
 # Kebab to snake case
 module_name="$(basename "${this_dir}" | sed -e 's/-/_/g')"
+base_dir="$(realpath "${this_dir}/..")"
 src_dir="${this_dir}/${module_name}"
 
 # Path to virtual environment
-: "${venv:=${this_dir}/.venv}"
+: "${venv:=${base_dir}/.venv}"
 
 if [ -d "${venv}" ]; then
     # Activate virtual environment if available
