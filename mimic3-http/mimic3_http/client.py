@@ -77,7 +77,7 @@ def main():
     if args.output:
         args.output.write_bytes(wav_bytes)
         _LOGGER.info("Wrote WAV data to %s", args.output)
-    elif args.stdout:
+    elif args.stdout or (not sys.stdout.isatty()):
         _LOGGER.debug("Writing WAV data to stdout")
         sys.stdout.buffer.write(wav_bytes)
     else:
