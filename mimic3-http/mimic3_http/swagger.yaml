@@ -14,19 +14,90 @@ paths:
       summary: 'Speak text to WAV'
       parameters:
         - in: query
-          name: voice
-          required: true
-          description: 'Voice in the form <lang>/<name>_<quality> optional with #<speaker> at the end'
-          schema:
-            type: string
-            example: 'en_UK/apope_low'
-        - in: query
           name: text
           required: true
           description: 'Text to speak'
           schema:
             type: string
             example: 'Welcome to the world of speech synthesis!'
+        - in: query
+          name: voice
+          description: 'Voice in the form <lang>/<name>_<quality> optional with #<speaker> at the end'
+          schema:
+            type: string
+            example: 'en_UK/apope_low'
+        - in: query
+          name: noiseScale
+          description: 'Volatility of speaker (0-1, default: 0.667)'
+          schema:
+            type: number
+            example: 0.667
+        - in: query
+          name: noiseW
+          description: 'Volatility of individual phonemes (0-1, default: 0.667)'
+          schema:
+            type: number
+            example: 0.8
+        - in: query
+          name: lengthScale
+          description: 'Speed of speaker (default: 1.0, faster &lt; 1 &lt; slower)'
+          schema:
+            type: number
+            example: 1.0
+        - in: query
+          name: ssml
+          description: 'Input text is SSML'
+          schema:
+            type: boolean
+            example: false
+      produces:
+        - audio/wav
+      responses:
+        '200':
+          description: audio
+          schema:
+            type: binary
+    post:
+      summary: 'Speak text to WAV'
+      requestBody:
+        required: true
+        description: 'Text to speak'
+        content:
+          text/plain:
+            schema:
+              type: string
+              example: 'Welcome to the world of speech synthesis!'
+      parameters:
+        - in: query
+          name: voice
+          description: 'Voice in the form <lang>/<name>_<quality> optional with #<speaker> at the end'
+          schema:
+            type: string
+            example: 'en_UK/apope_low'
+        - in: query
+          name: noiseScale
+          description: 'Volatility of speaker (0-1, default: 0.667)'
+          schema:
+            type: number
+            example: 0.667
+        - in: query
+          name: noiseW
+          description: 'Volatility of individual phonemes (0-1, default: 0.667)'
+          schema:
+            type: number
+            example: 0.8
+        - in: query
+          name: lengthScale
+          description: 'Speed of speaker (default: 1.0, faster &lt; 1 &lt; slower)'
+          schema:
+            type: number
+            example: 1.0
+        - in: query
+          name: ssml
+          description: 'Input text is SSML'
+          schema:
+            type: boolean
+            example: false
       produces:
         - audio/wav
       responses:

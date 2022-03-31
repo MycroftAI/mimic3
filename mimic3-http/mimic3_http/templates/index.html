@@ -90,12 +90,6 @@
                     <input type="number" id="length-scale" name="lengthScale" size="5" min="0" step="0.001" value="1">
                 </div>
             </div>
-            <div class="row mt-3">
-                <div class="col-auto">
-                    <label for="text-language" title="Text Language">Text Language:</label>
-                    <input type="text" id="text-language" name="textLanguage" size="8" placeholder="lang code">
-                </div>
-            </div>
             <hr class="mt-5" />
             <div class="row mt-5 justify-content-center">
               <a href="https://mycroft.ai" title="Mycroft AI">
@@ -142,7 +136,6 @@
                  voice = voice + "#" + speaker
              }
 
-             var textLanguage = q('#text-language').value || ''
              var ssml = q('#ssml').value || 'false'
 
              q('#audio-message').hidden = false
@@ -155,8 +148,7 @@
                  '&noiseScale=' + encodeURIComponent(noiseScale) +
                  '&noiseW=' + encodeURIComponent(noiseW) +
                  '&lengthScale=' + encodeURIComponent(lengthScale) +
-                 '&ssml=' + encodeURIComponent(ssml) +
-                 '&textLanguage=' + encodeURIComponent(textLanguage),
+                 '&ssml=' + encodeURIComponent(ssml),
                  {cache: 'no-cache'})
 
              if (res.ok) {
