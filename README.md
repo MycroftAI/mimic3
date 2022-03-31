@@ -185,6 +185,24 @@ Use the Mimic 3 web server as a drop-in replacement for [MaryTTS](http://mary.df
 
 Make sure to use a compatible [voice key](#voice-keys) like `en_UK/apope_low`.
 
+For Mycroft, you can use this instead of [the plugin](https://github.com/MycroftAI/plugin-tts-mimic3) by running:
+
+
+``` sh
+mycroft-config edit user
+```
+
+and then adding the following:
+
+``` json
+"tts": {
+"module": "marytts",
+"marytts": {
+    "url": "http://localhost:59125",
+    "voice": "en_UK/apope_low"
+}
+```
+
 
 ## SSML
 
