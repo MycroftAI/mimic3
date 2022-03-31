@@ -142,7 +142,7 @@ def initialize_args(state: CommandLineInterfaceState):
 
     # Open file for writing the names from <mark> tags in SSML.
     # Each name is printed on a single line.
-    if args.mark_file:
+    if args.mark_file and (args.mark_file != "-"):
         args.mark_file = Path(args.mark_file)
         args.mark_file.parent.mkdir(parents=True, exist_ok=True)
         state.mark_writer = open(  # pylint: disable=consider-using-with
@@ -157,8 +157,15 @@ def initialize_args(state: CommandLineInterfaceState):
         _LOGGER.debug("Setting random seed to %s", args.seed)
         np.random.seed(args.seed)
 
+    if args.csv_voice:
+        # --csv-voice implies --csv
+        args.csv = True
+
     if args.csv:
-        args.output_naming = "id"
+        args.output_naming = OutputNaming.ID
+    elif args.ssml:
+        # Avoid text mangling when using SSML
+        args.output_naming = OutputNaming.TIME
 
     # Read text from stdin or arguments
     if args.text:
@@ -313,6 +320,7 @@ def process_line(
     line: str,
     state: CommandLineInterfaceState,
     line_id: str = "",
+    line_voice: typing.Optional[str] = None,
 ):
     from mimic3_tts import SSMLSpeaker
 
@@ -320,6 +328,14 @@ def process_line(
     assert state.result_queue is not None
 
     args = state.args
+
+    if line_voice:
+        if line_voice.startswith("#"):
+            # Same voice, but different speaker
+            state.tts.speaker = line_voice[1:]
+        else:
+            # Different voice
+            state.tts.voice = line_voice
 
     if args.ssml:
         results = SSMLSpeaker(state.tts).speak(line)
@@ -333,12 +349,12 @@ def process_line(
 
     for result in results:
         state.result_queue.put(
-            ResultToProcess(
-                result=result,
-                line=line,
-                line_id=line_id,
-            )
+            ResultToProcess(result=result, line=line, line_id=line_id,)
         )
+
+    # Restore voice/speaker
+    state.tts.voice = args.voice
+    state.tts.speaker = args.speaker
 
 
 def process_lines(state: CommandLineInterfaceState):
@@ -350,6 +366,7 @@ def process_lines(state: CommandLineInterfaceState):
         result_idx = 0
 
         for line in state.texts:
+            line_voice: typing.Optional[str] = None
             line_id = ""
             line = line.strip()
             if not line:
@@ -357,9 +374,14 @@ def process_lines(state: CommandLineInterfaceState):
 
             if args.output_naming == OutputNaming.ID:
                 # Line has the format id|text instead of just text
-                line_id, line = line.split(args.id_delimiter, maxsplit=1)
+                with io.StringIO(line) as line_io:
+                    reader = csv.reader(line_io, delimiter=args.csv_delimiter)
+                    row = next(reader)
+                    line_id, line = row[0], row[-1]
+                    if args.csv_voice:
+                        line_voice = row[1]
 
-            process_line(line, state, line_id=line_id)
+            process_line(line, state, line_id=line_id, line_voice=line_voice)
             result_idx += 1
 
     except KeyboardInterrupt:
@@ -455,14 +477,10 @@ def get_args():
         help="Format of stdin text (default: auto)",
     )
     parser.add_argument(
-        "--voice",
-        "-v",
-        help="Name of voice (expected in <voices-dir>/<language>)",
+        "--voice", "-v", help="Name of voice (expected in <voices-dir>/<language>)",
     )
     parser.add_argument(
-        "--speaker",
-        "-s",
-        help="Name or number of speaker (default: first speaker)",
+        "--speaker", "-s", help="Name or number of speaker (default: first speaker)",
     )
     parser.add_argument(
         "--voices-dir",
@@ -489,14 +507,20 @@ def get_args():
     )
     parser.add_argument("--csv", action="store_true", help="Input format is id|text")
     parser.add_argument(
+        "--csv-delimiter", default="|", help="Delimiter used with --csv (default: |)"
+    )
+    parser.add_argument(
+        "--csv-voice",
+        action="store_true",
+        help="Input format is id|voice|text or id|#speaker|text",
+    )
+    parser.add_argument(
         "--mark-file",
         help="File to write mark names to as they're encountered (--ssml only)",
     )
 
     parser.add_argument(
-        "--noise-scale",
-        type=float,
-        help="Noise scale [0-1], default is 0.667",
+        "--noise-scale", type=float, help="Noise scale [0-1], default is 0.667",
     )
     parser.add_argument(
         "--length-scale",
@@ -504,9 +528,7 @@ def get_args():
         help="Length scale (1.0 is default speed, 0.5 is 2x faster)",
     )
     parser.add_argument(
-        "--noise-w",
-        type=float,
-        help="Variation in cadence [0-1], default is 0.8",
+        "--noise-w", type=float, help="Variation in cadence [0-1], default is 0.8",
     )
 
     # Miscellaneous
