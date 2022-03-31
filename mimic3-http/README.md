@@ -4,6 +4,8 @@ A small HTTP web server for the [Mimic 3](https://github.com/MycroftAI/mimic3) t
 
 [Available voices](https://github.com/MycroftAI/mimic3-voices)
 
+![screenshot of web interface](img/server_screenshot.jpg)
+
 
 ## Installation
 

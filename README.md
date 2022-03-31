@@ -150,6 +150,8 @@ See `mimic3-download --help` for more options.
 
 Start a web server with `mimic3-server` and visit `http://localhost:59125` to view the web UI.
 
+![screenshot of web interface](mimic3-http/img/server_screenshot.jpg)
+
 The following endpoints are available:
 
 * `/api/tts`
@@ -178,12 +180,13 @@ mimic3-client --voice 'en_UK/apope_low' 'My hovercraft is full of eels.' > hover
 ## MaryTTS Compatibility
 
 Use the  Mimic 3 web server as a drop-in replacement for [MaryTTS](http://mary.dfki.de/), for example with [Home Assistant](https://www.home-assistant.io/integrations/marytts/).
-Make sure to use a compatible [voice key](#voice-keys).
+
+Make sure to use a compatible [voice key](#voice-keys) like `en_UK/apope_low`.
 
 
 ## SSML
 
-A [subset of SSML](mimic3-tts/#SSML) is supported.
+A [subset of SSML](mimic3-tts/#SSML) (Speech Synthesis Markup Language) is supported.
 
 For example:
 

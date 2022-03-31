@@ -11,12 +11,148 @@ A fast and local neural text to speech system for [Mycroft](https://mycroft.ai/)
 ### mimic3
 
 
+#### Basic Synthesis
+
+```sh
+mimic3 --voice <voice> "<text>" > output.wav
+```
+
+where `<voice>` is a [voice key](https://github.com/MycroftAI/mimic3/#voice-keys) like `en_UK/apope_low`.
+`<TEXT>` may contain multiple sentences, which will be combined in the final output WAV file. These can also be [split into separate WAV files](#multiple-wav-output).
+
+
+#### SSML Synthesis
+
+```sh
+mimic3 --ssml --voice <voice> "<ssml>" > output.wav
+```
+
+where `<ssml>` is valid [SSML](https://www.w3.org/TR/speech-synthesis11/). Not all SSML features are supported, see [the documentation](#ssml) for details.
+
+If your SSML contains `<mark>` tags, add `--mark-file <file>` to the command-line and use `--interactive` mode. As the marks are encountered, their names will be written on separate lines to the file:
+
+```sh
+mimic3 --ssml --interactive --mark-file - '<speak>Test 1. <mark name="here" /> Test 2.</speak>'
+```
+
+
+#### Long Texts
+
+If your text is very long, and you would like to listen to it as its being synthesized, use `--interactive` mode:
+
+```sh
+mimic3 --interactive < long.txt
+```
+
+Each input line will be synthesized and played (see `--play-program`). By default, 5 sentences will be kept in an output queue, only blocking synthesis when the queue is full. You can adjust this value with `--result-queue-size`.
+
+If your long text is fixed-width with blank lines separating paragraphs like those from [Project Gutenberg](https://www.gutenberg.org/), use the `--process-on-blank-line` option so that sentences will not be broken at line boundaries. For example, you can listen to "Alice in Wonderland" like this:
+
+```sh
+curl --output - 'https://www.gutenberg.org/files/11/11-0.txt' | \
+    mimic3 --interactive --process-on-blank-line
+```
+
+
+#### Multiple WAV Output
+
+With `--output-dir` set to a directory, Larynx will output a separate WAV file for each sentence:
+
+```sh
+mimic3 'Test 1. Test 2.' --output-dir /path/to/wavs
+```
+
+By default, each WAV file will be named using the (slightly modified) text of the sentence. You can have WAV files named using a timestamp instead with `--output-naming time`. For full control of the output naming, the `--csv` command-line flag indicates that each sentence is of the form `id|text` where `id` will be the name of the WAV file.
+
+```sh
+cat << EOF |
+s01|The birch canoe slid on the smooth planks.
+s02|Glue the sheet to the dark blue background.
+s03|It's easy to tell the depth of a well.
+s04|These days a chicken leg is a rare dish.
+s05|Rice is often served in round bowls.
+s06|The juice of lemons makes fine punch.
+s07|The box was thrown beside the parked truck.
+s08|The hogs were fed chopped corn and garbage.
+s09|Four hours of steady work faced us.
+s10|Large size in stockings is hard to sell.
+EOF
+  mimic3 --csv --output-dir /path/to/wavs
+```
+
+You can adjust the delimiter with `--csv-delimiter <delimiter>`.
+
+Additionally, you can use the `--csv-voice` option to specify a different voice or speaker for each line:
+
+```sh
+cat << EOF |
+s01|#awb|The birch canoe slid on the smooth planks.
+s02|#rms|Glue the sheet to the dark blue background.
+s03|#slt|It's easy to tell the depth of a well.
+s04|#ksp|These days a chicken leg is a rare dish.
+s05|#clb|Rice is often served in round bowls.
+s06|#aew|The juice of lemons makes fine punch.
+s07|#bdl|The box was thrown beside the parked truck.
+s08|#lnh|The hogs were fed chopped corn and garbage.
+s09|#jmk|Four hours of steady work faced us.
+s10|en_UK/apope_low|Large size in stockings is hard to sell.
+EOF
+  mimic3 --voice 'en_US/cmu-arctic_low' --csv-voice --output-dir /path/to/wavs
+```
+
+The second contain can contain a `#<speaker>` or an entirely different voice!
+
+
+#### Interactive Mode
+
+With `--interactive`, Mimic 3 will switch into interactive mode. After entering a sentence, it will be played with `--play-program`.
+
+```sh
+mimic3 --interactive
+Reading text from stdin...
+Hello world!<ENTER>
+```
+
+Use `CTRL+D` or `CTRL+C` to exit.
+
+
+#### Noise and Length Settings
+
+Synthesis has the following additional parameters:
+
+* `--noise-scale` and `--noise-w`
+    * Determine the speaker volatility during synthesis
+    * 0-1, default is 0.667 and 0.8 respectively
+* `--length-scale` - makes the voice speaker slower (> 1) or faster (< 1)
+
+Individual voices have default settings for these parameters in their `config.json` files (under `inference`).
+
+
+#### List Voices
+
+```sh
+mimic3 --voices
+```
+
+
 ### mimic3-download
+
+Mimic 3 automatically downloads voices when they're first used, but you can manually download them too with `mimic3-download`.
+
+For example:
+
+``` sh
+mimic3-download 'en_US/*'
+```
+
+will download all U.S. English voices to `${HOME}/.local/share/mimic3` (technically `${XDG_DATA_HOME}/mimic3`).
+
+See `mimic3-download --help` for more options.
 
 
 ## SSML
 
-A subset of [SSML](https://www.w3.org/TR/speech-synthesis11/) is supported:
+A subset of [SSML](https://www.w3.org/TR/speech-synthesis11/) (Speech Synthesis Markup Language) is supported:
 
 * `<speak>` - wrap around SSML text
     * `lang` - set language for document
@@ -35,6 +171,15 @@ A subset of [SSML](https://www.w3.org/TR/speech-synthesis11/) is supported:
 * `<break time="">` - Pause for given amount of time
     * time - seconds ("123s") or milliseconds ("123ms")
 * `<sub alias="">` - substitute `alias` for inner text
+* `<phoneme ph="">` - supply phonemes for inner text
+    * See `phonemes.txt` in voice directory for available phonemes
+    * Phonemes may need to be separated by whitespace
+
+SSML `<say-as>` support varies between voice types:
+
+* [gruut](https://github.com/rhasspy/gruut/#ssml)
+* [eSpeak-ng](http://espeak.sourceforge.net/ssml.html)
+* Character-based voices do not currently support `<say-as>`
 
 
 ## Architecture
@@ -47,6 +192,8 @@ Our implementation is heavily based on [Jaehyeon Kim's PyTorch model](https://gi
 ### gruut Phoneme-based Voices
 
 Voices that use [gruut](https://github.com/rhasspy/gruut/) for phonemization.
+
+gruut phonemizes words according to a lexicon, with a pre-trained grapheme-to-phoneme model used to guess unknown word pronunciations.
 
 
 ### eSpeak Phoneme-based Voices
