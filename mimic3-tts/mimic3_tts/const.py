@@ -17,8 +17,8 @@ from pathlib import Path
 
 from xdgenvpy import XDG
 
-DEFAULT_VOICE = "en_US/vctk_low"
-DEFAULT_LANGUAGE = "en_US"
+DEFAULT_VOICE = "en_UK/apope_low"
+DEFAULT_LANGUAGE = "en_UK"
 DEFAULT_VOICES_URL_FORMAT = (
     "https://github.com/MycroftAI/mimic3-voices/raw/master/voices/{lang}/{name}"
 )
