@@ -1,5 +1,7 @@
 # Mimic 3
 
+![mimic 3 mark 2](img/mimic3-mark-ii.png)
+
 A fast and local neural text to speech system for [Mycroft](https://mycroft.ai/) and the [Mark II](https://mycroft.ai/product/mark-ii/).
 
 [Available voices](https://github.com/MycroftAI/mimic3-voices)
@@ -25,6 +27,7 @@ Some voices depend on [eSpeak-ng](https://github.com/espeak-ng/espeak-ng), speci
 sudo apt-get install libespeak-ng1
 ```
 
+
 ### Mycroft TTS Plugin
 
 Install the plugin:
@@ -36,7 +39,7 @@ mycroft-pip install plugin-tts-mimic3[all]
 Enable the plugin in your [mycroft.conf](https://mycroft-ai.gitbook.io/docs/using-mycroft-ai/customizations/mycroft-conf) file:
 
 ``` sh
-mycroft-conf set tts.module mimic3_tts_plug
+mycroft-config set tts.module mimic3_tts_plug
 ```
 
 See the [plugin's documentation](https://github.com/MycroftAI/plugin-tts-mimic3) for more options.
@@ -47,7 +50,7 @@ See the [plugin's documentation](https://github.com/MycroftAI/plugin-tts-mimic3)
 Install the command-line tool:
 
 ``` sh
-pip install mimic3[all]
+pip install mimic3-tts[all]
 ```
 
 Once installed, the following commands will be available:
@@ -110,9 +113,10 @@ Mimic 3 references voices with the format:
     * `<speaker>` can be a name or number starting at 0
     * Speaker names come from a voice's `speakers.txt` file
     
-For example, the default [Alan Pope](https://popey.me/) voice key is `en_UK/apope_low`. The [CMU Arctic voice](https://github.com/MycroftAI/mimic3-voices/tree/master/voices/en_US/cmu-arctic_low) contains multiple speakers, with a commonly used voice being `en_US/cmu-arctic_low#slt`.
+For example, the default [Alan Pope](https://popey.me/) voice key is `en_UK/apope_low`. 
+The [CMU Arctic voice](https://github.com/MycroftAI/mimic3-voices/tree/master/voices/en_US/cmu-arctic_low) contains multiple speakers, with a commonly used voice being `en_US/cmu-arctic_low#slt`.
 
-Voices are automatically downloaded from [Github](https://github.com/MycroftAI/mimic3-voices) and stored in `${HOME}/.local/share/mimic3` (technically `${XDG_DATA_HOME}/mimic3`).
+Voices are automatically downloaded from [Github](https://github.com/MycroftAI/mimic3-voices) and stored in `${HOME}/.local/share/mimic3` (technically `${XDG_DATA_HOME}/mimic3`). You can also [manually download them](#downloading-voices).
 
 
 ## Running
