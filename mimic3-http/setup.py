@@ -80,13 +80,22 @@ setup(
     author_email="michael.hansen@mycroft.ai",
     license="AGPLv3+",
     packages=setuptools.find_packages(),
-    package_data={"mimic3_http": ["VERSION", "py.typed", "templates", "css", "img"]},
+    package_data={
+        "mimic3_http": [
+            "VERSION",
+            "py.typed",
+            "templates",
+            "css",
+            "img",
+            "swagger.yaml",
+        ]
+    },
     install_requires=requirements,
     extras_require={':python_version<"3.9"': ["importlib_resources"], **extras_require},
     entry_points={
         "console_scripts": [
             "mimic3-server = mimic3_http.__main__:main",
-            "mimic3-client = mimic3_http.client.__main__:main",
+            "mimic3-client = mimic3_http.client:main",
         ]
     },
     classifiers=[

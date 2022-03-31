@@ -2,3 +2,4 @@ mimic3-tts<1.0
 quart>=0.16,<1.0
 quart-cors
 requests>=2,<3
+swagger-ui-py>=21,<22

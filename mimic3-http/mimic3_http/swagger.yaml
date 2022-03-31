@@ -1,0 +1,46 @@
+openapi: "3.0.0"
+info:
+  title: 'Mimic 3'
+  version: '0.1'
+  description: 'A fast and local neural text to speech system for Mycroft'
+schemes:
+  - http
+servers:
+  - url: http://localhost:59125
+    description: Local server
+paths:
+  /api/tts:
+    get:
+      summary: 'Speak text to WAV'
+      parameters:
+        - in: query
+          name: voice
+          required: true
+          description: 'Voice in the form <lang>/<name>_<quality> optional with #<speaker> at the end'
+          schema:
+            type: string
+            example: 'en_UK/apope_low'
+        - in: query
+          name: text
+          required: true
+          description: 'Text to speak'
+          schema:
+            type: string
+            example: 'Welcome to the world of speech synthesis!'
+      produces:
+        - audio/wav
+      responses:
+        '200':
+          description: audio
+          schema:
+            type: binary
+  /api/voices:
+    get:
+      summary: 'Get available voices'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: voices
+          schema:
+            type: object

@@ -36,6 +36,7 @@ from quart import (
     request,
     send_from_directory,
 )
+from swagger_ui import api_doc
 
 from ._resources import _DIR, _PACKAGE
 from .args import _MISSING
@@ -272,6 +273,11 @@ def get_app(args: argparse.Namespace, mimic3: Mimic3TextToSpeechSystem, temp_dir
         )
 
         return Response(wav_bytes, mimetype="audio/wav")
+
+    # Swagger UI
+    api_doc(
+        app, config_path=_DIR / "swagger.yaml", url_prefix="/openapi", title="Mimic 3"
+    )
 
     @app.errorhandler(Exception)
     async def handle_error(err) -> typing.Tuple[str, int]:
