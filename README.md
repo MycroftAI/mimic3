@@ -112,7 +112,7 @@ Mimic 3 references voices with the format:
     
 For example, the default [Alan Pope](https://popey.me/) voice key is `en_UK/apope_low`. The [CMU Arctic voice](https://github.com/MycroftAI/mimic3-voices/tree/master/voices/en_US/cmu-arctic_low) contains multiple speakers, with a commonly used voice being `en_US/cmu-arctic_low#slt`.
 
-Voices are automatically downloaded from [Github](https://github.com/MycroftAI/mimic3-voices) and stored in `${HOME}/.local/share/mimic3`
+Voices are automatically downloaded from [Github](https://github.com/MycroftAI/mimic3-voices) and stored in `${HOME}/.local/share/mimic3` (technically `${XDG_DATA_HOME}/mimic3`).
 
 
 ## Running
@@ -128,15 +128,88 @@ mimic3 --voice 'en_UK/apope_low' 'My hovercraft is full of eels.' > hovercraft_e
 
 See [voice keys](#voice-keys) for how to reference voices and speakers.
 
-See `mimic3 --help` or the [CLI documentation](mimic3-tts/README.md) for more details.
+See `mimic3 --help` or the [CLI documentation](mimic3-tts/) for more details.
+
+
+#### Downloading Voices
+
+Mimic 3 automatically downloads voices when they're first used, but you can manually download them too with `mimic3-download`.
+
+For example:
+
+``` sh
+mimic3-download 'en_US/*'
+```
+
+will download all U.S. English voices to `${HOME}/.local/share/mimic3`.
+
+See `mimic3-download --help` for more options.
 
 
 ### Web Server and Client
 
+Start a web server with `mimic3-server` and visit `http://localhost:59125` to view the web UI.
+
+The following endpoints are available:
+
+* `/api/tts`
+    * `POST` text or [SSML](#ssml) and receive WAV audio back
+    * Use `?voice=` to select a different [voice/speaker](#voice-keys)
+    * Set `Content-Type` to `application/ssml+xml` (or use `?ssml=1`) for [SSML](#ssml) input
+* `/api/voices`
+    * Returns a JSON list of available voices
+    
+An [OpenAPI](https://www.openapis.org/) test page is also available at `http://localhost:59125/openapi`
+
+See `mimic3-server --help` for the [web server documentation](mimic3-http/) for more details.
+
+
+#### Web Client
+
+The `mimic3-client` program provides an interface to the Mimic 3 web server that is similar to the `mimic3` command.
+
+Assuming you have started `mimic3-server` and can access `http://localhost:59125`, then:
+
+``` sh
+mimic3-client --voice 'en_UK/apope_low' 'My hovercraft is full of eels.' > hovercraft_eels.wav
+```
+
+
+## MaryTTS Compatibility
+
+Use the  Mimic 3 web server as a drop-in replacement for [MaryTTS](http://mary.dfki.de/), for example with [Home Assistant](https://www.home-assistant.io/integrations/marytts/).
+Make sure to use a compatible [voice key](#voice-keys).
+
 
 ## SSML
 
-A [subset of SSML](mimic3-tts/README.md#SSML) is supported.
+A [subset of SSML](mimic3-tts/#SSML) is supported.
+
+For example:
+
+``` xml
+<speak>
+  <voice name="en_UK/apope">
+    <s>
+      Welcome to the world of speech synthesis.
+    </s>
+  </voice>
+  <break time="3s" />
+  <voice name="en_US/cmu-arctic#slt">
+    <s>
+      This is a <say-as interpret-as="number" format="ordinal">2</say-as> voice.
+    </s>
+  </voice>
+</speak>
+```
+
+will speak the two sentences with different voices and a 3 second second pause in between. The second sentence will also have the number "2" pronounced as "second" (ordinal form).
+
+SSML `<say-as>` support varies between voice types:
+
+* [gruut](https://github.com/rhasspy/gruut/#ssml)
+* [eSpeak-ng](http://espeak.sourceforge.net/ssml.html)
+* Character-based voices do not currently support `<say-as>`
 
 
 ## License
