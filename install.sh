@@ -31,7 +31,7 @@ pip3 ${PIP_INSTALL} -e "${this_dir}/opentts-abc"
 
 # Include support for languages besides English
 pushd "${this_dir}/mimic3-tts" 2>/dev/null
-pip3 ${PIP_INSTALL} -e '.[de,fr,it,nl,ru,sw]'
+pip3 ${PIP_INSTALL} -e '.[all]'
 popd 2>/dev/null
 
 pip3 ${PIP_INSTALL} -e "${this_dir}/mimic3-http"
