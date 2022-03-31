@@ -56,7 +56,7 @@ curl --output - 'https://www.gutenberg.org/files/11/11-0.txt' | \
 
 #### Multiple WAV Output
 
-With `--output-dir` set to a directory, Larynx will output a separate WAV file for each sentence:
+With `--output-dir` set to a directory, Mimic 3 will output a separate WAV file for each sentence:
 
 ```sh
 mimic3 'Test 1. Test 2.' --output-dir /path/to/wavs

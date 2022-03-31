@@ -176,10 +176,12 @@ Assuming you have started `mimic3-server` and can access `http://localhost:59125
 mimic3-client --voice 'en_UK/apope_low' 'My hovercraft is full of eels.' > hovercraft_eels.wav
 ```
 
+See `mimic3-client --help` for more options.
+
 
 ## MaryTTS Compatibility
 
-Use the  Mimic 3 web server as a drop-in replacement for [MaryTTS](http://mary.dfki.de/), for example with [Home Assistant](https://www.home-assistant.io/integrations/marytts/).
+Use the Mimic 3 web server as a drop-in replacement for [MaryTTS](http://mary.dfki.de/), for example with [Home Assistant](https://www.home-assistant.io/integrations/marytts/).
 
 Make sure to use a compatible [voice key](#voice-keys) like `en_UK/apope_low`.
 
