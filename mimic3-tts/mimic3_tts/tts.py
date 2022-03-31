@@ -262,7 +262,7 @@ class Mimic3TextToSpeechSystem(TextToSpeechSystem):
             # Clear speaker on voice change
             self.speaker = None
 
-        self.settings.voice = new_voice
+        self.settings.voice = new_voice or DEFAULT_VOICE
 
         if "#" in self.settings.voice:
             # Split

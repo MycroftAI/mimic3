@@ -15,18 +15,22 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-# Run mimic3-download --update to update Docker image
+# Run mimic3-client --update to update Docker image
 
 args=()
 repo='mycroftai/mimic3'
 tag='latest'
 docker='docker'
+port='59125'
 
 while [[ -n "$1" ]]; do
     if [[ "$1" == '--update' ]]; then
         # Update Docker image
         update='1'
-        args+=("$1")
+    elif [[ "$1" == '--port' ]]; then
+        port="$2"
+        args+=('--port' "${port}")
+        shift 1
     else
         args+=("$1")
     fi
@@ -66,12 +70,13 @@ fi
 
 "${docker}" run \
             -i \
+            --network host \
             -e "HOME=${HOME}" \
             -v "$HOME:${HOME}" \
             -w "${PWD}" \
-            --device /dev/snd:/dev/snd \
             --user "$(id -u):$(id -g)" "${docker_run_args[@]}" \
             --entrypoint '/home/mimic3/app/.venv/bin/python3' \
             "${repo}:${tag}" \
-            -m mimic3_tts.download \
+            -m mimic3_http.client \
+            --stdout \
             "${args[@]}"

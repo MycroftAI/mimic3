@@ -485,7 +485,7 @@ def get_args():
     parser.add_argument(
         "--interactive",
         action="store_true",
-        help="Play audio after each input line (see --play-command)",
+        help="Play audio after each input line (see --play-program)",
     )
     parser.add_argument("--csv", action="store_true", help="Input format is id|text")
     parser.add_argument(

@@ -15,6 +15,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 import argparse
+import subprocess
+import shlex
+import shutil
 import logging
 import os
 import sys
@@ -27,6 +30,8 @@ import requests
 _PACKAGE = "mimic3_http.client"
 
 _LOGGER = logging.getLogger(_PACKAGE)
+
+_DEFAULT_PLAY_PROGRAMS = ["paplay", "play -q", "aplay -q"]
 
 # -----------------------------------------------------------------------------
 
@@ -76,14 +81,26 @@ def main():
         _LOGGER.debug("Writing WAV data to stdout")
         sys.stdout.buffer.write(wav_bytes)
     else:
-        from playsound import playsound
+        play_wav_bytes(args, wav_bytes)
 
-        with tempfile.NamedTemporaryFile(mode="wb+", suffix=".wav") as wav_file:
-            wav_file.write(wav_bytes)
-            wav_file.seek(0)
 
-            _LOGGER.debug("Playing WAV file: %s", wav_file.name)
-            playsound(wav_file.name)
+# -----------------------------------------------------------------------------
+
+
+def play_wav_bytes(args: argparse.Namespace, wav_bytes: bytes):
+    with tempfile.NamedTemporaryFile(mode="wb+", suffix=".wav") as wav_file:
+        wav_file.write(wav_bytes)
+        wav_file.seek(0)
+
+        for play_program in reversed(args.play_program):
+            play_cmd = shlex.split(play_program)
+            if not shutil.which(play_cmd[0]):
+                continue
+
+            play_cmd.append(wav_file.name)
+            _LOGGER.debug("Playing WAV file: %s", play_cmd)
+            subprocess.check_output(play_cmd)
+            break
 
 
 # -----------------------------------------------------------------------------
@@ -101,24 +118,16 @@ def get_args() -> argparse.Namespace:
         help="URL of mimic3 HTTP server (default: http://localhost:59125/api/tts)",
     )
     parser.add_argument(
-        "--voice",
-        "-v",
-        help="Name of voice (expected in <voices-dir>/<language>)",
+        "--voice", "-v", help="Name of voice (expected in <voices-dir>/<language>)",
     )
     parser.add_argument(
-        "--output",
-        "-o",
-        help="Path to write WAV file (default: play audio)",
+        "--output", "-o", help="Path to write WAV file (default: play audio)",
     )
     parser.add_argument(
-        "--stdout",
-        action="store_true",
-        help="Write WAV data to stdout",
+        "--stdout", action="store_true", help="Write WAV data to stdout",
     )
     parser.add_argument(
-        "--noise-scale",
-        type=float,
-        help="Noise scale [0-1], default is 0.667",
+        "--noise-scale", type=float, help="Noise scale [0-1], default is 0.667",
     )
     parser.add_argument(
         "--length-scale",
@@ -126,9 +135,13 @@ def get_args() -> argparse.Namespace:
         help="Length scale (1.0 is default speed, 0.5 is 2x faster)",
     )
     parser.add_argument(
-        "--noise-w",
-        type=float,
-        help="Variation in cadence [0-1], default is 0.8",
+        "--noise-w", type=float, help="Variation in cadence [0-1], default is 0.8",
+    )
+    parser.add_argument(
+        "--play-program",
+        action="append",
+        default=_DEFAULT_PLAY_PROGRAMS,
+        help="Program(s) used to play WAV files",
     )
     parser.add_argument("--ssml", action="store_true", help="Input text is SSML")
     parser.add_argument(

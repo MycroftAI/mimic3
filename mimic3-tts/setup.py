@@ -53,9 +53,7 @@ for lang in [
     "fr",
     "it",
     "nl",
-    "pt",
     "ru",
-    "sv",
     "sw",
 ]:
     extras[f"gruut[{lang}]"] = [lang]
