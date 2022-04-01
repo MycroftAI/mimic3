@@ -15,6 +15,7 @@
 #
 import csv
 import logging
+import platform
 import time
 import typing
 from abc import ABCMeta, abstractmethod
@@ -242,7 +243,15 @@ class Mimic3Voice(metaclass=ABCMeta):
         _LOGGER.debug("Loading model from %s", generator_path)
 
         # Load onnx model
-        session_options = session_options or onnxruntime.SessionOptions()
+        if session_options is None:
+            session_options = onnxruntime.SessionOptions()
+
+            if platform.machine() == "armv7l":
+                # Enabling optimizations on 32-bit ARM crashes
+                session_options.graph_optimization_level = (
+                    onnxruntime.GraphOptimizationLevel.ORT_DISABLE_ALL
+                )
+
         onnx_model = onnxruntime.InferenceSession(
             str(generator_path), sess_options=session_options
         )
