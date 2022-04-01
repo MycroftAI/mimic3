@@ -349,7 +349,11 @@ def process_line(
 
     for result in results:
         state.result_queue.put(
-            ResultToProcess(result=result, line=line, line_id=line_id,)
+            ResultToProcess(
+                result=result,
+                line=line,
+                line_id=line_id,
+            )
         )
 
     # Restore voice/speaker
@@ -477,10 +481,14 @@ def get_args():
         help="Format of stdin text (default: auto)",
     )
     parser.add_argument(
-        "--voice", "-v", help="Name of voice (expected in <voices-dir>/<language>)",
+        "--voice",
+        "-v",
+        help="Name of voice (expected in <voices-dir>/<language>)",
     )
     parser.add_argument(
-        "--speaker", "-s", help="Name or number of speaker (default: first speaker)",
+        "--speaker",
+        "-s",
+        help="Name or number of speaker (default: first speaker)",
     )
     parser.add_argument(
         "--voices-dir",
@@ -520,7 +528,9 @@ def get_args():
     )
 
     parser.add_argument(
-        "--noise-scale", type=float, help="Noise scale [0-1], default is 0.667",
+        "--noise-scale",
+        type=float,
+        help="Noise scale [0-1], default is 0.667",
     )
     parser.add_argument(
         "--length-scale",
@@ -528,7 +538,9 @@ def get_args():
         help="Length scale (1.0 is default speed, 0.5 is 2x faster)",
     )
     parser.add_argument(
-        "--noise-w", type=float, help="Variation in cadence [0-1], default is 0.8",
+        "--noise-w",
+        type=float,
+        help="Variation in cadence [0-1], default is 0.8",
     )
 
     # Miscellaneous

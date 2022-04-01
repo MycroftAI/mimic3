@@ -69,7 +69,7 @@ class Mimic3Settings:
     voices_directories: typing.Optional[typing.Iterable[typing.Union[str, Path]]] = None
     """Directories to search for voices (<lang>/<voice>)"""
 
-    voices_url_format: str = DEFAULT_VOICES_URL_FORMAT
+    voices_url_format: typing.Optional[str] = DEFAULT_VOICES_URL_FORMAT
     """URL format string for a voice directory.
 
     May contain:
@@ -238,7 +238,7 @@ class Mimic3TextToSpeechSystem(TextToSpeechSystem):
                 description="",
                 speakers=speakers,
                 location=str.format(
-                    self.settings.voices_url_format,
+                    self.settings.voices_url_format or DEFAULT_VOICES_URL_FORMAT,
                     lang=voice_lang,
                     name=voice_name,
                     key=voice_key,
@@ -471,7 +471,7 @@ class Mimic3TextToSpeechSystem(TextToSpeechSystem):
         voice_lang, voice_name = voice_key.split("/", maxsplit=1)
         voice_info = _VOICES[voice_key]
         voice_url = str.format(
-            self.settings.voices_url_format,
+            self.settings.voices_url_format or DEFAULT_VOICES_URL_FORMAT,
             key=voice_key,
             lang=voice_lang,
             name=voice_name,
