@@ -1,0 +1,9 @@
+[Unit]
+Description=Run Mimic 3 web server
+Documentation=https://github.com/MycroftAI/mimic3
+
+[Service]
+ExecStart=/path/to/mimic3-server
+
+[Install]
+WantedBy=default.target

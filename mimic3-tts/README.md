@@ -182,6 +182,84 @@ SSML `<say-as>` support varies between voice types:
 * Character-based voices do not currently support `<say-as>`
 
 
+## Speech Dispatcher
+
+Mimic 3 can be used with the [Orca screen reader](https://help.gnome.org/users/orca/stable/) for Linux via [speech-dispatcher](https://github.com/brailcom/speechd).
+
+After [installing Mimic 3](https://github.com/MycroftAI/mimic3/#installation), make sure you also have speech-dispatcher installed:
+
+``` sh
+sudo apt-get install speech-dispatcher
+```
+
+Create the file `/etc/speech-dispatcher/modules/mimic3-generic.conf` with the contents:
+
+``` text
+GenericExecuteSynth "printf %s \'$DATA\' | /path/to/mimic3-client --voice \'$VOICE\' --stdout | $PLAY_COMMAND"
+AddVoice "en-us" "MALE1" "en_UK/apope_low"
+```
+
+You will need `sudo` access to do this. Make sure to change `/path/to/mimic3-client` to wherever you installed Mimic 3.
+
+To change the voice later, you only need to replace `en_UK/apope_low`.
+
+Next, edit the existing file `/etc/speech-dispatcher/speechd.conf` and ensure the following settings are present:
+
+``` text
+DefaultVoiceType  "MALE1"
+DefaultModule mimic3-generic
+```
+
+Restart speech-dispatcher with:
+
+``` sh
+sudo systemd restart speech-dispatcher
+```
+
+and test it out with:
+
+``` sh
+spd-say 'Hello from speech dispatcher.'
+```
+
+
+### Systemd Service
+
+To ensure that Mimic 3 runs at boot, create a systemd service at `$HOME/.config/systemd/user/mimic3.service` with the contents:
+
+``` text
+[Unit]
+Description=Run Mimic 3 web server
+Documentation=https://github.com/MycroftAI/mimic3
+
+[Service]
+ExecStart=/path/to/mimic3-server
+
+[Install]
+WantedBy=default.target
+```
+
+Make sure to change `/path/to/mimic3-server` to wherever you installed Mimic 3.
+
+Refresh the systemd services:
+
+``` sh
+systemd --user daemon-reload
+```
+
+Now try starting the service:
+
+``` sh
+systemd --user start mimic3
+```
+
+If that's successful, ensure it starts at boot:
+
+``` sh
+systemd --user enable mimic3
+```
+
+
 ## Architecture
 
 Mimic 3 uses the [VITS](https://arxiv.org/abs/2106.06103), a "Conditional Variational Autoencoder with Adversarial Learning for End-to-End Text-to-Speech". VITS is a combination of the [GlowTTS duration predictor](https://arxiv.org/abs/2005.11129) and the [HiFi-GAN vocoder](https://arxiv.org/abs/2010.05646).

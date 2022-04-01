@@ -7,6 +7,15 @@ A fast and local neural text to speech system for [Mycroft](https://mycroft.ai/)
 [Available voices](https://github.com/MycroftAI/mimic3-voices)
 
 
+## Use Cases
+
+* [Mycroft TTS plugin](#mycroft-tts-plugin)
+* [Web server](#web-server-and-client)
+    * Drop-in [replacement for MaryTTS](#marytts-compatibility)
+* [Command-line tool](#command-line-tools)
+* [Voice for screen reader](mimic3-tts/#speech-dispatcher)
+
+
 ## Dependencies
 
 Mimic 3 requires:
