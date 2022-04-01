@@ -343,8 +343,8 @@ class Mimic3TextToSpeechSystem(TextToSpeechSystem):
 
     def add_break(self, time_ms: int):
         # Generate silence (16-bit mono at sample rate)
-        num_bytes = int((time_ms / 1000.0) * self.settings.sample_rate * 2)
-        audio_bytes = bytes(num_bytes)
+        num_samples = int((time_ms / 1000.0) * self.settings.sample_rate)
+        audio_bytes = bytes(num_samples * 2)
 
         self._results.append(
             AudioResult(
