@@ -44,6 +44,7 @@ COPY ./ ./
 
 # Install mimic3
 RUN --mount=type=cache,id=pip-venv,target=/root/.cache/pip \
+    PIP_INSTALL='install -f https://synesthesiam.github.io/prebuilt-apps/' \
     ./install.sh
 
 # Install PyInstaller
@@ -57,7 +58,6 @@ RUN .venv/bin/pyinstaller \
     --hidden-import 'pycrfsuite._dumpparser' \
     --hidden-import 'pycrfsuite._logparser' \
     --collect-binaries 'onnxruntime' \
-    --add-binary "$(/sbin/ldconfig -p | grep libespeak-ng.so.1 | awk '{print $4}'):." \
     --collect-data 'gruut' \
     --hidden-import "gruut_lang_de" \
     --collect-data "gruut_lang_de" \
@@ -85,7 +85,6 @@ RUN .venv/bin/pyinstaller \
     --hidden-import 'pycrfsuite._dumpparser' \
     --hidden-import 'pycrfsuite._logparser' \
     --collect-binaries 'onnxruntime' \
-    --add-binary "$(/sbin/ldconfig -p | grep libespeak-ng.so.1 | awk '{print $4}'):." \
     --collect-data 'gruut' \
     --hidden-import "gruut_lang_de" \
     --collect-data "gruut_lang_de" \
@@ -103,6 +102,7 @@ RUN .venv/bin/pyinstaller \
     --collect-data "gruut_lang_sw" \
     --collect-data 'espeak_phonemizer' \
     --collect-data 'phonemes2ids' \
+    --hidden-import 'swagger-ui-py' \
     --collect-data 'mimic3_tts' \
     --collect-data 'mimic3_http' \
     pyinstaller/mimic3_server.py

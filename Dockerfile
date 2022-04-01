@@ -44,6 +44,7 @@ COPY ./ ./
 
 # Install mimic3
 RUN --mount=type=cache,id=pip-requirements,target=/root/.cache/pip \
+    PIP_INSTALL='install -f https://synesthesiam.github.io/prebuilt-apps/' \
     ./install.sh
 
 # -----------------------------------------------------------------------------
