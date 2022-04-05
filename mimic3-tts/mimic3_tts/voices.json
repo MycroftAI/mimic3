@@ -63,6 +63,36 @@
         "speakers": [],
         "properties": {}
     },
+    "en_UK/apope_low": {
+        "files": {
+            "LICENSE": {
+                "size_bytes": 46,
+                "sha256_sum": "2fb2b744e6d96a2e3137d58121670b005718c736d5dde1832c99ff9073f64c00"
+            },
+            "README.md": {
+                "size_bytes": 155,
+                "sha256_sum": "2e6c39454c35910c6b48518523429ec2e4f27ae8eb763e311877a017db23d4da"
+            },
+            "config.json": {
+                "size_bytes": 3434,
+                "sha256_sum": "1fdaa1124e02cc177eb776fbc6e08c838b56bd2e86c82d8d7fe434d9337806b0"
+            },
+            "generator.onnx": {
+                "size_bytes": 62792219,
+                "sha256_sum": "0b5a323500ebd022351db12da2b3aab8cdd47d0826d173e780a58b93604618c9"
+            },
+            "phoneme_map.txt": {
+                "size_bytes": 15,
+                "sha256_sum": "4003f421fc91ed1d5a343442659db6cf9d58bd1c6d8d771abc1999cc24d7694d"
+            },
+            "phonemes.txt": {
+                "size_bytes": 263,
+                "sha256_sum": "8f9c3e6ced14d7fc5426e4e1bc7f7cc1037a20a645ca34110abcb76148fa8bfd"
+            }
+        },
+        "speakers": [],
+        "properties": {}
+    },
     "en_US/cmu-arctic_low": {
         "files": {
             "LICENSE": {
@@ -497,6 +527,40 @@
             "phonemes.txt": {
                 "size_bytes": 256,
                 "sha256_sum": "d8d8f00e1b855c92cbc53f442166f2b4c20d898777f8d754a93eb074d0b218e0"
+            }
+        },
+        "speakers": [],
+        "properties": {}
+    },
+    "nl/nathalie_low": {
+        "files": {
+            "LICENSE": {
+                "size_bytes": 7049,
+                "sha256_sum": "7179683e8000e6bdc9bbc60d85edf0a4ac8e76f951857f54fcb775d5886f1309"
+            },
+            "README.md": {
+                "size_bytes": 180,
+                "sha256_sum": "15e74dbbdadc8bf7c3a84b1b130f6e5df5f37ffe82880703b27d92e11cff1af8"
+            },
+            "SOURCE": {
+                "size_bytes": 50,
+                "sha256_sum": "6422e7d891e0d77db7a7cd9643bc8cff4c26f47d652b83b651a0179682ce65c7"
+            },
+            "config.json": {
+                "size_bytes": 3604,
+                "sha256_sum": "e8e1acf414067657bd377965eb822c51f55483e2ad9a498398e473b0eae4c137"
+            },
+            "generator.onnx": {
+                "size_bytes": 62800663,
+                "sha256_sum": "1707e33a94538529009c28d0da2a99fe81aa15bd7bb4c2252b3ace0ab704fa71"
+            },
+            "phoneme_map.txt": {
+                "size_bytes": 21,
+                "sha256_sum": "18b9c5fe46201cd5b0b20e88dc78c64ef3bcaaf87a428386420757f2d0bf7bb3"
+            },
+            "phonemes.txt": {
+                "size_bytes": 336,
+                "sha256_sum": "355389fee04f97557232cdde7fb8d4cf03ae2aabd7b0b26ed5978ebbf6575dd4"
             }
         },
         "speakers": [],

@@ -44,7 +44,7 @@ from .const import (
     DEFAULT_VOICES_URL_FORMAT,
 )
 from .download import VoiceFile, download_voice
-from .voice import SPEAKER_TYPE, Mimic3Voice
+from .voice import SPEAKER_TYPE, BreakType, Mimic3Voice
 
 _DIR = Path(__file__).parent
 
@@ -293,14 +293,28 @@ class Mimic3TextToSpeechSystem(TextToSpeechSystem):
     def speak_text(self, text: str, text_language: typing.Optional[str] = None):
         voice = self._get_or_load_voice(self.voice)
 
-        for sent_phonemes in voice.text_to_phonemes(text, text_language=text_language):
+        minor_break_ms = voice.config.inference.major_break_ms
+        major_break_ms = voice.config.inference.major_break_ms
+
+        for sent_phonemes, break_type in voice.text_to_phonemes(
+            text, text_language=text_language
+        ):
+            # Utterances have start/end meta phonemes (usually ^ and $)
+            is_utterance = break_type != BreakType.NONE
+
             self._results.append(
                 Mimic3Phonemes(
                     current_settings=deepcopy(self.settings),
                     phonemes=sent_phonemes,
-                    is_utterance=False,
+                    is_utterance=is_utterance,
                 )
             )
+
+            # Add silence if using manual break intervals
+            if (break_type == BreakType.MAJOR) and (major_break_ms is not None):
+                self.add_break(major_break_ms)
+            elif (break_type == BreakType.MINOR) and (minor_break_ms is not None):
+                self.add_break(minor_break_ms)
 
     # pylint: disable=arguments-differ
     def speak_tokens(

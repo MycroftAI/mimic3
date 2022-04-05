@@ -15,11 +15,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 import argparse
-import subprocess
-import shlex
-import shutil
 import logging
 import os
+import shlex
+import shutil
+import subprocess
 import sys
 import tempfile
 import typing
@@ -118,16 +118,24 @@ def get_args() -> argparse.Namespace:
         help="URL of mimic3 HTTP server (default: http://localhost:59125/api/tts)",
     )
     parser.add_argument(
-        "--voice", "-v", help="Name of voice (expected in <voices-dir>/<language>)",
+        "--voice",
+        "-v",
+        help="Name of voice (expected in <voices-dir>/<language>)",
     )
     parser.add_argument(
-        "--output", "-o", help="Path to write WAV file (default: play audio)",
+        "--output",
+        "-o",
+        help="Path to write WAV file (default: play audio)",
     )
     parser.add_argument(
-        "--stdout", action="store_true", help="Write WAV data to stdout",
+        "--stdout",
+        action="store_true",
+        help="Write WAV data to stdout",
     )
     parser.add_argument(
-        "--noise-scale", type=float, help="Noise scale [0-1], default is 0.667",
+        "--noise-scale",
+        type=float,
+        help="Noise scale [0-1], default is 0.667",
     )
     parser.add_argument(
         "--length-scale",
@@ -135,7 +143,9 @@ def get_args() -> argparse.Namespace:
         help="Length scale (1.0 is default speed, 0.5 is 2x faster)",
     )
     parser.add_argument(
-        "--noise-w", type=float, help="Variation in cadence [0-1], default is 0.8",
+        "--noise-w",
+        type=float,
+        help="Variation in cadence [0-1], default is 0.8",
     )
     parser.add_argument(
         "--play-program",

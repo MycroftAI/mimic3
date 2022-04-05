@@ -19,6 +19,7 @@ import platform
 import time
 import typing
 from abc import ABCMeta, abstractmethod
+from enum import Enum
 from pathlib import Path
 from xml.sax.saxutils import escape as xmlescape
 
@@ -34,10 +35,19 @@ from mimic3_tts.utils import audio_float_to_int16
 
 # -----------------------------------------------------------------------------
 
+
+class BreakType(str, Enum):
+    NONE = "none"
+    MINOR = "minor"
+    MAJOR = "major"
+    UTTERANCE = "utterance"
+
+
 PHONEME_TYPE = str
 PHONEME_ID_TYPE = int
 WORD_PHONEMES_TYPE = typing.List[typing.List[PHONEME_TYPE]]
 PHONEME_MAP_TYPE = typing.Dict[PHONEME_TYPE, typing.List[PHONEME_TYPE]]
+TEXT_TO_PHONEMES_TYPE = typing.Iterable[typing.Tuple[WORD_PHONEMES_TYPE, BreakType]]
 
 SPEAKER_NAME_TYPE = str
 SPEAKER_ID_TYPE = int
@@ -47,6 +57,7 @@ SPEAKER_MAP_TYPE = typing.Dict[SPEAKER_NAME_TYPE, SPEAKER_ID_TYPE]
 DEFAULT_LANGUAGE = "en_US"
 
 _LOGGER = logging.getLogger(__name__)
+
 
 # -----------------------------------------------------------------------------
 
@@ -71,7 +82,7 @@ class Mimic3Voice(metaclass=ABCMeta):
     @abstractmethod
     def text_to_phonemes(
         self, text: str, text_language: typing.Optional[str] = None
-    ) -> typing.Iterable[WORD_PHONEMES_TYPE]:
+    ) -> TEXT_TO_PHONEMES_TYPE:
         """Convert text into phonemes"""
 
     def word_to_phonemes(
@@ -82,7 +93,7 @@ class Mimic3Voice(metaclass=ABCMeta):
     ) -> typing.List[PHONEME_TYPE]:
         """Convert a single word (with optional role) into phonemes"""
         word_phonemes = []
-        for sent_phonemes in self.text_to_phonemes(
+        for sent_phonemes, _break_type in self.text_to_phonemes(
             word_text, text_language=text_language
         ):
             for sent_word_phonemes in sent_phonemes:
@@ -99,7 +110,9 @@ class Mimic3Voice(metaclass=ABCMeta):
     ) -> WORD_PHONEMES_TYPE:
         """Speak a word or phrase with a specific interpretation/format"""
         word_phonemes = []
-        for sent_phonemes in self.text_to_phonemes(text, text_language=text_language):
+        for sent_phonemes, _break_type in self.text_to_phonemes(
+            text, text_language=text_language
+        ):
             word_phonemes.extend(sent_phonemes)
 
         return word_phonemes
@@ -318,12 +331,12 @@ class GruutVoice(Mimic3Voice):
 
     def text_to_phonemes(
         self, text: str, text_language: typing.Optional[str] = None
-    ) -> typing.Iterable[WORD_PHONEMES_TYPE]:
+    ) -> TEXT_TO_PHONEMES_TYPE:
         text_language = text_language or self.config.text_language or DEFAULT_LANGUAGE
         for sentence in gruut.sentences(text, lang=text_language):
             sent_phonemes = [w.phonemes for w in sentence if w.phonemes]
             if sent_phonemes:
-                yield sent_phonemes
+                yield sent_phonemes, BreakType.NONE
 
     def word_to_phonemes(
         self,
@@ -389,7 +402,7 @@ class EspeakVoice(Mimic3Voice):
 
     def text_to_phonemes(
         self, text: str, text_language: typing.Optional[str] = None
-    ) -> typing.Iterable[WORD_PHONEMES_TYPE]:
+    ) -> TEXT_TO_PHONEMES_TYPE:
         phoneme_separator = ""
         word_separator = self.config.phonemes.word_separator
 
@@ -406,11 +419,31 @@ class EspeakVoice(Mimic3Voice):
             punctuation_separator=phoneme_separator,
         )
 
-        word_phonemes = [
+        all_word_phonemes = [
             list(IPA.graphemes(wp_str)) for wp_str in phoneme_str.split(word_separator)
         ]
 
-        yield word_phonemes
+        minor_break = self.config.phonemes.minor_break
+        major_break = self.config.phonemes.major_break
+
+        if minor_break or major_break:
+            # Split on breaks
+            sent_phonemes = []
+            for word_phonemes in all_word_phonemes:
+                sent_phonemes.append(word_phonemes)
+
+                if minor_break and (word_phonemes[-1] == minor_break):
+                    yield sent_phonemes, BreakType.MINOR
+                    sent_phonemes = []
+                elif major_break and (word_phonemes[-1] == major_break):
+                    yield sent_phonemes, BreakType.MAJOR
+                    sent_phonemes = []
+
+            if sent_phonemes:
+                yield sent_phonemes, BreakType.MAJOR
+        else:
+            # No split
+            yield all_word_phonemes, BreakType.UTTERANCE
 
     def word_to_phonemes(
         self,
@@ -486,9 +519,9 @@ class SymbolsVoice(Mimic3Voice):
 
     def text_to_phonemes(
         self, text: str, text_language: typing.Optional[str] = None
-    ) -> typing.Iterable[WORD_PHONEMES_TYPE]:
+    ) -> TEXT_TO_PHONEMES_TYPE:
         word_separator = self.config.phonemes.word_separator
         word_phonemes = [
             list(IPA.graphemes(wp_str)) for wp_str in text.split(word_separator)
         ]
-        yield word_phonemes
+        yield word_phonemes, BreakType.NONE

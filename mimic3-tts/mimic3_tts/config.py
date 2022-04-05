@@ -29,6 +29,8 @@ from phonemes2ids import BlankBetween
 
 @dataclass
 class AudioConfig(DataClassJsonMixin):
+    """Audio input/output details"""
+
     filter_length: int = 1024
     hop_length: int = 256
     win_length: int = 1024
@@ -109,6 +111,8 @@ class AudioConfig(DataClassJsonMixin):
 
 @dataclass
 class ModelConfig(DataClassJsonMixin):
+    """TTS model hyperparameters"""
+
     num_symbols: int = 0
     n_speakers: int = 1
 
@@ -141,6 +145,8 @@ class ModelConfig(DataClassJsonMixin):
 
 @dataclass
 class PhonemesConfig(DataClassJsonMixin):
+    """Phonemes to ids configuration"""
+
     phoneme_separator: str = " "
     """Separator between individual phonemes in CSV input"""
 
@@ -185,21 +191,30 @@ class PhonemesConfig(DataClassJsonMixin):
 
 
 class Phonemizer(str, Enum):
+    """Method used to convert text to phonemes"""
+
     SYMBOLS = "symbols"
     GRUUT = "gruut"
     ESPEAK = "espeak"
 
 
 class Aligner(str, Enum):
+    """Text/audio aligner"""
+
     KALDI_ALIGN = "kaldi_align"
+    """https://github.com/rhasspy/kaldi-align"""
 
 
 class TextCasing(str, Enum):
+    """Casing method applied to text"""
+
     LOWER = "lower"
     UPPER = "upper"
 
 
 class MetadataFormat(str, Enum):
+    """Format of training metadata"""
+
     TEXT = "text"
     PHONEMES = "phonemes"
     PHONEME_IDS = "ids"
@@ -207,6 +222,8 @@ class MetadataFormat(str, Enum):
 
 @dataclass
 class DatasetConfig:
+    """Training dataset configuration"""
+
     name: str
     metadata_format: MetadataFormat = MetadataFormat.TEXT
     multispeaker: bool = False
@@ -228,19 +245,28 @@ class DatasetConfig:
 
 @dataclass
 class AlignerConfig:
+    """Text/audio alignment configuration"""
+
     aligner: typing.Optional[Aligner] = None
     casing: typing.Optional[TextCasing] = None
 
 
 @dataclass
 class InferenceConfig:
+    """Inference configuration"""
+
     length_scale: float = 1.0
     noise_scale: float = 0.667
     noise_w: float = 0.8
 
+    minor_break_ms: typing.Optional[int] = None
+    major_break_ms: typing.Optional[int] = None
+
 
 @dataclass
 class TrainingConfig(DataClassJsonMixin):
+    """Master configuration for training"""
+
     seed: int = 1234
     epochs: int = 10000
     learning_rate: float = 2e-4
