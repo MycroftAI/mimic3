@@ -712,5 +712,35 @@
             "pysariev"
         ],
         "properties": {}
+    },
+    "vi_VN/vais1000_low": {
+        "files": {
+            "LICENSE": {
+                "size_bytes": 45,
+                "sha256_sum": "0792914b42cbac29cb2ca5e729be0e7f959786ead4c1c31c027aca9a0a108c02"
+            },
+            "README.md": {
+                "size_bytes": 222,
+                "sha256_sum": "9dea8ff0cccc3d16343badf88c7b9a3383f78320fda0fdbf6ab23128a8dee81e"
+            },
+            "SOURCE": {
+                "size_bytes": 81,
+                "sha256_sum": "fb9722c013a1bf36d8d0d21892cc0127e1804d1e601fd28cc8c8b37e81e4b6d1"
+            },
+            "config.json": {
+                "size_bytes": 3641,
+                "sha256_sum": "2e6ed61ee8a981ccf8ed65372cc21885ec6049930535b55dc4c1164ae7323dc5"
+            },
+            "generator.onnx": {
+                "size_bytes": 62796823,
+                "sha256_sum": "38c07623df5bb5e198174b95a60d4d5d40bad583df7cfcee90547ce581f6569b"
+            },
+            "phonemes.txt": {
+                "size_bytes": 281,
+                "sha256_sum": "1070c88fd8459f584d3cc41a5d3d9bdf6161d545cfb532615fa64ab78b8869c0"
+            }
+        },
+        "speakers": [],
+        "properties": {}
     }
 }
