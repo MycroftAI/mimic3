@@ -4,7 +4,8 @@
 
 A fast and local neural text to speech system for [Mycroft](https://mycroft.ai/) and the [Mark II](https://mycroft.ai/product/mark-ii/).
 
-[Available voices](https://github.com/MycroftAI/mimic3-voices)
+* [Available voices](https://github.com/MycroftAI/mimic3-voices)
+* [How does it work?](mimic3-tts/)
 
 
 ## Use Cases
@@ -63,6 +64,7 @@ pip install mimic3-tts[all]
 ```
 
 Once installed, the following commands will be available:
+
     * `mimic3`
     * `mimic3-download`
 

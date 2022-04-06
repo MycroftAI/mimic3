@@ -2,7 +2,8 @@
 
 A fast and local neural text to speech system for [Mycroft](https://mycroft.ai/) and the [Mark II](https://mycroft.ai/product/mark-ii/).
 
-[Available voices](https://github.com/MycroftAI/mimic3-voices)
+* [Available voices](https://github.com/MycroftAI/mimic3-voices)
+* [Mimic 3 Architecture](#architecture)
 
 
 ## Command-Line Tools
@@ -267,21 +268,35 @@ Mimic 3 uses the [VITS](https://arxiv.org/abs/2106.06103), a "Conditional Variat
 Our implementation is heavily based on [Jaehyeon Kim's PyTorch model](https://github.com/jaywalnut310/vits), with the addition of [Onnx runtime](https://onnxruntime.ai/) export for speed. 
 
 
+### Phoneme Ids
+
+At a high level, Mimic 3 performs two important tasks:
+
+1. Converting raw text input numeric input for the VITS TTS model, and
+2. Using the model to transform numeric input into audio output
+
+The second step is the same for every voice, but the first step (text to numbers) varies. There are currently three implementations of step 1, described below.
+
+
 ### gruut Phoneme-based Voices
 
 Voices that use [gruut](https://github.com/rhasspy/gruut/) for phonemization.
 
-gruut phonemizes words according to a lexicon, with a pre-trained grapheme-to-phoneme model used to guess unknown word pronunciations.
+gruut normalizes text and phonemizes words according to a lexicon, with a pre-trained grapheme-to-phoneme model used to guess unknown word pronunciations.
 
 
 ### eSpeak Phoneme-based Voices
 
 Voices that use [eSpeak-ng](https://github.com/espeak-ng/espeak-ng) for phonemization (via [espeak-phonemizer](https://github.com/rhasspy/espeak-phonemizer)).
 
+eSpeak-ng normalizes and phonemizes text using internal rules and lexicons. It supports a large number of languages, and can handle many textual forms.
+
 
 ### Character-based Voices
 
 Voices whose "phonemes" are characters from an alphabet, typically with some punctuation.
+
+For voices whose orthography (writing system) is close enough to its spoken form, character-based voices allow for skipping the phonemization step. However, these voices do not support text normalization, so numbers, dates, etc. must be written out.
 
 
 ## License
