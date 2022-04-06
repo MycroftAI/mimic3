@@ -102,7 +102,7 @@ RUN .venv/bin/pyinstaller \
     --collect-data "gruut_lang_sw" \
     --collect-data 'espeak_phonemizer' \
     --collect-data 'phonemes2ids' \
-    --hidden-import 'swagger-ui-py' \
+    --hidden-import 'swagger_ui' \
     --collect-data 'mimic3_tts' \
     --collect-data 'mimic3_http' \
     pyinstaller/mimic3_server.py

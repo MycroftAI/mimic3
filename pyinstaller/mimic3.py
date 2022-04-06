@@ -15,7 +15,15 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 """Stub for PyInstaller"""
+import sys
 
-from mimic3_tts.__main__ import main
 
-main()
+if (len(sys.argv) > 1) and (sys.argv[1] == "--server"):
+    from mimic3_http.__main__ import main as http_main
+
+    sys.argv = [sys.argv[0]] + sys.argv[2:]
+    http_main()
+else:
+    from mimic3_tts.__main__ import main as tts_main
+
+    tts_main()

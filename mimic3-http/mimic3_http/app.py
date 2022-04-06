@@ -176,10 +176,12 @@ def get_app(args: argparse.Namespace, mimic3: Mimic3TextToSpeechSystem, temp_dir
         """CSS static endpoint."""
         return await send_from_directory(_CSS_DIR, filename)
 
+    show_openapi = True
+
     @app.route("/")
     async def app_index():
         """Main page."""
-        return await render_template("index.html")
+        return await render_template("index.html", show_openapi=show_openapi)
 
     @app.route("/api/tts", methods=["GET", "POST"])
     async def app_tts() -> Response:
@@ -275,9 +277,17 @@ def get_app(args: argparse.Namespace, mimic3: Mimic3TextToSpeechSystem, temp_dir
         return Response(wav_bytes, mimetype="audio/wav")
 
     # Swagger UI
-    api_doc(
-        app, config_path=_DIR / "swagger.yaml", url_prefix="/openapi", title="Mimic 3"
-    )
+    try:
+        api_doc(
+            app,
+            config_path=_DIR / "swagger.yaml",
+            url_prefix="/openapi",
+            title="Mimic 3",
+        )
+    except Exception:
+        # Fails with PyInstaller for some reason
+        _LOGGER.exception("Error setting up swagger UI page")
+        show_openapi = False
 
     @app.errorhandler(Exception)
     async def handle_error(err) -> typing.Tuple[str, int]:

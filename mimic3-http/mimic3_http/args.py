@@ -73,6 +73,9 @@ def get_args() -> argparse.Namespace:
         "--debug", action="store_true", help="Print DEBUG messages to console"
     )
     parser.add_argument(
+        "--server", action="store_true", help="Dummy argument from PyInstaller script"
+    )
+    parser.add_argument(
         "--version", action="store_true", help="Print version to console and exit"
     )
     args = parser.parse_args()
