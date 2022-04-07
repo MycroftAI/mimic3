@@ -2,6 +2,7 @@
 !LICENSE
 !install.sh
 !pyinstaller/*.py
+!pyinstaller/mimic3-server
 
 # opentts-abc
 !opentts-abc/setup.py

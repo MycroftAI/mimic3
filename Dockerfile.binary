@@ -51,7 +51,7 @@ RUN --mount=type=cache,id=pip-venv,target=/root/.cache/pip \
 RUN --mount=type=cache,id=pip-venv,target=/root/.cache/pip \
     .venv/bin/pip3 install 'pyinstaller>=4,<5'
 
-# Create binary for command-line interface
+# Create binary
 RUN .venv/bin/pyinstaller \
     --noconfirm \
     --name mimic3 \
@@ -75,37 +75,12 @@ RUN .venv/bin/pyinstaller \
     --collect-data "gruut_lang_sw" \
     --collect-data 'espeak_phonemizer' \
     --collect-data 'phonemes2ids' \
-    --collect-data 'mimic3_tts' \
-    pyinstaller/mimic3.py
-
-# Create binary for web server
-RUN .venv/bin/pyinstaller \
-    --noconfirm \
-    --name mimic3-server \
-    --hidden-import 'pycrfsuite._dumpparser' \
-    --hidden-import 'pycrfsuite._logparser' \
-    --collect-binaries 'onnxruntime' \
-    --collect-data 'gruut' \
-    --hidden-import "gruut_lang_de" \
-    --collect-data "gruut_lang_de" \
-    --hidden-import "gruut_lang_en" \
-    --collect-data "gruut_lang_en" \
-    --hidden-import "gruut_lang_fr" \
-    --collect-data "gruut_lang_fr" \
-    --hidden-import "gruut_lang_it" \
-    --collect-data "gruut_lang_it" \
-    --hidden-import "gruut_lang_nl" \
-    --collect-data "gruut_lang_nl" \
-    --hidden-import "gruut_lang_ru" \
-    --collect-data "gruut_lang_ru" \
-    --hidden-import "gruut_lang_sw" \
-    --collect-data "gruut_lang_sw" \
-    --collect-data 'espeak_phonemizer' \
-    --collect-data 'phonemes2ids' \
     --hidden-import 'swagger_ui' \
     --collect-data 'mimic3_tts' \
     --collect-data 'mimic3_http' \
-    pyinstaller/mimic3_server.py
+    pyinstaller/mimic3.py
+
+COPY pyinstaller/mimic3-server dist/mimic3/
 
 # -----------------------------------------------------------------------------
 
