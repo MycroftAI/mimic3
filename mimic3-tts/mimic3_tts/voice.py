@@ -23,6 +23,7 @@ from enum import Enum
 from pathlib import Path
 from xml.sax.saxutils import escape as xmlescape
 
+import epitran
 import espeak_phonemizer
 import gruut
 import numpy as np
@@ -310,9 +311,20 @@ class Mimic3Voice(metaclass=ABCMeta):
                 phoneme_map=phoneme_map,
                 speaker_map=speaker_map,
             )
+
         if config.phonemizer == Phonemizer.SYMBOLS:
             # Phonemes are characters from an alphabet
             return SymbolsVoice(
+                config=config,
+                onnx_model=onnx_model,
+                phoneme_to_id=phoneme_to_id,
+                phoneme_map=phoneme_map,
+                speaker_map=speaker_map,
+            )
+
+        if config.phonemizer == Phonemizer.EPITRAN:
+            # Phonemes are from epitran: https://github.com/dmort27/epitran/
+            return EpitranVoice(
                 config=config,
                 onnx_model=onnx_model,
                 phoneme_to_id=phoneme_to_id,
@@ -525,3 +537,51 @@ class SymbolsVoice(Mimic3Voice):
             list(IPA.graphemes(wp_str)) for wp_str in text.split(word_separator)
         ]
         yield word_phonemes, BreakType.NONE
+
+
+# -----------------------------------------------------------------------------
+
+
+class EpitranVoice(Mimic3Voice):
+    """Voice whose phonemes come from epitran (https://github.com/dmort27/epitran/)"""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._epis: typing.Dict[str, epitran.Epitran] = {}
+
+    def text_to_phonemes(
+        self, text: str, text_language: typing.Optional[str] = None
+    ) -> TEXT_TO_PHONEMES_TYPE:
+        text_language = text_language or self.config.text_language or DEFAULT_LANGUAGE
+
+        epi = self._epis.get(text_language)
+        if epi is None:
+            epi = epitran.Epitran(text_language)
+            self._epis[text_language] = epi
+
+        phoneme_str = epi.transliterate(text)
+        all_word_phonemes = [
+            list(IPA.graphemes(wp_str)) for wp_str in phoneme_str.split()
+        ]
+
+        minor_break = self.config.phonemes.minor_break
+        major_break = self.config.phonemes.major_break
+
+        if minor_break or major_break:
+            # Split on breaks
+            sent_phonemes = []
+            for word_phonemes in all_word_phonemes:
+                sent_phonemes.append(word_phonemes)
+
+                if minor_break and (word_phonemes[-1] == minor_break):
+                    yield sent_phonemes, BreakType.MINOR
+                    sent_phonemes = []
+                elif major_break and (word_phonemes[-1] == major_break):
+                    yield sent_phonemes, BreakType.MAJOR
+                    sent_phonemes = []
+
+            if sent_phonemes:
+                yield sent_phonemes, BreakType.MAJOR
+        else:
+            # No split
+            yield all_word_phonemes, BreakType.UTTERANCE

@@ -299,6 +299,13 @@ Voices whose "phonemes" are characters from an alphabet, typically with some pun
 For voices whose orthography (writing system) is close enough to its spoken form, character-based voices allow for skipping the phonemization step. However, these voices do not support text normalization, so numbers, dates, etc. must be written out.
 
 
+### Epitran-based Voices
+
+Voices that use [epitran](https://github.com/dmort27/epitran/) for phonemization.
+
+epitran uses rules to generate phonetic pronunciations from text. It does not support text normalization, however, so numbers, dates, etc. must be written out.
+
+
 ## License
 
 See [license file](LICENSE)

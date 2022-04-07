@@ -2,8 +2,8 @@
     "de_DE/thorsten_low": {
         "files": {
             "LICENSE": {
-                "size_bytes": 6557,
-                "sha256_sum": "434e11b12f4a3f3096032bc35c5189afe7827b726212b2406a28189598d9c4cf"
+                "size_bytes": 6555,
+                "sha256_sum": "36ffd9dc085d529a7e60e1276d73ae5a030b020313e6c5408593a6ae2af39673"
             },
             "README.md": {
                 "size_bytes": 193,
@@ -72,6 +72,10 @@
             "README.md": {
                 "size_bytes": 155,
                 "sha256_sum": "2e6c39454c35910c6b48518523429ec2e4f27ae8eb763e311877a017db23d4da"
+            },
+            "SOURCE": {
+                "size_bytes": 18,
+                "sha256_sum": "8197ffe96f3b6772797357e007d63cde409573a0bd3fe174489e01a5faa95553"
             },
             "config.json": {
                 "size_bytes": 3434,
@@ -404,6 +408,54 @@
         "speakers": [],
         "properties": {}
     },
+    "fr_FR/m-ailabs_low": {
+        "files": {
+            "LICENSE": {
+                "size_bytes": 1372,
+                "sha256_sum": "fdd78a909fb9384d869363522b967557bc9e28e5b65874921f24e48cbb82f38c"
+            },
+            "README.md": {
+                "size_bytes": 192,
+                "sha256_sum": "cea70c7d84bd5f85607efd4545825a36f6117106e2deb8b00cdb923f550670e8"
+            },
+            "SOURCE": {
+                "size_bytes": 61,
+                "sha256_sum": "841520f6a8cc616e307a92552355691f8c3087fadda2e9b7a03a7863b2d0cf6a"
+            },
+            "config.json": {
+                "size_bytes": 3608,
+                "sha256_sum": "db66a1051ae131d82ebb9257faeab5d1403ddcf33342eb84ac8e3fe4cf9c7dc9"
+            },
+            "generator.onnx": {
+                "size_bytes": 76330079,
+                "sha256_sum": "cf1de519bf1d02e6d8d2685f64192783b9ca6d7a8bd101b03e20f5c5ceee28bb"
+            },
+            "phoneme_map.txt": {
+                "size_bytes": 15,
+                "sha256_sum": "4003f421fc91ed1d5a343442659db6cf9d58bd1c6d8d771abc1999cc24d7694d"
+            },
+            "phonemes.txt": {
+                "size_bytes": 232,
+                "sha256_sum": "711294d0b5a0ec08ec21ca8a75184e0fee3aba1e1adcf967fe5e1ef96f6c176e"
+            },
+            "speaker_map.csv": {
+                "size_bytes": 119,
+                "sha256_sum": "25df8f995e663206cb06a203a084051552557108d2e165f42476787cd6e1ee5e"
+            },
+            "speakers.txt": {
+                "size_bytes": 64,
+                "sha256_sum": "01e93046b04e95815d5397ee759bba055e80a5e6bdcabc117ff801c1da841d20"
+            }
+        },
+        "speakers": [
+            "ezwa",
+            "nadine_eckert_boulet",
+            "bernard",
+            "zeckou",
+            "gilles_g_le_blanc"
+        ],
+        "properties": {}
+    },
     "fr_FR/siwis_low": {
         "files": {
             "LICENSE": {
@@ -602,6 +654,14 @@
     },
     "ru_RU/multi_low": {
         "files": {
+            "README.md": {
+                "size_bytes": 266,
+                "sha256_sum": "f2a1a1aecc439fefb59879481dc659eb532d7cbf4e417829f68543e5379cabdc"
+            },
+            "SOURCE": {
+                "size_bytes": 132,
+                "sha256_sum": "9c3b3fd5fe49e2e1d4e5daa5c643a713da955415d06fccf50add1185301f351a"
+            },
             "config.json": {
                 "size_bytes": 3923,
                 "sha256_sum": "314e0fdd09183942d2f7393d4b950a12823849c0f72d22e62dc9858a6b4886c6"
@@ -617,6 +677,14 @@
             "generator.onnx": {
                 "size_bytes": 76335199,
                 "sha256_sum": "cb84b12479fc619943cb8fbb56827f7fd95f5ffcbebf2c220606b3a9750bf2ca"
+            },
+            "m-ailabs/LICENSE": {
+                "size_bytes": 1372,
+                "sha256_sum": "fdd78a909fb9384d869363522b967557bc9e28e5b65874921f24e48cbb82f38c"
+            },
+            "m-ailabs/SOURCE": {
+                "size_bytes": 61,
+                "sha256_sum": "841520f6a8cc616e307a92552355691f8c3087fadda2e9b7a03a7863b2d0cf6a"
             },
             "phoneme_map.txt": {
                 "size_bytes": 15,
@@ -666,6 +734,48 @@
             }
         },
         "speakers": [],
+        "properties": {}
+    },
+    "te_IN/cmu-indic_low": {
+        "files": {
+            "LICENSE": {
+                "size_bytes": 960,
+                "sha256_sum": "244ff21a910baf28bcb27b1975620a79d2be8611815ecc599f08eb06dd6f000e"
+            },
+            "README.md": {
+                "size_bytes": 162,
+                "sha256_sum": "19ee27d0ac6dbcc337a39ff442a13cd04302594e648877c82ed6a01f43400f3f"
+            },
+            "SOURCE": {
+                "size_bytes": 30,
+                "sha256_sum": "d79737ae72d64666485e1899ec32badf1f1043be2619463139d502d5f88f4167"
+            },
+            "config.json": {
+                "size_bytes": 3647,
+                "sha256_sum": "aaaee2aa729ccdf98776690187bce96e63a835d91b4683ecf2951e8ad32fc485"
+            },
+            "generator.onnx": {
+                "size_bytes": 76331359,
+                "sha256_sum": "c8abcadc961fba7369f5fff4672eba194a105ecaf044ca4e3fd0a5b3c81c11b6"
+            },
+            "phonemes.txt": {
+                "size_bytes": 282,
+                "sha256_sum": "ec8b51eb56fde1a81c7eb4442cb7cf7604596501b63093b441c04fbc943c895c"
+            },
+            "speaker_map.csv": {
+                "size_bytes": 49,
+                "sha256_sum": "0ce2ff1aa2d78aed066e36b204df647ac9c565b4bd7bdb3bb657e334d7a0e4ab"
+            },
+            "speakers.txt": {
+                "size_bytes": 13,
+                "sha256_sum": "7d9c38da91ac4289c23f20d7cb0b6efb69fc8ca4807d62f0a5d7f0a4e0cf77e4"
+            }
+        },
+        "speakers": [
+            "ss",
+            "sk",
+            "kpn"
+        ],
         "properties": {}
     },
     "uk_UK/m-ailabs_low": {

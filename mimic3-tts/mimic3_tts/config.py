@@ -196,6 +196,7 @@ class Phonemizer(str, Enum):
     SYMBOLS = "symbols"
     GRUUT = "gruut"
     ESPEAK = "espeak"
+    EPITRAN = "epitran"
 
 
 class Aligner(str, Enum):

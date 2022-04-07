@@ -33,8 +33,14 @@ args = get_args()
 
 if args.debug:
     logging.basicConfig(level=logging.DEBUG)
+
+    # Override epitran
+    logging.getLogger().setLevel(logging.DEBUG)
 else:
     logging.basicConfig(level=logging.INFO)
+
+    # Override epitran
+    logging.getLogger().setLevel(logging.INFO)
 
 
 _LOGGER.debug(args)
