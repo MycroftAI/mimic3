@@ -136,6 +136,14 @@ mimic3 --voices
 ```
 
 
+#### CUDA Acceleration
+
+If you have a GPU with support for CUDA, you can accelerate synthesis with the `--cuda` flag. This requires you to install the [onnxruntime-gpu](https://pypi.org/project/onnxruntime-gpu/) Python package.
+
+Using [nvidia-docker](https://github.com/NVIDIA/nvidia-docker) is highly recommended. See the `Dockerfile.gpu` file in the parent repository for an example of how to build a compatible container.
+
+
+
 ### mimic3-download
 
 Mimic 3 automatically downloads voices when they're first used, but you can manually download them too with `mimic3-download`.

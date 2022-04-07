@@ -194,6 +194,13 @@ mimic3-client --voice 'en_UK/apope_low' 'My hovercraft is full of eels.' > hover
 See `mimic3-client --help` for more options.
 
 
+## CUDA Acceleration
+
+If you have a GPU with support for CUDA, you can accelerate synthesis with the `--cuda` flag when running `mimic3` or `mimic3-server`. This requires you to install the [onnxruntime-gpu](https://pypi.org/project/onnxruntime-gpu/) Python package.
+
+Using [nvidia-docker](https://github.com/NVIDIA/nvidia-docker) is highly recommended. See [ Dockerfile.gpu](Dockerfile.gpu) for an example of how to build a compatible container.
+
+
 ## MaryTTS Compatibility
 
 Use the Mimic 3 web server as a drop-in replacement for [MaryTTS](http://mary.dfki.de/), for example with [Home Assistant](https://www.home-assistant.io/integrations/marytts/).

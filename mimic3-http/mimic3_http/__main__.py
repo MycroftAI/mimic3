@@ -17,67 +17,70 @@
 import asyncio
 import logging
 import tempfile
+import threading
+from queue import Queue
 
 import hypercorn
-from mimic3_tts import Mimic3Settings, Mimic3TextToSpeechSystem
 
 from .app import get_app
 from .args import get_args
+from .synthesis import do_synthesis_proc
 
 _LOGGER = logging.getLogger(__name__)
 
 
 # -----------------------------------------------------------------------------
 
-args = get_args()
 
-if args.debug:
-    logging.basicConfig(level=logging.DEBUG)
+def main():
+    args = get_args()
 
-    # Override epitran
-    logging.getLogger().setLevel(logging.DEBUG)
-else:
-    logging.basicConfig(level=logging.INFO)
+    if args.debug:
+        logging.basicConfig(level=logging.DEBUG)
 
-    # Override epitran
-    logging.getLogger().setLevel(logging.INFO)
+        # Override epitran
+        logging.getLogger().setLevel(logging.DEBUG)
+    else:
+        logging.basicConfig(level=logging.INFO)
 
+        # Override epitran
+        logging.getLogger().setLevel(logging.INFO)
 
-_LOGGER.debug(args)
+    _LOGGER.debug(args)
+
+    # Run Web Server
+    _LOGGER.info("Starting web server")
+    request_queue = Queue()
+    threads = [
+        threading.Thread(
+            target=do_synthesis_proc, args=(args, request_queue), daemon=True
+        )
+        for _ in range(args.num_threads)
+    ]
+    for thread in threads:
+        thread.start()
+
+    hyp_config = hypercorn.config.Config()
+    hyp_config.bind = [f"{args.host}:{args.port}"]
+
+    try:
+        with tempfile.TemporaryDirectory(prefix="mimic3") as temp_dir:
+            app = get_app(args, request_queue, temp_dir)
+            asyncio.run(hypercorn.asyncio.serve(app, hyp_config))
+    finally:
+        # Drain queue
+        while not request_queue.empty():
+            request_queue.get()
+
+        # Stop request threads
+        for _ in range(args.num_threads):
+            request_queue.put(None)
+
+        for thread in threads:
+            thread.join()
 
 
 # -----------------------------------------------------------------------------
-# Load Mimic 3
-# -----------------------------------------------------------------------------
 
-# TODO: args.voices_dir
-
-mimic3 = Mimic3TextToSpeechSystem(
-    Mimic3Settings(
-        voice=args.voice,
-        speaker=args.speaker,
-        length_scale=args.length_scale,
-        noise_scale=args.noise_scale,
-        noise_w=args.noise_w,
-    )
-)
-
-if args.preload_voice:
-    # Ensure voices are preloaded
-    for voice_key in args.preload_voice:
-        _LOGGER.debug("Preloading voice: %s", voice_key)
-        mimic3.preload_voice(voice_key)
-
-
-# -----------------------------------------------------------------------------
-# Run Web Server
-# -----------------------------------------------------------------------------
-
-_LOGGER.info("Starting web server")
-
-hyp_config = hypercorn.config.Config()
-hyp_config.bind = [f"{args.host}:{args.port}"]
-
-with mimic3, tempfile.TemporaryDirectory(prefix="mimic3") as temp_dir:
-    app = get_app(args, mimic3, temp_dir)
-    asyncio.run(hypercorn.asyncio.serve(app, hyp_config))
+if __name__ == "__main__":
+    main()

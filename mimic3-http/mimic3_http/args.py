@@ -63,12 +63,17 @@ def get_args() -> argparse.Namespace:
     parser.add_argument(
         "--preload-voice", action="append", help="Preload voice when starting up"
     )
-    # parser.add_argument(
-    #     "--max-loaded-models",
-    #     type=int,
-    #     default=0,
-    #     help="Maximum number of voice models that can be loaded simultaneously (0 for no limit)",
-    # )
+    parser.add_argument(
+        "--cuda",
+        action="store_true",
+        help="Use Onnx CUDA execution provider (requires onnxruntime-gpu)",
+    )
+    parser.add_argument(
+        "--num-threads",
+        type=int,
+        default=1,
+        help="Number of synthesis threads (default: 1)",
+    )
     parser.add_argument(
         "--debug", action="store_true", help="Print DEBUG messages to console"
     )

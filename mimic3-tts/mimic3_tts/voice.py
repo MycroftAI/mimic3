@@ -16,6 +16,7 @@
 import csv
 import logging
 import platform
+import threading
 import time
 import typing
 from abc import ABCMeta, abstractmethod
@@ -65,6 +66,9 @@ _LOGGER = logging.getLogger(__name__)
 
 class Mimic3Voice(metaclass=ABCMeta):
     """Base class for Mimic 3 voice implementations"""
+
+    _SHARED_MODELS: typing.Dict[str, onnxruntime.InferenceSession] = {}
+    _SHARED_MODELS_LOCK = threading.Lock()
 
     def __init__(
         self,
@@ -236,6 +240,12 @@ class Mimic3Voice(metaclass=ABCMeta):
     def load_from_directory(
         voice_dir: typing.Union[str, Path],
         session_options: typing.Optional[onnxruntime.SessionOptions] = None,
+        providers: typing.Optional[
+            typing.Sequence[
+                typing.Union[str, typing.Tuple[str, typing.Dict[str, typing.Any]]]
+            ]
+        ] = None,
+        share_models: bool = True,
     ) -> "Mimic3Voice":
         """Load a Mimic 3 voice from a directory"""
         voice_dir = Path(voice_dir)
@@ -254,21 +264,30 @@ class Mimic3Voice(metaclass=ABCMeta):
             phoneme_to_id = phonemes2ids.load_phoneme_ids(ids_file)
 
         generator_path = voice_dir / "generator.onnx"
-        _LOGGER.debug("Loading model from %s", generator_path)
 
-        # Load onnx model
-        if session_options is None:
-            session_options = onnxruntime.SessionOptions()
+        onnx_model: typing.Optional[onnxruntime.InferenceSession] = None
 
-            if platform.machine() == "armv7l":
-                # Enabling optimizations on 32-bit ARM crashes
-                session_options.graph_optimization_level = (
-                    onnxruntime.GraphOptimizationLevel.ORT_DISABLE_ALL
-                )
+        if share_models:
+            with Mimic3Voice._SHARED_MODELS_LOCK:
+                model_key = str(generator_path.absolute())
+                onnx_model = Mimic3Voice._SHARED_MODELS.get(model_key)
 
-        onnx_model = onnxruntime.InferenceSession(
-            str(generator_path), sess_options=session_options
-        )
+                if onnx_model is None:
+                    onnx_model = Mimic3Voice._load_model(
+                        generator_path,
+                        session_options=session_options,
+                        providers=providers,
+                    )
+
+                    Mimic3Voice._SHARED_MODELS[model_key] = onnx_model
+                else:
+                    _LOGGER.debug("Using shared Onnx model (%s)", model_key)
+        else:
+            onnx_model = Mimic3Voice._load_model(
+                generator_path,
+                session_options=session_options,
+                providers=providers,
+            )
 
         # phoneme -> phoneme, phoneme, ...
         phoneme_map: typing.Optional[PHONEME_MAP_TYPE] = None
@@ -333,6 +352,34 @@ class Mimic3Voice(metaclass=ABCMeta):
             )
 
         raise ValueError(f"Unsupported phonemizer: {config.phonemizer}")
+
+    @staticmethod
+    def _load_model(
+        generator_path: Path,
+        session_options: typing.Optional[onnxruntime.SessionOptions] = None,
+        providers: typing.Optional[
+            typing.Sequence[
+                typing.Union[str, typing.Tuple[str, typing.Dict[str, typing.Any]]]
+            ]
+        ] = None,
+    ) -> onnxruntime.InferenceSession:
+        _LOGGER.debug("Loading model from %s", generator_path)
+
+        # Load onnx model
+        if session_options is None:
+            session_options = onnxruntime.SessionOptions()
+
+            if platform.machine() == "armv7l":
+                # Enabling optimizations on 32-bit ARM crashes
+                session_options.graph_optimization_level = (
+                    onnxruntime.GraphOptimizationLevel.ORT_DISABLE_ALL
+                )
+
+        onnx_model = onnxruntime.InferenceSession(
+            str(generator_path), sess_options=session_options, providers=providers
+        )
+
+        return onnx_model
 
 
 # -----------------------------------------------------------------------------

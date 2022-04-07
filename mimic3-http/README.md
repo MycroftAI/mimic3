@@ -18,7 +18,7 @@ This will start a web server at `http://localhost:59125`
 See `mimic3-server --debug` for more options.
 
 
-## Endpoints
+### Endpoints
 
 * `/api/tts`
     * `POST` text or [SSML](#ssml) and receive WAV audio back
@@ -28,6 +28,13 @@ See `mimic3-server --debug` for more options.
     * Returns a JSON list of available voices
 
 An [OpenAPI](https://www.openapis.org/) test page is also available at `http://localhost:59125/openapi`
+
+
+### CUDA Acceleration
+
+If you have a GPU with support for CUDA, you can accelerate synthesis with the `--cuda` flag. This requires you to install the [onnxruntime-gpu](https://pypi.org/project/onnxruntime-gpu/) Python package.
+
+Using [nvidia-docker](https://github.com/NVIDIA/nvidia-docker) is highly recommended. See the `Dockerfile.gpu` file in the parent repository for an example of how to build a compatible container.
 
 
 ## Running the Client

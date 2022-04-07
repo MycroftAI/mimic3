@@ -219,7 +219,9 @@ def initialize_tts(state: CommandLineInterfaceState):
     args = state.args
 
     state.tts = Mimic3TextToSpeechSystem(
-        Mimic3Settings(voices_directories=args.voices_dir, speaker=args.speaker)
+        Mimic3Settings(
+            voices_directories=args.voices_dir, speaker=args.speaker, use_cuda=args.cuda
+        )
     )
 
     if args.voices:
@@ -568,6 +570,11 @@ def get_args():
         action="append",
         default=_DEFAULT_PLAY_PROGRAMS,
         help="Program(s) used to play WAV files",
+    )
+    parser.add_argument(
+        "--cuda",
+        action="store_true",
+        help="Use Onnx CUDA execution provider (requires onnxruntime-gpu)",
     )
     parser.add_argument("--seed", type=int, help="Set random seed (default: not set)")
     parser.add_argument("--version", action="store_true", help="Print version and exit")

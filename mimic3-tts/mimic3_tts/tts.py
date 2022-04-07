@@ -102,6 +102,12 @@ class Mimic3Settings:
     no_download: bool = False
     """Do not download voices automatically"""
 
+    use_cuda: bool = False
+    """Use CUDA GPU acceleration (requires onnxruntime-gpu)"""
+
+    share_onnx_models_between_threads: bool = True
+    """If True, Onnx models are shared between threads"""
+
 
 @dataclass
 class Mimic3Phonemes:
@@ -470,7 +476,16 @@ class Mimic3TextToSpeechSystem(TextToSpeechSystem):
 
             return existing_voice
 
-        voice = Mimic3Voice.load_from_directory(model_dir)
+        # https://onnxruntime.ai/docs/execution-providers/
+        providers = None
+        if self.settings.use_cuda:
+            providers = ["CUDAExecutionProvider"]
+
+        voice = Mimic3Voice.load_from_directory(
+            model_dir,
+            providers=providers,
+            share_models=self.settings.share_onnx_models_between_threads,
+        )
 
         _LOGGER.info("Loaded voice from %s", model_dir)
 

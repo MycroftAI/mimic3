@@ -33,5 +33,8 @@ install:
 docker:
 	docker buildx build . -f Dockerfile --platform $(DOCKER_PLATFORM) --tag mycroftai/mimic3 --load
 
+docker-gpu:
+	docker buildx build . -f Dockerfile.gpu --tag mycroftai/mimic3:gpu --load
+
 binaries:
 	docker buildx build . -f Dockerfile.binary --platform $(DOCKER_PLATFORM) --output type=local,dest=dist/$(DOCKER_PLATFORM)

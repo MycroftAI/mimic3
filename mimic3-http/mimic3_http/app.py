@@ -15,19 +15,17 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 import argparse
+import asyncio
 import dataclasses
-import hashlib
-import io
 import logging
 import typing
-import wave
-from dataclasses import dataclass
 from pathlib import Path
+from queue import Queue
 from urllib.parse import parse_qs
 from uuid import uuid4
 
 import quart_cors
-from mimic3_tts import AudioResult, Mimic3TextToSpeechSystem, SSMLSpeaker
+from mimic3_tts import Mimic3Settings, Mimic3TextToSpeechSystem
 from quart import (
     Quart,
     Response,
@@ -40,14 +38,18 @@ from swagger_ui import api_doc
 
 from ._resources import _DIR, _PACKAGE
 from .args import _MISSING
+from .const import SynthesisRequest, TextToWavParams
 
 _LOGGER = logging.getLogger(__name__)
 
 
-def get_app(args: argparse.Namespace, mimic3: Mimic3TextToSpeechSystem, temp_dir: str):
+def get_app(args: argparse.Namespace, request_queue: Queue, temp_dir: str):
     """Create and return Quart application for Mimic 3 HTTP server"""
 
     _TEMP_DIR: typing.Optional[Path] = None
+
+    # TODO: args.voices_dirs
+    _MIMIC3 = Mimic3TextToSpeechSystem(Mimic3Settings())
 
     if args.cache_dir != _MISSING:
         if args.cache_dir is None:
@@ -61,23 +63,7 @@ def get_app(args: argparse.Namespace, mimic3: Mimic3TextToSpeechSystem, temp_dir
     if _TEMP_DIR:
         _LOGGER.debug("Cache directory: %s", _TEMP_DIR)
 
-    @dataclass
-    class TextToWavParams:
-        """Synthesis parameters used for caching"""
-
-        text: str
-        voice: str = args.voice
-        noise_scale: float = args.noise_scale
-        noise_w: float = args.noise_w
-        length_scale: float = args.length_scale
-        ssml: bool = False
-        text_language: typing.Optional[str] = None
-
-        @property
-        def cache_key(self) -> str:
-            return hashlib.md5(repr(self).encode()).hexdigest()
-
-    def text_to_wav(params: TextToWavParams, no_cache: bool = False) -> bytes:
+    async def text_to_wav(params: TextToWavParams, no_cache: bool = False) -> bytes:
         """Synthesize text into audio.
 
         Returns: WAV bytes
@@ -93,58 +79,25 @@ def get_app(args: argparse.Namespace, mimic3: Mimic3TextToSpeechSystem, temp_dir
                 wav_bytes = maybe_wav_path.read_bytes()
                 return wav_bytes
 
-        mimic3.voice = params.voice
+        loop = asyncio.get_running_loop()
+        future = loop.create_future()
+        request_queue.put_nowait(
+            SynthesisRequest(
+                params=params,
+                loop=loop,
+                future=future,
+            )
+        )
+        wav_bytes = await future
 
-        mimic3.settings.length_scale = params.length_scale
-        mimic3.settings.noise_scale = params.noise_scale
-        mimic3.settings.noise_w = params.noise_w
+        if _TEMP_DIR and (not no_cache):
+            # Store in cache
+            wav_path = _TEMP_DIR / f"{params.cache_key}.wav"
+            wav_path.write_bytes(wav_bytes)
 
-        with io.BytesIO() as wav_io:
-            wav_file: wave.Wave_write = wave.open(wav_io, "wb")
-            wav_params_set = False
+            _LOGGER.debug("Cached WAV at %s", wav_path.absolute())
 
-            with wav_file:
-                try:
-                    if params.ssml:
-                        # SSML
-                        results = SSMLSpeaker(mimic3).speak(params.text)
-                    else:
-                        # Plain text
-                        mimic3.begin_utterance()
-                        mimic3.speak_text(
-                            params.text, text_language=params.text_language
-                        )
-                        results = mimic3.end_utterance()
-
-                    for result in results:
-                        # Add audio to existing WAV file
-                        if isinstance(result, AudioResult):
-                            if not wav_params_set:
-                                wav_file.setframerate(result.sample_rate_hz)
-                                wav_file.setsampwidth(result.sample_width_bytes)
-                                wav_file.setnchannels(result.num_channels)
-                                wav_params_set = True
-
-                            wav_file.writeframes(result.audio_bytes)
-                except Exception as e:
-                    if not wav_params_set:
-                        # Set default parameters so exception can propagate
-                        wav_file.setframerate(22050)
-                        wav_file.setsampwidth(2)
-                        wav_file.setnchannels(1)
-
-                    raise e
-
-            wav_bytes = wav_io.getvalue()
-
-            if _TEMP_DIR and (not no_cache):
-                # Store in cache
-                wav_path = _TEMP_DIR / f"{params.cache_key}.wav"
-                wav_path.write_bytes(wav_bytes)
-
-                _LOGGER.debug("Cached WAV at %s", wav_path.absolute())
-
-            return wav_bytes
+        return wav_bytes
 
     # -----------------------------------------------------------------------------
 
@@ -186,7 +139,11 @@ def get_app(args: argparse.Namespace, mimic3: Mimic3TextToSpeechSystem, temp_dir
     @app.route("/api/tts", methods=["GET", "POST"])
     async def app_tts() -> Response:
         """Speak text to WAV."""
-        tts_args: typing.Dict[str, typing.Any] = {}
+        tts_args: typing.Dict[str, typing.Any] = {
+            "length_scale": args.length_scale,
+            "noise_scale": args.noise_scale,
+            "noise_w": args.noise_w,
+        }
 
         _LOGGER.debug("Request args: %s", request.args)
 
@@ -230,7 +187,7 @@ def get_app(args: argparse.Namespace, mimic3: Mimic3TextToSpeechSystem, temp_dir
         no_cache_str = request.args.get("noCache", "")
         no_cache = _to_bool(no_cache_str)
 
-        wav_bytes = text_to_wav(
+        wav_bytes = await text_to_wav(
             TextToWavParams(text=text, **tts_args), no_cache=no_cache
         )
 
@@ -238,7 +195,7 @@ def get_app(args: argparse.Namespace, mimic3: Mimic3TextToSpeechSystem, temp_dir
 
     @app.route("/api/voices", methods=["GET"])
     async def api_voices():
-        voices_dict = {v.key: v for v in mimic3.get_voices()}
+        voices_dict = {v.key: v for v in _MIMIC3.get_voices()}
         voices = sorted(voices_dict.values(), key=lambda v: v.key)
         return jsonify([dataclasses.asdict(v) for v in voices])
 
@@ -263,7 +220,7 @@ def get_app(args: argparse.Namespace, mimic3: Mimic3TextToSpeechSystem, temp_dir
         ssml = text.strip().startswith("<")
 
         _LOGGER.debug("Speaking with voice '%s': %s", voice, text)
-        wav_bytes = text_to_wav(
+        wav_bytes = await text_to_wav(
             TextToWavParams(
                 text=text,
                 voice=voice,
