@@ -23,7 +23,7 @@ Mimic 3 requires:
 
 * Python 3.7 or higher
 * The [Onnx runtime](https://onnxruntime.ai/)
-* [gruut](https://github.com/rhasspy/gruut) or [eSpeak-ng](https://github.com/espeak-ng/espeak-ng) (depending on the voice)
+* [gruut](https://github.com/rhasspy/gruut) or [eSpeak-ng](https://github.com/espeak-ng/espeak-ng) or [epitran](https://github.com/dmort27/epitran/) (depending on the voice)
 
 
 ## Installation

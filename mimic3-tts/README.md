@@ -285,6 +285,8 @@ Mimic 3 uses the [VITS](https://arxiv.org/abs/2106.06103), a "Conditional Variat
 
 Our implementation is heavily based on [Jaehyeon Kim's PyTorch model](https://github.com/jaywalnut310/vits), with the addition of [Onnx runtime](https://onnxruntime.ai/) export for speed. 
 
+![mimic 3 architecture](img/mimic3-architecture.png)
+
 
 ### Phoneme Ids
 
