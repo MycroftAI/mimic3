@@ -490,6 +490,40 @@
         "speakers": [],
         "properties": {}
     },
+    "fr_FR/tom_low": {
+        "files": {
+            "LICENSE": {
+                "size_bytes": 24947,
+                "sha256_sum": "635554793cdae1fbc549793a1565772c763e64a686dc674edeaa492c5b88e493"
+            },
+            "README.md": {
+                "size_bytes": 186,
+                "sha256_sum": "5722e7135a6487a7e88158aac85a490e155742e85fa4953d426d2f7884359475"
+            },
+            "SOURCE": {
+                "size_bytes": 50,
+                "sha256_sum": "96978fc4977928015e2999d4497f667edb562fd1a44211a31ac2c15c94ced664"
+            },
+            "config.json": {
+                "size_bytes": 3634,
+                "sha256_sum": "203dc4bafb3d3dacc0cee09959a41494ac173e53c57b3c3b75e2af1593c3859a"
+            },
+            "generator.onnx": {
+                "size_bytes": 62788375,
+                "sha256_sum": "0f9ae579eceea1dd908ad47a8196a5a1944c9f2848a89516abf8624917952d03"
+            },
+            "phoneme_map.txt": {
+                "size_bytes": 15,
+                "sha256_sum": "4003f421fc91ed1d5a343442659db6cf9d58bd1c6d8d771abc1999cc24d7694d"
+            },
+            "phonemes.txt": {
+                "size_bytes": 232,
+                "sha256_sum": "711294d0b5a0ec08ec21ca8a75184e0fee3aba1e1adcf967fe5e1ef96f6c176e"
+            }
+        },
+        "speakers": [],
+        "properties": {}
+    },
     "hu_HU/diana-majlinger_low": {
         "files": {
             "LICENSE": {

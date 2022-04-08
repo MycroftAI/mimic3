@@ -234,15 +234,17 @@ For example:
 
 ``` xml
 <speak>
-  <voice name="en_UK/apope">
+  <voice name="en_UK/apope_low">
     <s>
       Welcome to the world of speech synthesis.
     </s>
   </voice>
   <break time="3s" />
-  <voice name="en_US/cmu-arctic#slt">
+  <voice name="en_US/cmu-arctic_low#slt">
     <s>
-      This is a <say-as interpret-as="number" format="ordinal">2</say-as> voice.
+      <prosody volume="soft">
+        This is a <say-as interpret-as="number" format="ordinal">2</say-as> voice.
+      </prosody>
     </s>
   </voice>
 </speak>

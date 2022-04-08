@@ -172,6 +172,12 @@ A subset of [SSML](https://www.w3.org/TR/speech-synthesis11/) (Speech Synthesis 
     * `voice` - name or language of voice
         * Name format is `tts:voice` (e.g., "glow-speak:en-us_mary_ann") or `tts:voice#speaker_id` (e.g., "coqui-tts:en_vctk#p228")
         * If one of the supported languages, a preferred voice is used (override with `--preferred-voice <lang> <voice>`)
+* `<prosody attribute="value">` - change speaking attributes
+    * Supported `attribute` names:
+        * `volume` - speaking volume
+            * number in [0, 100] - 0 is silent, 100 is loudest (default)
+            * +X, -X, +X%, -X% - absolute/percent offset from current volume
+            * one of "default", "silent", "x-loud", "loud", "medium", "soft", "x-soft"
 * `<say-as interpret-as="">` - force interpretation of inner text
     * `interpret-as` one of "spell-out", "date", "number", "time", or "currency"
     * `format` - way to format text depending on `interpret-as`

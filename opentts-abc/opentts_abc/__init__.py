@@ -206,6 +206,15 @@ class TextToSpeechSystem(AbstractContextManager, metaclass=ABCMeta):
     def language(self, new_language: str):
         """Set the current voice language"""
 
+    @property
+    @abstractmethod
+    def volume(self) -> float:
+        """Get the current volume in [0, 100]"""
+
+    @volume.setter
+    def volume(self, new_volume: float):
+        """Set the current volume in [0, 100]"""
+
     def shutdown(self):
         """Called by the host program when the text to speech system should be stopped"""
 

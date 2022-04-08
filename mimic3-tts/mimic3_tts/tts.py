@@ -14,6 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 """Implementation of OpenTTS for Mimic 3"""
+import audioop
 import itertools
 import logging
 import typing
@@ -42,6 +43,7 @@ from .const import (
     DEFAULT_VOICE,
     DEFAULT_VOICES_DOWNLOAD_DIR,
     DEFAULT_VOICES_URL_FORMAT,
+    DEFAULT_VOLUME,
 )
 from .download import VoiceFile, download_voice
 from .voice import SPEAKER_TYPE, BreakType, Mimic3Voice
@@ -107,6 +109,9 @@ class Mimic3Settings:
 
     share_onnx_models_between_threads: bool = True
     """If True, Onnx models are shared between threads"""
+
+    volume: float = DEFAULT_VOLUME
+    """Voice volume in [0, 100]"""
 
 
 @dataclass
@@ -292,6 +297,14 @@ class Mimic3TextToSpeechSystem(TextToSpeechSystem):
     def language(self, new_language: str):
         self.settings.language = new_language
 
+    @property
+    def volume(self) -> float:
+        return self.settings.volume
+
+    @volume.setter
+    def volume(self, new_volume: float):
+        self.settings.volume = max(0, min(100, new_volume))
+
     def begin_utterance(self):
         pass
 
@@ -433,6 +446,10 @@ class Mimic3TextToSpeechSystem(TextToSpeechSystem):
         )
 
         audio_bytes = audio.tobytes()
+
+        if settings.volume != DEFAULT_VOLUME:
+            audio_bytes = audioop.mul(audio_bytes, 2, settings.volume / 100.0)
+
         return AudioResult(
             sample_rate_hz=voice.config.audio.sample_rate,
             audio_bytes=audio_bytes,

@@ -14,12 +14,13 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 """Support for Speech Synthesis Markup Language (SSML)"""
+import dataclasses
 import enum
 import logging
 import re
 import typing
 import xml.etree.ElementTree as etree
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from opentts_abc import BaseResult, Phonemes, SayAs, TextToSpeechSystem, Word
 
@@ -57,6 +58,39 @@ class ParsingState(int, enum.Enum):
     IN_SAY_AS = enum.auto()
     """Inside <say-as>"""
 
+    IN_PROSODY = enum.auto()
+    """Inside <prosody>"""
+
+
+_DEFAULT_VOLUME: float = 100.0
+
+
+@dataclass
+class ProsodyState:
+    """Current prosody settings"""
+
+    volume: float = _DEFAULT_VOLUME
+
+
+# -----------------------------------------------------------------------------
+
+_DEFAULT_VOLUME_MAP = {
+    "default": _DEFAULT_VOLUME,
+    "x-loud": _DEFAULT_VOLUME,
+    "loud": _DEFAULT_VOLUME * 0.8,
+    "medium": _DEFAULT_VOLUME * 0.5,
+    "soft": _DEFAULT_VOLUME * 0.3,
+    "x-soft": _DEFAULT_VOLUME * 0.1,
+    "silent": 0.0,
+}
+
+
+@dataclass
+class SSMLSettings:
+    volume_map: typing.Mapping[str, float] = field(
+        default_factory=lambda: _DEFAULT_VOLUME_MAP
+    )
+
 
 # -----------------------------------------------------------------------------
 
@@ -67,17 +101,23 @@ class SSMLSpeaker:
     See: https://www.w3.org/TR/speech-synthesis11/
     """
 
-    def __init__(self, tts: TextToSpeechSystem):
+    def __init__(
+        self, tts: TextToSpeechSystem, settings: typing.Optional[SSMLSettings] = None
+    ):
+        self.tts = tts
+        self.settings = settings or SSMLSettings()
+
         self._state_stack: typing.List[ParsingState] = [ParsingState.DEFAULT]
         self._element_stack: typing.List[etree.Element] = []
         self._voice_stack: typing.List[str] = []
         self._lang_stack: typing.List[str] = []
         self._interpret_as: typing.Optional[str] = None
         self._say_as_format: typing.Optional[str] = None
-        self.tts = tts
+        self._prosody_stack: typing.List[ProsodyState] = []
 
         self._default_voice = self.tts.voice
         self._default_lang = self.tts.language
+        self._default_prosody = ProsodyState()
 
     def speak(
         self, ssml: typing.Union[str, etree.Element]
@@ -120,6 +160,8 @@ class SSMLSpeaker:
                     self._handle_end_say_as()
                 elif end_tag == "lang":
                     self._handle_end_lang()
+                elif end_tag == "prosody":
+                    self._handle_end_prosody()
                 elif end_tag in {"sub"}:
                     # Handled in handle_text
                     pass
@@ -163,6 +205,8 @@ class SSMLSpeaker:
                     self._handle_begin_say_as(elem)
                 elif elem_tag == "lang":
                     self._handle_begin_lang(elem)
+                elif elem_tag == "prosody":
+                    self._handle_begin_prosody(elem)
                 elif elem_tag in {"metadata", "meta"}:
                     self._handle_begin_metadata()
                 else:
@@ -392,6 +436,33 @@ class SSMLSpeaker:
 
         LOG.debug("language: %s", self._lang)
 
+    def _handle_begin_prosody(self, elem: etree.Element):
+        """Handle <prosody>"""
+        LOG.debug("begin prosody")
+
+        # Start from current settings
+        new_prosody = ProsodyState(**dataclasses.asdict(self._prosody))
+
+        volume_str = attrib_no_namespace(elem, "volume")
+        if volume_str is not None:
+            new_prosody.volume = self._parse_volume(
+                volume_str, current_volume=self._prosody.volume
+            )
+
+        LOG.debug("prosody: %s", new_prosody)
+        self._push_prosody(new_prosody)
+
+        self.tts.volume = new_prosody.volume
+
+    def _handle_end_prosody(self):
+        """Handle </prosody>"""
+        LOG.debug("end prosody")
+        self._pop_prosody()
+
+        LOG.debug("prosody: %s", self._prosody)
+
+        self.tts.volume = self._prosody.volume
+
     # -------------------------------------------------------------------------
 
     @property
@@ -469,6 +540,72 @@ class SSMLSpeaker:
             return self._voice_stack.pop()
 
         return self._default_voice
+
+    @property
+    def _prosody(self) -> ProsodyState:
+        """Get prosody settings at the top of the stack"""
+        if self._prosody_stack:
+            return self._prosody_stack[-1]
+
+        return self._default_prosody
+
+    def _push_prosody(self, new_prosody: ProsodyState):
+        """Push new prosody settings on to the stack"""
+        self._prosody_stack.append(new_prosody)
+
+    def _pop_prosody(self) -> ProsodyState:
+        """Pop prosody settings off the stop of the stack"""
+        if self._prosody_stack:
+            return self._prosody_stack.pop()
+
+        return self._default_prosody
+
+    def _parse_volume(
+        self, volume_str: str, current_volume: float = _DEFAULT_VOLUME
+    ) -> float:
+        """Parse SSML volume from <prosody> into [0, 100] value"""
+        volume = current_volume
+        volume_str = volume_str.strip().lower()
+
+        # Look up by name
+        maybe_volume = self.settings.volume_map.get(volume_str)
+        if maybe_volume is not None:
+            volume = maybe_volume
+        elif volume_str:
+            is_positive_offset = False
+            is_negative_offset = False
+            is_percent = False
+
+            if volume_str[0] in {"+", "-"}:
+                if volume_str[0] == "+":
+                    is_positive_offset = True
+                else:
+                    is_negative_offset = True
+
+                volume_str = volume_str[1:]
+
+            if volume_str[-1] == "%":
+                is_percent = True
+                volume_str = volume_str[:-1]
+
+            volume_value = float(volume_str)
+            if is_percent:
+                if is_positive_offset:
+                    volume += volume * (volume_value / 100.0)
+                elif is_negative_offset:
+                    volume -= volume * (volume_value / 100.0)
+                else:
+                    # Already on a [0, 100] scale
+                    volume = volume_value
+            elif is_positive_offset:
+                volume += volume_value
+            elif is_negative_offset:
+                volume -= volume_value
+            else:
+                # Absolute value
+                volume = volume_value
+
+        return max(0, min(_DEFAULT_VOLUME, volume))
 
 
 # -----------------------------------------------------------------------------
