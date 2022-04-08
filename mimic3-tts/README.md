@@ -292,7 +292,7 @@ Our implementation is heavily based on [Jaehyeon Kim's PyTorch model](https://gi
 
 At a high level, Mimic 3 performs two important tasks:
 
-1. Converting raw text input numeric input for the VITS TTS model, and
+1. Converting raw text to numeric input for the VITS TTS model, and
 2. Using the model to transform numeric input into audio output
 
 The second step is the same for every voice, but the first step (text to numbers) varies. There are currently three implementations of step 1, described below.

@@ -1,0 +1,9 @@
+Package: mimic3-tts
+Version: ${VERSION}
+Section: utils
+Priority: optional
+Depends: libespeak-ng1
+Recommends: sox
+Architecture: ${DEBIAN_ARCH}
+Maintainer: Mycroft AI
+Description: A fast, local, neural text to speech system for Mycroft

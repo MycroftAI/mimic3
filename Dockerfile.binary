@@ -63,6 +63,8 @@ RUN .venv/bin/pyinstaller \
     --collect-data "gruut_lang_de" \
     --hidden-import "gruut_lang_en" \
     --collect-data "gruut_lang_en" \
+    --hidden-import "gruut_lang_es" \
+    --collect-data "gruut_lang_es" \
     --hidden-import "gruut_lang_fr" \
     --collect-data "gruut_lang_fr" \
     --hidden-import "gruut_lang_it" \
@@ -76,9 +78,19 @@ RUN .venv/bin/pyinstaller \
     --collect-data 'espeak_phonemizer' \
     --collect-data 'phonemes2ids' \
     --hidden-import 'swagger_ui' \
+    --hidden-import 'epitran' \
+    --hidden-import 'epitran' \
+    --collect-data 'panphon' \
+    --collect-data 'panphon' \
     --collect-data 'mimic3_tts' \
     --collect-data 'mimic3_http' \
     pyinstaller/mimic3.py
+
+# Clean up unused lexicons
+RUN find dist/mimic3/ -wholename '*/gruut_lang_*/espeak' -type d | \
+    while read -r espeak_dir; do \
+        rm -rf "${espeak_dir}"; \
+    done
 
 COPY pyinstaller/mimic3-server dist/mimic3/
 

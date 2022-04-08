@@ -16,7 +16,7 @@
 .PHONY: dist install docker binaries
 
 SHELL := bash
-DOCKER_PLATFORM ?= linux/amd64
+DOCKER_PLATFORM ?= linux/amd64  # linux/arm64 linux/arm/v7
 
 dist:
 	cd opentts-abc && python3 setup.py sdist
@@ -34,7 +34,9 @@ docker:
 	docker buildx build . -f Dockerfile --platform $(DOCKER_PLATFORM) --tag mycroftai/mimic3 --load
 
 docker-gpu:
-	docker buildx build . -f Dockerfile.gpu --tag mycroftai/mimic3:gpu --load
+	docker buildx build . -f Dockerfile.gpu --tag 'mycroftai/mimic3:gpu' --load
 
 binaries:
 	docker buildx build . -f Dockerfile.binary --platform $(DOCKER_PLATFORM) --output type=local,dest=dist/$(DOCKER_PLATFORM)
+
+debian:
