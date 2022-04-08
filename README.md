@@ -242,7 +242,7 @@ For example:
   <break time="3s" />
   <voice name="en_US/cmu-arctic_low#slt">
     <s>
-      <prosody volume="soft">
+      <prosody volume="soft" rate="150%">
         This is a <say-as interpret-as="number" format="ordinal">2</say-as> voice.
       </prosody>
     </s>

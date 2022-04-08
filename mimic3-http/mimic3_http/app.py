@@ -17,6 +17,7 @@
 import argparse
 import asyncio
 import dataclasses
+import json
 import logging
 import typing
 from pathlib import Path
@@ -118,6 +119,17 @@ def get_app(args: argparse.Namespace, request_queue: Queue, temp_dir: str):
 
     def _to_bool(s: str) -> bool:
         return s.strip().lower() in {"true", "1", "yes", "on"}
+
+    class VoiceEncoder(json.JSONEncoder):
+        """Encode a voice to JSON"""
+
+        def default(self, o):
+            if isinstance(o, set):
+                return list(o)
+
+            return json.JSONEncoder.default(self, o)
+
+    app.json_encoder = VoiceEncoder  # type: ignore
 
     @app.route("/img/<path:filename>", methods=["GET"])
     async def img(filename) -> Response:

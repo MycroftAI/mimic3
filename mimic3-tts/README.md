@@ -178,6 +178,10 @@ A subset of [SSML](https://www.w3.org/TR/speech-synthesis11/) (Speech Synthesis 
             * number in [0, 100] - 0 is silent, 100 is loudest (default)
             * +X, -X, +X%, -X% - absolute/percent offset from current volume
             * one of "default", "silent", "x-loud", "loud", "medium", "soft", "x-soft"
+        * `rate` - speaking rate
+            * number - 1 is default rate, < 1 is slower, > 1 is faster
+            * X% - 100% is default rate, 50% is half speed, 200% is twice as fast
+            * one of "default", "x-fast", "fast", "medium", "slow", "x-slow"
 * `<say-as interpret-as="">` - force interpretation of inner text
     * `interpret-as` one of "spell-out", "date", "number", "time", or "currency"
     * `format` - way to format text depending on `interpret-as`

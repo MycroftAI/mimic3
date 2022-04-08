@@ -218,6 +218,15 @@ class TextToSpeechSystem(AbstractContextManager, metaclass=ABCMeta):
     def volume(self, new_volume: float):
         """Set the current volume in [0, 100]"""
 
+    @property
+    @abstractmethod
+    def rate(self) -> float:
+        """Get the current speaking rate"""
+
+    @rate.setter
+    def rate(self, new_rate: float):
+        """Set the current speaker rate"""
+
     def shutdown(self):
         """Called by the host program when the text to speech system should be stopped"""
 

@@ -40,6 +40,7 @@ from ._resources import _VOICES
 from .config import TrainingConfig
 from .const import (
     DEFAULT_LANGUAGE,
+    DEFAULT_RATE,
     DEFAULT_VOICE,
     DEFAULT_VOICES_DOWNLOAD_DIR,
     DEFAULT_VOICES_URL_FORMAT,
@@ -112,6 +113,9 @@ class Mimic3Settings:
 
     volume: float = DEFAULT_VOLUME
     """Voice volume in [0, 100]"""
+
+    rate: float = DEFAULT_RATE
+    """Voice speaking rate (< 1 is slower, > 1 is faster)"""
 
 
 @dataclass
@@ -318,6 +322,14 @@ class Mimic3TextToSpeechSystem(TextToSpeechSystem):
     def volume(self, new_volume: float):
         self.settings.volume = max(0, min(100, new_volume))
 
+    @property
+    def rate(self) -> float:
+        return self.settings.rate
+
+    @rate.setter
+    def rate(self, new_rate: float):
+        self.settings.rate = new_rate
+
     def begin_utterance(self):
         pass
 
@@ -456,6 +468,7 @@ class Mimic3TextToSpeechSystem(TextToSpeechSystem):
             length_scale=settings.length_scale,
             noise_scale=settings.noise_scale,
             noise_w=settings.noise_w,
+            rate=settings.rate,
         )
 
         audio_bytes = audio.tobytes()

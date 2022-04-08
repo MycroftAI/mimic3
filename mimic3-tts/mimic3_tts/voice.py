@@ -32,8 +32,9 @@ import onnxruntime
 import phonemes2ids
 from gruut_ipa import IPA
 
-from mimic3_tts.config import Phonemizer, TrainingConfig
-from mimic3_tts.utils import audio_float_to_int16
+from .config import Phonemizer, TrainingConfig
+from .const import DEFAULT_RATE
+from .utils import audio_float_to_int16
 
 # -----------------------------------------------------------------------------
 
@@ -159,10 +160,15 @@ class Mimic3Voice(metaclass=ABCMeta):
         length_scale: typing.Optional[float] = None,
         noise_scale: typing.Optional[float] = None,
         noise_w: typing.Optional[float] = None,
+        rate: float = DEFAULT_RATE,
     ) -> np.ndarray:
         """Synthesize audio from phoneme ids usng Onnx voice model (see generator.onnx)"""
         if length_scale is None:
             length_scale = self.config.inference.length_scale
+
+        # Scale length by rate
+        if rate > 0:
+            length_scale /= rate
 
         if noise_scale is None:
             noise_scale = self.config.inference.noise_scale

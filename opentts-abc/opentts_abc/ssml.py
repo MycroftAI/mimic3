@@ -63,6 +63,7 @@ class ParsingState(int, enum.Enum):
 
 
 _DEFAULT_VOLUME: float = 100.0
+_DEFAULT_RATE: float = 1.0
 
 
 @dataclass
@@ -70,6 +71,10 @@ class ProsodyState:
     """Current prosody settings"""
 
     volume: float = _DEFAULT_VOLUME
+    """Currrent volume setting in [0, 100]"""
+
+    rate: float = _DEFAULT_RATE
+    """Current rate setting (< 1 is slower, > 1 is faster)"""
 
 
 # -----------------------------------------------------------------------------
@@ -84,12 +89,29 @@ _DEFAULT_VOLUME_MAP = {
     "silent": 0.0,
 }
 
+_DEFAULT_RATE_MAP = {
+    "default": _DEFAULT_RATE,
+    "x-fast": _DEFAULT_RATE * 3,
+    "fast": _DEFAULT_RATE * 2,
+    "medium": _DEFAULT_RATE,
+    "slow": _DEFAULT_RATE * 0.5,
+    "x-slow": _DEFAULT_RATE * 0.25,
+}
+
 
 @dataclass
 class SSMLSettings:
+    """Settings for SSML named constants"""
+
     volume_map: typing.Mapping[str, float] = field(
         default_factory=lambda: _DEFAULT_VOLUME_MAP
     )
+    """Volume named constant to volume level"""
+
+    rate_map: typing.Mapping[str, float] = field(
+        default_factory=lambda: _DEFAULT_RATE_MAP
+    )
+    """Rate named constant to speaking rate"""
 
 
 # -----------------------------------------------------------------------------
@@ -449,10 +471,15 @@ class SSMLSpeaker:
                 volume_str, current_volume=self._prosody.volume
             )
 
+        rate_str = attrib_no_namespace(elem, "rate")
+        if rate_str is not None:
+            new_prosody.rate = self._parse_rate(rate_str)
+
         LOG.debug("prosody: %s", new_prosody)
         self._push_prosody(new_prosody)
 
         self.tts.volume = new_prosody.volume
+        self.tts.rate = new_prosody.rate
 
     def _handle_end_prosody(self):
         """Handle </prosody>"""
@@ -606,6 +633,32 @@ class SSMLSpeaker:
                 volume = volume_value
 
         return max(0, min(_DEFAULT_VOLUME, volume))
+
+    def _parse_rate(self, rate_str: str) -> float:
+        """Parse SSML rate from <prosody> into float"""
+        rate = _DEFAULT_RATE
+        rate_str = rate_str.strip().lower()
+
+        maybe_rate = self.settings.rate_map.get(rate_str)
+        if maybe_rate is not None:
+            rate = maybe_rate
+        elif rate_str:
+            is_percent = False
+
+            if rate_str[-1] == "%":
+                is_percent = True
+                rate_str = rate_str[:-1]
+
+            rate_value = float(rate_str)
+
+            if is_percent:
+                # 50% = 0.5
+                rate = rate_value / 100.0
+            else:
+                # Absolute value
+                rate = rate_value
+
+        return rate
 
 
 # -----------------------------------------------------------------------------
