@@ -221,6 +221,18 @@ class Mimic3TextToSpeechSystem(TextToSpeechSystem):
                                 if line:
                                     speakers.append(line)
 
+                    # Load aliases
+                    aliases: typing.Optional[typing.Set[str]] = None
+                    aliases_path = voice_dir / "ALIASES"
+                    if aliases_path.is_file():
+                        aliases = set()
+
+                        with open(aliases_path, "r", encoding="utf-8") as aliases_file:
+                            for line in aliases_file:
+                                line = line.strip()
+                                if line:
+                                    aliases.add(line)
+
                     voice_key = f"{voice_lang}/{voice_name}"
 
                     yield Voice(
@@ -231,6 +243,7 @@ class Mimic3TextToSpeechSystem(TextToSpeechSystem):
                         speakers=speakers,
                         location=str(voice_dir.absolute()),
                         properties=properties,
+                        aliases=aliases,
                     )
 
                     known_voices.discard(voice_key)
@@ -467,7 +480,9 @@ class Mimic3TextToSpeechSystem(TextToSpeechSystem):
         # Look up as substring of known voice
         model_dir: typing.Optional[Path] = None
         for maybe_voice in self.get_voices():
-            if maybe_voice.key.endswith(voice_key):
+            if (voice_key == maybe_voice.key) or (
+                maybe_voice.aliases and (voice_key in maybe_voice.aliases)
+            ):
                 maybe_model_dir = Path(maybe_voice.location)
 
                 if (not maybe_model_dir.is_dir()) and (not self.settings.no_download):
