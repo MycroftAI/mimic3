@@ -55,6 +55,64 @@ mycroft-config set tts.module mimic3_tts_plug
 See the [plugin's documentation](https://github.com/MycroftAI/plugin-tts-mimic3) for more options.
 
 
+### Docker image
+
+A pre-built Docker image is available for the following platforms:
+
+* `linux/amd64`
+    * For desktops and laptops (`x86_64` CPUs)
+* `linux/arm64`
+    * For Raspberry 3/4 and Zero 2 with [64-bit Pi OS](https://www.raspberrypi.com/news/raspberry-pi-os-64-bit/)
+* `linux/arm/v7`
+    * For Raspberry Pi 1/2/3/4 and Zero 2 with 32-bit Pi OS
+    
+Install/update with:
+
+``` sh
+docker pull mycroftai/mimic3
+```
+
+Once installed, check out the following scripts for running:
+
+    * [`mimic3`](docker/mimic3)
+    * [`mimic3-server`](docker/mimic3-server)
+    * [`mimic3-download`](docker/mimic3-download)
+    
+Or you can manually run the web server with:
+
+``` sh
+docker run \
+       -it \
+       -p 59125:59125 \
+       -v "${HOME}/.local/share/mimic3:/home/mimic3/.local/share/mimic3" \
+       'mycroftai/mimic3'
+```
+
+
+### Debian Package
+
+Grab the Debian package from the [latest release](https://github.com/mycroftAI/mimic3/releases) for your platform:
+
+* `mimic3-tts_<version>_amd64.deb`
+    * For desktops and laptops (`x86_64` CPUs)
+* `mimic3-tts_<version>_arm64.deb`
+    * For Raspberry 3/4 and Zero 2 with [64-bit Pi OS](https://www.raspberrypi.com/news/raspberry-pi-os-64-bit/)
+* `mimic3-tts_<version>_armhf.deb`
+    * For Raspberry Pi 1/2/3/4 and Zero 2 with 32-bit Pi OS
+    
+Once downloaded, install the package with:
+
+``` sh
+sudo apt install ./mimic3-tts_<version>_<platform>.deb
+```
+
+Once installed, the following commands will be available:
+
+    * `mimic3`
+    * `mimic3-server`
+    * `mimic3-download`
+
+
 ### Using pip
 
 Install the command-line tool:
