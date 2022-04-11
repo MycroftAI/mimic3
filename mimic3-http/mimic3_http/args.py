@@ -21,9 +21,11 @@ from ._resources import _PACKAGE, __version__
 _MISSING = object()
 
 
-def get_args() -> argparse.Namespace:
+def get_args(argv=None) -> argparse.Namespace:
     """Parse and return command-line arguments"""
-    parser = argparse.ArgumentParser(prog=_PACKAGE)
+    parser = argparse.ArgumentParser(
+        prog=_PACKAGE, description="Local HTTP web server for Mimic 3"
+    )
     parser.add_argument(
         "--voices-dir",
         action="append",
@@ -78,12 +80,9 @@ def get_args() -> argparse.Namespace:
         "--debug", action="store_true", help="Print DEBUG messages to console"
     )
     parser.add_argument(
-        "--server", action="store_true", help="Dummy argument from PyInstaller script"
-    )
-    parser.add_argument(
         "--version", action="store_true", help="Print version to console and exit"
     )
-    args = parser.parse_args()
+    args = parser.parse_args(args=argv)
 
     if args.version:
         print(__version__)

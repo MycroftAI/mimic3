@@ -36,8 +36,8 @@ _DEFAULT_PLAY_PROGRAMS = ["paplay", "play -q", "aplay -q"]
 # -----------------------------------------------------------------------------
 
 
-def main():
-    args = get_args()
+def main(argv=None):
+    args = get_args(argv)
 
     if args.output:
         args.output = Path(args.output)
@@ -106,8 +106,10 @@ def play_wav_bytes(args: argparse.Namespace, wav_bytes: bytes):
 # -----------------------------------------------------------------------------
 
 
-def get_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(prog=_PACKAGE)
+def get_args(argv) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        prog=_PACKAGE, description="Client for Mimic 3 HTTP web server"
+    )
     parser.add_argument(
         "text", nargs="*", help="Text to convert to speech (default: stdin)"
     )
@@ -157,7 +159,7 @@ def get_args() -> argparse.Namespace:
     parser.add_argument(
         "--debug", action="store_true", help="Print DEBUG messages to the console"
     )
-    args = parser.parse_args()
+    args = parser.parse_args(args=argv)
 
     if args.debug:
         logging.basicConfig(level=logging.DEBUG)

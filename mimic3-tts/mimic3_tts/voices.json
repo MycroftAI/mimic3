@@ -1,6 +1,62 @@
 {
+    "de_DE/m-ailabs_low": {
+        "files": {
+            "ALIASES": {
+                "size_bytes": 15,
+                "sha256_sum": "e0ae61445d0dc4ff8edb87f3cf5118c3d73f4725f08d64070bdf0e41ea105955"
+            },
+            "LICENSE": {
+                "size_bytes": 1372,
+                "sha256_sum": "fdd78a909fb9384d869363522b967557bc9e28e5b65874921f24e48cbb82f38c"
+            },
+            "README.md": {
+                "size_bytes": 192,
+                "sha256_sum": "b54bbfe56a8ab4089414b3b00da581658b32839a2dbc758eb862cd4fa46f82a1"
+            },
+            "SOURCE": {
+                "size_bytes": 61,
+                "sha256_sum": "841520f6a8cc616e307a92552355691f8c3087fadda2e9b7a03a7863b2d0cf6a"
+            },
+            "config.json": {
+                "size_bytes": 3611,
+                "sha256_sum": "9265a46d77604ba55ce327a7bb85d9505157d45152250bc24553ffa5e4ea1a87"
+            },
+            "generator.onnx": {
+                "size_bytes": 76340831,
+                "sha256_sum": "3330372429b25fe3a38b10bbe914862a49b2cd0a58da332bbe30fa123035a067"
+            },
+            "phoneme_map.txt": {
+                "size_bytes": 15,
+                "sha256_sum": "4003f421fc91ed1d5a343442659db6cf9d58bd1c6d8d771abc1999cc24d7694d"
+            },
+            "phonemes.txt": {
+                "size_bytes": 349,
+                "sha256_sum": "a0024e3875fa210c5a77e15c24d1e7bfa09719ec3111ba359b87d190bc3f2970"
+            },
+            "speaker_map.csv": {
+                "size_bytes": 132,
+                "sha256_sum": "2e646caf922b48cf499e8063b2bdd43d0c6dae7e57943f102f1ef425490ddaff"
+            },
+            "speakers.txt": {
+                "size_bytes": 77,
+                "sha256_sum": "35c2fc71cc96418cf9b6a16e62fe13bb3fe129db8c4c8123af57c743d6cb5e1b"
+            }
+        },
+        "speakers": [
+            "ramona_deininger",
+            "karlsson",
+            "rebecca_braunert_plunkett",
+            "eva_k",
+            "angela_merkel"
+        ],
+        "properties": {}
+    },
     "de_DE/thorsten_low": {
         "files": {
+            "ALIASES": {
+                "size_bytes": 33,
+                "sha256_sum": "b8e63a783428e6bdc042373baaf00d715ad736cf5ea4dc10c5d6463e34229ff8"
+            },
             "LICENSE": {
                 "size_bytes": 6555,
                 "sha256_sum": "36ffd9dc085d529a7e60e1276d73ae5a030b020313e6c5408593a6ae2af39673"
@@ -35,6 +91,10 @@
     },
     "el_GR/rapunzelina_low": {
         "files": {
+            "ALIASES": {
+                "size_bytes": 27,
+                "sha256_sum": "bccc3c214f6eb2f652d26a1877f3c381f3b436a04f677b2a25b6abed15c8396b"
+            },
             "LICENSE": {
                 "size_bytes": 6384,
                 "sha256_sum": "e052310c1e6d75057abe231ba94b7f2eedee1aec4a0c5c658c8151f6f8c05fd8"
@@ -65,6 +125,10 @@
     },
     "en_UK/apope_low": {
         "files": {
+            "ALIASES": {
+                "size_bytes": 27,
+                "sha256_sum": "1e3fd2b4f35effd0f9eebc91bad0d496d68967fe3e081190d241d2a33e16b014"
+            },
             "LICENSE": {
                 "size_bytes": 46,
                 "sha256_sum": "2fb2b744e6d96a2e3137d58121670b005718c736d5dde1832c99ff9073f64c00"
@@ -99,6 +163,10 @@
     },
     "en_US/cmu-arctic_low": {
         "files": {
+            "ALIASES": {
+                "size_bytes": 28,
+                "sha256_sum": "32ca0bba8ea9469ecb36fba25555978a965713008b2c3c6b2bdb50f957cf7ad2"
+            },
             "LICENSE": {
                 "size_bytes": 960,
                 "sha256_sum": "244ff21a910baf28bcb27b1975620a79d2be8611815ecc599f08eb06dd6f000e"
@@ -160,6 +228,10 @@
     },
     "en_US/ljspeech_low": {
         "files": {
+            "ALIASES": {
+                "size_bytes": 24,
+                "sha256_sum": "3588144e27e432ac8f98eeb7cb2bf42d153b4419068761895b21fdf4d5909c53"
+            },
             "LICENSE": {
                 "size_bytes": 42,
                 "sha256_sum": "2a380bafa00cc11ecae80f4a1c21f3873361bc9af1f23c8eecc255b143cdaf68"
@@ -194,6 +266,10 @@
     },
     "en_US/vctk_low": {
         "files": {
+            "ALIASES": {
+                "size_bytes": 22,
+                "sha256_sum": "76bfae8700cf6b9d7f4d4d65b7a0670813b5fafd8cb3679973c243f1160d3bca"
+            },
             "LICENSE": {
                 "size_bytes": 17417,
                 "sha256_sum": "b351fdf5bbec1e011fd4c09ed1af05df6fd7de2e679fd7a92e6ec4398c38e3ff"
@@ -346,6 +422,10 @@
     },
     "es_ES/carlfm_low": {
         "files": {
+            "ALIASES": {
+                "size_bytes": 29,
+                "sha256_sum": "4dcbb22abe30e064da6abdbd9551d02db2bfccdb67d7b506194170087a637c12"
+            },
             "LICENSE": {
                 "size_bytes": 14,
                 "sha256_sum": "f5b244982699ca9fe5cc8fa8a7c08cf5dee5d3a0c8896892899e5df13316e1b7"
@@ -380,6 +460,10 @@
     },
     "fi_FI/harri-tapani-ylilammi_low": {
         "files": {
+            "ALIASES": {
+                "size_bytes": 59,
+                "sha256_sum": "583544b592d8cadd2c03fb4d2666d1ea41196ef4c7b4126bb71d4336c52edbb6"
+            },
             "LICENSE": {
                 "size_bytes": 6384,
                 "sha256_sum": "e052310c1e6d75057abe231ba94b7f2eedee1aec4a0c5c658c8151f6f8c05fd8"
@@ -410,6 +494,10 @@
     },
     "fr_FR/m-ailabs_low": {
         "files": {
+            "ALIASES": {
+                "size_bytes": 15,
+                "sha256_sum": "f39626712251586470737f40b6bb2d1dc86730853f061dd59c5b426b0774d9be"
+            },
             "LICENSE": {
                 "size_bytes": 1372,
                 "sha256_sum": "fdd78a909fb9384d869363522b967557bc9e28e5b65874921f24e48cbb82f38c"
@@ -458,6 +546,10 @@
     },
     "fr_FR/siwis_low": {
         "files": {
+            "ALIASES": {
+                "size_bytes": 27,
+                "sha256_sum": "83cdf2053ef873751c00007aa35a69b45fefc814b17a7dd6c5a8e1a79135a9f5"
+            },
             "LICENSE": {
                 "size_bytes": 17416,
                 "sha256_sum": "b34e17103bfb246f2549fc82a279e6ba28834e0cb42f76a92efc14b72e3a3723"
@@ -492,6 +584,10 @@
     },
     "fr_FR/tom_low": {
         "files": {
+            "ALIASES": {
+                "size_bytes": 14,
+                "sha256_sum": "f11c23869882a66f2f4a4ed1e9a07fc8963a819521747f7458876de18558425f"
+            },
             "LICENSE": {
                 "size_bytes": 24947,
                 "sha256_sum": "635554793cdae1fbc549793a1565772c763e64a686dc674edeaa492c5b88e493"
@@ -526,6 +622,10 @@
     },
     "hu_HU/diana-majlinger_low": {
         "files": {
+            "ALIASES": {
+                "size_bytes": 47,
+                "sha256_sum": "6e5d2f1f9653ee935fad9e4e4d2d1a57e3d1358d053a1f2fcfa0e0b4fc27fc45"
+            },
             "LICENSE": {
                 "size_bytes": 6384,
                 "sha256_sum": "e052310c1e6d75057abe231ba94b7f2eedee1aec4a0c5c658c8151f6f8c05fd8"
@@ -556,6 +656,10 @@
     },
     "it_IT/riccardo-fasol_low": {
         "files": {
+            "ALIASES": {
+                "size_bytes": 45,
+                "sha256_sum": "fd792bad7cb68b327fdc04b4d10c9cd2c04c6c83be065018de7ac62fdfc4d7ad"
+            },
             "LICENSE": {
                 "size_bytes": 1372,
                 "sha256_sum": "fdd78a909fb9384d869363522b967557bc9e28e5b65874921f24e48cbb82f38c"
@@ -590,6 +694,10 @@
     },
     "ko_KO/kss_low": {
         "files": {
+            "ALIASES": {
+                "size_bytes": 23,
+                "sha256_sum": "2a78354f385e4490457fc83c0c7ff6bb22f41ded915417b9cdde8a73d4229b47"
+            },
             "LICENSE": {
                 "size_bytes": 6384,
                 "sha256_sum": "e052310c1e6d75057abe231ba94b7f2eedee1aec4a0c5c658c8151f6f8c05fd8"
@@ -618,8 +726,88 @@
         "speakers": [],
         "properties": {}
     },
+    "nl/bart-de-leeuw_low": {
+        "files": {
+            "ALIASES": {
+                "size_bytes": 31,
+                "sha256_sum": "fc319d16d5ac6ae15742de66567fac445473d6031c0c2b9b74f11939523cd8bb"
+            },
+            "LICENSE": {
+                "size_bytes": 6384,
+                "sha256_sum": "e052310c1e6d75057abe231ba94b7f2eedee1aec4a0c5c658c8151f6f8c05fd8"
+            },
+            "README.md": {
+                "size_bytes": 201,
+                "sha256_sum": "028b261e4147010ecea7cc4b732c3c6624843b7df5411d67b25a26e8fae64dfb"
+            },
+            "SOURCE": {
+                "size_bytes": 69,
+                "sha256_sum": "b7c9a4b2358be26c8cd98ef6f6ef731b64f6a945611db86020faead59278391c"
+            },
+            "config.json": {
+                "size_bytes": 3628,
+                "sha256_sum": "3f2d000a7a72ff3764f3f2f33636419f12e6d4b6e644de3308a2f2630ff1efc0"
+            },
+            "generator.onnx": {
+                "size_bytes": 62800663,
+                "sha256_sum": "c3c982ff70b626483ef767475650d344bc618cbb97cff018489b6b5203d2e2b7"
+            },
+            "phoneme_map.txt": {
+                "size_bytes": 21,
+                "sha256_sum": "18b9c5fe46201cd5b0b20e88dc78c64ef3bcaaf87a428386420757f2d0bf7bb3"
+            },
+            "phonemes.txt": {
+                "size_bytes": 336,
+                "sha256_sum": "355389fee04f97557232cdde7fb8d4cf03ae2aabd7b0b26ed5978ebbf6575dd4"
+            }
+        },
+        "speakers": [],
+        "properties": {}
+    },
+    "nl/flemishguy_low": {
+        "files": {
+            "ALIASES": {
+                "size_bytes": 25,
+                "sha256_sum": "1bb2b354175d5f2907b852776868647a3259de3e7886535568b32089505dc176"
+            },
+            "LICENSE": {
+                "size_bytes": 7049,
+                "sha256_sum": "7179683e8000e6bdc9bbc60d85edf0a4ac8e76f951857f54fcb775d5886f1309"
+            },
+            "README.md": {
+                "size_bytes": 186,
+                "sha256_sum": "c8e38927cdae75058269215c1298980f17ab5128a51f163c72349f09e440c442"
+            },
+            "SOURCE": {
+                "size_bytes": 52,
+                "sha256_sum": "47ed4627b3caa192570bf1c8d8810b3fb69ce8bf9ed85fc981f0b87df40b40b8"
+            },
+            "config.json": {
+                "size_bytes": 3621,
+                "sha256_sum": "32243780361d3e8885ca85238fae167c617b5426b71e744b81d44af0c7e7222b"
+            },
+            "generator.onnx": {
+                "size_bytes": 62800663,
+                "sha256_sum": "3929b68d9b02e93363d0ca7f630599ec63ea5ea0826f3eb80c15542210783ebd"
+            },
+            "phoneme_map.txt": {
+                "size_bytes": 21,
+                "sha256_sum": "18b9c5fe46201cd5b0b20e88dc78c64ef3bcaaf87a428386420757f2d0bf7bb3"
+            },
+            "phonemes.txt": {
+                "size_bytes": 329,
+                "sha256_sum": "8e811259b6697f32859d1980ba53a08bab9a7a6a823e07f51733a65e06980a0e"
+            }
+        },
+        "speakers": [],
+        "properties": {}
+    },
     "nl/nathalie_low": {
         "files": {
+            "ALIASES": {
+                "size_bytes": 21,
+                "sha256_sum": "d4518b145f08c1c7246054e60273243e52194afeae4a5a93420e223edadf5bb9"
+            },
             "LICENSE": {
                 "size_bytes": 7049,
                 "sha256_sum": "7179683e8000e6bdc9bbc60d85edf0a4ac8e76f951857f54fcb775d5886f1309"
@@ -654,6 +842,10 @@
     },
     "nl/rdh_low": {
         "files": {
+            "ALIASES": {
+                "size_bytes": 14,
+                "sha256_sum": "3153cae15f6ede59466db67d86585e281468f5e32363c8bf3fcc9b7eeee1d77f"
+            },
             "LICENSE": {
                 "size_bytes": 7049,
                 "sha256_sum": "7179683e8000e6bdc9bbc60d85edf0a4ac8e76f951857f54fcb775d5886f1309"
@@ -688,6 +880,10 @@
     },
     "ru_RU/multi_low": {
         "files": {
+            "ALIASES": {
+                "size_bytes": 21,
+                "sha256_sum": "3a821bb9177dbc8920ca2667a8d053db86d8df26eeba2b675800e77a36a3c41e"
+            },
             "README.md": {
                 "size_bytes": 266,
                 "sha256_sum": "f2a1a1aecc439fefb59879481dc659eb532d7cbf4e417829f68543e5379cabdc"
@@ -746,6 +942,10 @@
     },
     "sw/lanfrica_low": {
         "files": {
+            "ALIASES": {
+                "size_bytes": 15,
+                "sha256_sum": "6e8b37087bd0077fa5f292296d323b8dc0677e0b7467d94d3b4983fc144adade"
+            },
             "LICENSE": {
                 "size_bytes": 0,
                 "sha256_sum": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
@@ -772,6 +972,10 @@
     },
     "te_IN/cmu-indic_low": {
         "files": {
+            "ALIASES": {
+                "size_bytes": 25,
+                "sha256_sum": "ba89ff81ef986ba9e3ebcad3fc4a877fe1653d7837ae49bdd9602b54c99c2706"
+            },
             "LICENSE": {
                 "size_bytes": 960,
                 "sha256_sum": "244ff21a910baf28bcb27b1975620a79d2be8611815ecc599f08eb06dd6f000e"
@@ -814,6 +1018,10 @@
     },
     "uk_UK/m-ailabs_low": {
         "files": {
+            "ALIASES": {
+                "size_bytes": 24,
+                "sha256_sum": "ca1594184cd4d6361fe6e66b0ec8598f75f16e15638b5b72825f4d97acddcdd0"
+            },
             "LICENSE": {
                 "size_bytes": 1372,
                 "sha256_sum": "fdd78a909fb9384d869363522b967557bc9e28e5b65874921f24e48cbb82f38c"
@@ -859,6 +1067,10 @@
     },
     "vi_VN/vais1000_low": {
         "files": {
+            "ALIASES": {
+                "size_bytes": 24,
+                "sha256_sum": "dc595d196326c9ac87a0e3f784a7990ccc2aadcda3fd898bd63a532e8d0e4699"
+            },
             "LICENSE": {
                 "size_bytes": 45,
                 "sha256_sum": "0792914b42cbac29cb2ca5e729be0e7f959786ead4c1c31c027aca9a0a108c02"

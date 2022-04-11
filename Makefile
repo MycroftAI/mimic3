@@ -17,6 +17,7 @@
 
 SHELL := bash
 DOCKER_PLATFORM ?= linux/amd64  # linux/arm64 linux/arm/v7
+DOCKER_OUTPUT ?= --load
 
 dist:
 	cd opentts-abc && python3 setup.py sdist
@@ -31,10 +32,10 @@ install:
 	./install.sh
 
 docker:
-	docker buildx build . -f Dockerfile --platform $(DOCKER_PLATFORM) --tag mycroftai/mimic3 --load
+	docker buildx build . -f Dockerfile --platform $(DOCKER_PLATFORM) --tag mycroftai/mimic3 $(DOCKER_OUTPUT)
 
 docker-gpu:
-	docker buildx build . -f Dockerfile.gpu --tag 'mycroftai/mimic3:gpu' --load
+	docker buildx build . -f Dockerfile.gpu --tag 'mycroftai/mimic3:gpu' $(DOCKER_OUTPUT)
 
 binaries:
 	docker buildx build . -f Dockerfile.binary --platform $(DOCKER_PLATFORM) --output type=local,dest=dist/$(DOCKER_PLATFORM)

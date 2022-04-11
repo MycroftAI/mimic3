@@ -113,9 +113,11 @@ def download_voice(
 # -----------------------------------------------------------------------------
 
 
-def main():
+def main(argv=None):
     """Main entry point"""
-    parser = argparse.ArgumentParser(prog=f"{_PACKAGE}.download")
+    parser = argparse.ArgumentParser(
+        prog=f"{_PACKAGE}.download", description="Download utility for Mimic 3 voices"
+    )
     parser.add_argument(
         "key",
         nargs="*",
@@ -139,7 +141,7 @@ def main():
     parser.add_argument(
         "--debug", action="store_true", help="Print DEBUG messages to console"
     )
-    args = parser.parse_args()
+    args = parser.parse_args(args=argv)
 
     if args.debug:
         logging.basicConfig(level=logging.DEBUG)

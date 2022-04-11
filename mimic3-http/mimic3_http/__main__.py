@@ -32,8 +32,8 @@ _LOGGER = logging.getLogger(__name__)
 # -----------------------------------------------------------------------------
 
 
-def main():
-    args = get_args()
+def main(argv=None):
+    args = get_args(argv)
 
     if args.debug:
         logging.basicConfig(level=logging.DEBUG)

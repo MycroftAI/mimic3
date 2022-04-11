@@ -14,8 +14,12 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
+# -----------------------------------------------------------------------------
+#
+# Stub script to execute web server in PyInstaller distribution.
+#
 
 # Directory of *this* script
 this_dir="$( cd "$( dirname "$0" )" && pwd )"
 
-"${this_dir}/mimic3" --server "$@"
+"${this_dir}/mimic3" --subprogram server "$@"

@@ -472,9 +472,11 @@ def print_voices(state: CommandLineInterfaceState):
 # -----------------------------------------------------------------------------
 
 
-def get_args():
+def get_args(argv=None):
     """Parse command-line arguments"""
-    parser = argparse.ArgumentParser(prog=_PACKAGE)
+    parser = argparse.ArgumentParser(
+        prog=_PACKAGE, description="Mimic 3 command-line interface"
+    )
     parser.add_argument(
         "text", nargs="*", help="Text to convert to speech (default: stdin)"
     )
@@ -584,7 +586,7 @@ def get_args():
         "--debug", action="store_true", help="Print DEBUG messages to the console"
     )
 
-    return parser.parse_args()
+    return parser.parse_args(args=argv)
 
 
 # -----------------------------------------------------------------------------

@@ -15,14 +15,25 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 """Stub for PyInstaller"""
-import sys
+import argparse
+
+parser = argparse.ArgumentParser(add_help=False)
+parser.add_argument("--subprogram", choices=["server", "client", "download"])
+known_args, rest_args = parser.parse_known_args()
 
 
-if (len(sys.argv) > 1) and (sys.argv[1] == "--server"):
+if known_args.subprogram == "server":
     from mimic3_http.__main__ import main as http_main
 
-    sys.argv = [sys.argv[0]] + sys.argv[2:]
-    http_main()
+    http_main(argv=rest_args)
+elif known_args.subprogram == "client":
+    from mimic3_http.client import main as client_main
+
+    client_main(argv=rest_args)
+elif known_args.subprogram == "download":
+    from mimic3_tts.download import main as download_main
+
+    download_main(argv=rest_args)
 else:
     from mimic3_tts.__main__ import main as tts_main
 
