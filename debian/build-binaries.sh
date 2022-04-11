@@ -26,7 +26,7 @@ src_dir="$(realpath "${this_dir}/..")"
 
 if [ -z "$1" ]; then
     # All platforms
-    platforms=('amd64' 'arm64' 'arm/v7')
+    platforms=('linux/amd64' 'linux/arm64' 'linux/arm/v7')
 else
     # Only platforms from command-line arguments
     platforms=("$@")
