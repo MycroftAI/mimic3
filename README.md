@@ -119,10 +119,12 @@ Once installed, the following commands will be available in `.venv/bin`:
 
 Mimic 3 references voices with the format:
 
-* `<language>/<name>_<quality>` for single speaker voices, and
-* `<language>/<name>_<quality>#<speaker>` for multi-speaker voices 
+* `<language>/<dataset>_<quality>` for single speaker voices, and
+* `<language>/<dataset>_<quality>#<speaker>` for multi-speaker voices 
     * `<speaker>` can be a name or number starting at 0
     * Speaker names come from a voice's `speakers.txt` file
+    
+![parts of a mimic 3 voice](img/voice_parts.png)
     
 For example, the default [Alan Pope](https://popey.me/) voice key is `en_UK/apope_low`. 
 The [CMU Arctic voice](https://github.com/MycroftAI/mimic3-voices/tree/master/voices/en_US/cmu-arctic_low) contains multiple speakers, with a commonly used voice being `en_US/cmu-arctic_low#slt`.
