@@ -119,8 +119,8 @@ Once installed, the following commands will be available in `.venv/bin`:
 
 Mimic 3 references voices with the format:
 
-* `<language>/<dataset>_<quality>` for single speaker voices, and
-* `<language>/<dataset>_<quality>#<speaker>` for multi-speaker voices 
+* `<language>_<region>/<dataset>_<quality>` for single speaker voices, and
+* `<language>_<region>/<dataset>_<quality>#<speaker>` for multi-speaker voices 
     * `<speaker>` can be a name or number starting at 0
     * Speaker names come from a voice's `speakers.txt` file
     
