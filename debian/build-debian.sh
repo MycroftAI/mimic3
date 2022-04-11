@@ -27,9 +27,21 @@ this_dir="$( cd "$( dirname "$0" )" && pwd )"
 src_dir="$(realpath "${this_dir}/..")"
 dist_dir="${src_dir}/dist/linux"
 
+voices_dir="${src_dir}/../mimic3-voices/voices"
+src_voice_dir="${voices_dir}/en_UK/apope_low"
+
 version="$(cat "${src_dir}/mimic3-tts/mimic3_tts/VERSION")"
 
-for platform in 'amd64' 'arm64' 'arm/v7'; do
+if [ -z "$1" ]; then
+    # All platforms
+    platforms=('amd64' 'arm64' 'arm/v7')
+else
+    # Only platforms from command-line arguments
+    platforms=("$@")
+fi
+
+# Create Debian package for each platform
+for platform in "${platforms[@]}"; do
     platform_dir="${dist_dir}/${platform}"
     if [ -d "${platform_dir}" ]; then
         # Create temporary directory for building
@@ -67,6 +79,11 @@ for platform in 'amd64' 'arm64' 'arm/v7'; do
         # Copy scripts
         mkdir -p "${package_dir}/usr/bin/"
         rsync -av "${this_dir}/bin/" "${package_dir}/usr/bin/"
+
+        # Copy default voice
+        dest_voice_dir="${package_dir}/usr/share/mimic3/voices/en_UK/apope_low"
+        mkdir -p "${dest_voice_dir}"
+        rsync -av "${src_voice_dir}/" "${dest_voice_dir}/"
 
         # Build Debian package
         pushd "${temp_dir}" 2>/dev/null
