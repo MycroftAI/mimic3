@@ -35,7 +35,7 @@ fi
 pushd "${src_dir}"
 
 for platform in "${platforms[@]}"; do
-    DOCKER_PLATFORMS="${platform}" \
+    DOCKER_PLATFORM="${platform}" \
         make binaries
 done
 
