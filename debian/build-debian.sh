@@ -20,7 +20,7 @@
 # Before running this script, you must build PyInstaller binaries with "make
 # binaries" or by manually invoking Dockerfile.binary.
 # -----------------------------------------------------------------------------
-set -euo pipefail
+set -eo pipefail
 
 # Directory of *this* script
 this_dir="$( cd "$( dirname "$0" )" && pwd )"

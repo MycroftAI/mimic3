@@ -92,7 +92,11 @@ RUN find dist/mimic3/ -wholename '*/gruut_lang_*/espeak' -type d | \
         rm -rf "${espeak_dir}"; \
     done
 
-COPY pyinstaller/mimic3-server dist/mimic3/
+# Copy convenience scripts
+COPY pyinstaller/mimic3-server \
+    pyinstaller/mimic3-client \
+    pyinstaller/mimic3-download \
+    dist/mimic3/
 
 # -----------------------------------------------------------------------------
 

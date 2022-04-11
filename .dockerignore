@@ -3,6 +3,8 @@
 !install.sh
 !pyinstaller/*.py
 !pyinstaller/mimic3-server
+!pyinstaller/mimic3-client
+!pyinstaller/mimic3-download
 
 # opentts-abc
 !opentts-abc/setup.py
