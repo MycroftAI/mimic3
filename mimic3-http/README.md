@@ -42,10 +42,12 @@ Using [nvidia-docker](https://github.com/NVIDIA/nvidia-docker) is highly recomme
 Assuming you have started `mimic3-server` and can access `http://localhost:59125`, then:
 
 ``` sh
-mimic3-client --voice 'en_UK/apope_low' 'My hovercraft is full of eels.' > hovercraft_eels.wav
+mimic3 --remote --voice 'en_UK/apope_low' 'My hovercraft is full of eels.' > hovercraft_eels.wav
 ```
 
-See `mimic3-client --help` for more options.
+If your server is somewhere besides `localhost`, use `mimic3 --remote <URL> ...`
+
+See `mimic3 --help` for more options.
 
 
 ## MaryTTS Compatibility

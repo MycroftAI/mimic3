@@ -214,11 +214,11 @@ sudo apt-get install speech-dispatcher
 Create the file `/etc/speech-dispatcher/modules/mimic3-generic.conf` with the contents:
 
 ``` text
-GenericExecuteSynth "printf %s \'$DATA\' | /path/to/mimic3-client --voice \'$VOICE\' --stdout | $PLAY_COMMAND"
+GenericExecuteSynth "printf %s \'$DATA\' | /path/to/mimic3 --remote --voice \'$VOICE\' --stdout | $PLAY_COMMAND"
 AddVoice "en-us" "MALE1" "en_UK/apope_low"
 ```
 
-You will need `sudo` access to do this. Make sure to change `/path/to/mimic3-client` to wherever you installed Mimic 3.
+You will need `sudo` access to do this. Make sure to change `/path/to/mimic3` to wherever you installed Mimic 3. Note that the `--remote` option is used to connect to a local Mimic 3 web server (use `--remote <URL>` if your server is somewhere besides `localhost`).
 
 To change the voice later, you only need to replace `en_UK/apope_low`.
 

@@ -95,7 +95,6 @@ setup(
     entry_points={
         "console_scripts": [
             "mimic3-server = mimic3_http.__main__:main",
-            "mimic3-client = mimic3_http.client:main",
         ]
     },
     classifiers=[

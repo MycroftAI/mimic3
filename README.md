@@ -76,7 +76,6 @@ pip install mimic3-http[all]
 
 Once installed, the following commands will be available:
     * `mimic3-server`
-    * `mimic3-client`
 
 Language support can be selectively installed by replacing `all` with:
 
@@ -111,7 +110,6 @@ A virtual environment will be created in `mimic3/.venv` and each of the Python m
 Once installed, the following commands will be available in `.venv/bin`:
     * `mimic3`
     * `mimic3-server`
-    * `mimic3-client`
     * `mimic3-download`
 
 
@@ -185,15 +183,17 @@ See `mimic3-server --help` for the [web server documentation](mimic3-http/) for 
 
 #### Web Client
 
-The `mimic3-client` program provides an interface to the Mimic 3 web server that is similar to the `mimic3` command.
+The `mimic3` program provides an interface to the Mimic 3 web server when the `--remote` option is given.
 
 Assuming you have started `mimic3-server` and can access `http://localhost:59125`, then:
 
 ``` sh
-mimic3-client --voice 'en_UK/apope_low' 'My hovercraft is full of eels.' > hovercraft_eels.wav
+mimic3 --remote --voice 'en_UK/apope_low' 'My hovercraft is full of eels.' > hovercraft_eels.wav
 ```
 
-See `mimic3-client --help` for more options.
+If your server is somewhere besides `localhost`, use `mimic3 --remote <URL> ...`
+
+See `mimic3 --help` for more options.
 
 
 ## CUDA Acceleration

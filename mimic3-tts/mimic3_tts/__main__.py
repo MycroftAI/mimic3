@@ -213,6 +213,14 @@ def initialize_args(state: CommandLineInterfaceState):
 
         state.texts = process_on_blank_line(state.texts)
 
+    if args.remote and args.remote.endswith("/"):
+        # Ensure no slash
+        args.remote = args.remote[:-1]
+
+    if (not args.speaker) and args.voice and ("#" in args.voice):
+        # Split apart voice
+        args.voice, args.speaker = args.voice.split("#", maxsplit=1)
+
 
 def initialize_tts(state: CommandLineInterfaceState):
     """Create Mimic 3 TTS from command-line arguments"""
@@ -220,24 +228,29 @@ def initialize_tts(state: CommandLineInterfaceState):
 
     args = state.args
 
-    state.tts = Mimic3TextToSpeechSystem(
-        Mimic3Settings(
-            voices_directories=args.voices_dir, speaker=args.speaker, use_cuda=args.cuda
+    if not args.remote:
+        # Local TTS
+        state.tts = Mimic3TextToSpeechSystem(
+            Mimic3Settings(
+                voices_directories=args.voices_dir,
+                speaker=args.speaker,
+                use_cuda=args.cuda,
+            )
         )
-    )
 
     if args.voices:
         # Don't bother with the rest of the initialization
         return
 
-    if state.args.voice:
-        # Set default voice
-        state.tts.voice = state.args.voice
+    if state.tts:
+        if state.args.voice:
+            # Set default voice
+            state.tts.voice = state.args.voice
 
-    if state.args.preload_voice:
-        for voice_key in state.args.preload_voice:
-            _LOGGER.debug("Preloading voice: %s", voice_key)
-            state.tts.preload_voice(voice_key)
+        if state.args.preload_voice:
+            for voice_key in state.args.preload_voice:
+                _LOGGER.debug("Preloading voice: %s", voice_key)
+                state.tts.preload_voice(voice_key)
 
     state.result_queue = Queue(maxsize=args.result_queue_size)
 
@@ -326,31 +339,52 @@ def process_line(
     line_id: str = "",
     line_voice: typing.Optional[str] = None,
 ):
-    from mimic3_tts import SSMLSpeaker
-
-    assert state.tts is not None
     assert state.result_queue is not None
 
-    args = state.args
+    if state.tts:
+        # Local TTS
+        from mimic3_tts import SSMLSpeaker
 
-    if line_voice:
-        if line_voice.startswith("#"):
-            # Same voice, but different speaker
-            state.tts.speaker = line_voice[1:]
+        assert state.tts is not None
+
+        args = state.args
+
+        if line_voice:
+            if line_voice.startswith("#"):
+                # Same voice, but different speaker
+                state.tts.speaker = line_voice[1:]
+            else:
+                # Different voice
+                state.tts.voice = line_voice
+
+        if args.ssml:
+            results = SSMLSpeaker(state.tts).speak(line)
         else:
-            # Different voice
-            state.tts.voice = line_voice
+            state.tts.begin_utterance()
 
-    if args.ssml:
-        results = SSMLSpeaker(state.tts).speak(line)
+            # TODO: text language
+            state.tts.speak_text(line)
+
+            results = state.tts.end_utterance()
     else:
-        state.tts.begin_utterance()
+        # Remote TTS
+        from mimic3_tts import AudioResult
 
-        # TODO: text language
-        state.tts.speak_text(line)
+        # Get remote WAV data and repackage as AudioResult
+        wav_bytes = get_remote_wav_bytes(state, line)
+        with io.BytesIO(wav_bytes) as wav_io:
+            wav_reader: wave.Wave_read = wave.open(wav_io, "rb")
+            with wav_reader as wav_file:
+                results = [
+                    AudioResult(
+                        sample_rate_hz=wav_file.getframerate(),
+                        sample_width_bytes=wav_file.getsampwidth(),
+                        num_channels=wav_file.getnchannels(),
+                        audio_bytes=wav_file.readframes(wav_file.getnframes()),
+                    )
+                ]
 
-        results = state.tts.end_utterance()
-
+    # Add results to processing queue
     for result in results:
         state.result_queue.put(
             ResultToProcess(
@@ -361,8 +395,9 @@ def process_line(
         )
 
     # Restore voice/speaker
-    state.tts.voice = args.voice
-    state.tts.speaker = args.speaker
+    if state.tts:
+        state.tts.voice = args.voice
+        state.tts.speaker = args.speaker
 
 
 def process_lines(state: CommandLineInterfaceState):
@@ -434,7 +469,7 @@ def process_lines(state: CommandLineInterfaceState):
 
 
 def shutdown_tts(state: CommandLineInterfaceState):
-    if state.tts is not None:
+    if state.tts:
         state.tts.shutdown()
         state.tts = None
 
@@ -456,10 +491,13 @@ def play_wav_bytes(args: argparse.Namespace, wav_bytes: bytes):
 
 
 def print_voices(state: CommandLineInterfaceState):
-    assert state.tts is not None
-
-    voices = list(state.tts.get_voices())
-    voices = sorted(voices, key=lambda v: v.key)
+    if state.tts:
+        # Local TTS
+        voices = list(state.tts.get_voices())
+        voices = sorted(voices, key=lambda v: v.key)
+    else:
+        # Remove TTS
+        voices = get_remote_voices(state)
 
     writer = csv.writer(sys.stdout, delimiter="\t")
     writer.writerow(("KEY", "LANGUAGE", "NAME", "DESCRIPTION", "LOCATION"))
@@ -472,6 +510,59 @@ def print_voices(state: CommandLineInterfaceState):
 # -----------------------------------------------------------------------------
 
 
+def get_remote_voices(state: CommandLineInterfaceState) -> typing.List:
+    import requests
+
+    from mimic3_tts import Voice
+
+    args = state.args
+
+    url = f"{args.remote}/api/voices"
+    _LOGGER.debug("Getting voices from remote server at %s", url)
+
+    voices_json = requests.get(url).json()
+
+    return [Voice(**voice_args) for voice_args in voices_json]
+
+
+def get_remote_wav_bytes(state: CommandLineInterfaceState, text: str) -> bytes:
+    import requests
+
+    args = state.args
+
+    if args.ssml:
+        headers = {"Content-Type": "application/ssml+xml"}
+    else:
+        headers = {"Content-Type": "text/plain"}
+
+    params: typing.Dict[str, str] = {}
+
+    if args.voice:
+        if args.speaker:
+            params["voice"] = f"{args.voice}#{args.speaker}"
+        else:
+            params["voice"] = args.voice
+
+    if args.length_scale:
+        params["lengthScale"] = args.length_scale
+
+    if args.noise_scale:
+        params["noiseScale"] = args.noise_scale
+
+    if args.noise_w:
+        params["noiseW"] = args.noise_w
+
+    url = f"{args.remote}/api/tts"
+    _LOGGER.debug("Synthesizing text remotely at %s", url)
+
+    wav_bytes = requests.post(url, headers=headers, params=params, data=text).content
+
+    return wav_bytes
+
+
+# -----------------------------------------------------------------------------
+
+
 def get_args(argv=None):
     """Parse command-line arguments"""
     parser = argparse.ArgumentParser(
@@ -479,6 +570,12 @@ def get_args(argv=None):
     )
     parser.add_argument(
         "text", nargs="*", help="Text to convert to speech (default: stdin)"
+    )
+    parser.add_argument(
+        "--remote",
+        nargs="?",
+        const="http://localhost:59125",
+        help="Connect to Mimic 3 HTTP web server for synthesis (default: localhost)",
     )
     parser.add_argument(
         "--stdin-format",

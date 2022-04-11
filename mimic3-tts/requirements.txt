@@ -6,5 +6,6 @@ numpy<2.0
 onnxruntime>=1.6,<2.0
 opentts_abc<1.0
 phonemes2ids<2.0
+requests>=2,<3
 tqdm>=4,<5
 xdgenvpy>2.0,<3

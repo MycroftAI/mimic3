@@ -26,7 +26,7 @@ from urllib.parse import parse_qs
 from uuid import uuid4
 
 import quart_cors
-from mimic3_tts import Mimic3Settings, Mimic3TextToSpeechSystem
+from mimic3_tts import DEFAULT_VOICE, Mimic3Settings, Mimic3TextToSpeechSystem
 from quart import (
     Quart,
     Response,
@@ -159,9 +159,8 @@ def get_app(args: argparse.Namespace, request_queue: Queue, temp_dir: str):
 
         _LOGGER.debug("Request args: %s", request.args)
 
-        voice = request.args.get("voice")
-        if voice is not None:
-            tts_args["voice"] = str(voice)
+        voice = request.args.get("voice") or args.voice or DEFAULT_VOICE
+        tts_args["voice"] = str(voice)
 
         # TTS settings
         noise_scale = request.args.get("noiseScale")
@@ -226,7 +225,7 @@ def get_app(args: argparse.Namespace, request_queue: Queue, temp_dir: str):
             text = request.args.get("INPUT_TEXT", "")
             voice = str(request.args.get("VOICE", voice)).strip()
 
-        voice = voice or args.voice
+        voice = voice or args.voice or DEFAULT_VOICE
 
         # Assume SSML if text begins with an angle bracket
         ssml = text.strip().startswith("<")
