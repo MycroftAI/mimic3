@@ -401,7 +401,7 @@ class GruutVoice(Mimic3Voice):
         for sentence in gruut.sentences(text, lang=text_language):
             sent_phonemes = [w.phonemes for w in sentence if w.phonemes]
             if sent_phonemes:
-                yield sent_phonemes, BreakType.NONE
+                yield sent_phonemes, BreakType.UTTERANCE
 
     def word_to_phonemes(
         self,
@@ -589,7 +589,7 @@ class SymbolsVoice(Mimic3Voice):
         word_phonemes = [
             list(IPA.graphemes(wp_str)) for wp_str in text.split(word_separator)
         ]
-        yield word_phonemes, BreakType.NONE
+        yield word_phonemes, BreakType.UTTERANCE
 
 
 # -----------------------------------------------------------------------------

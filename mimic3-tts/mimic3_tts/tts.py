@@ -343,8 +343,19 @@ class Mimic3TextToSpeechSystem(TextToSpeechSystem):
         for sent_phonemes, break_type in voice.text_to_phonemes(
             text, text_language=text_language
         ):
+            add_major_silence = (break_type == BreakType.MAJOR) and (
+                major_break_ms is not None
+            )
+            add_minor_silence = (break_type == BreakType.MINOR) and (
+                minor_break_ms is not None
+            )
+
             # Utterances have start/end meta phonemes (usually ^ and $)
-            is_utterance = break_type != BreakType.NONE
+            is_utterance = (
+                (break_type == BreakType.UTTERANCE)
+                or add_major_silence
+                or add_minor_silence
+            )
 
             self._results.append(
                 Mimic3Phonemes(
@@ -355,9 +366,11 @@ class Mimic3TextToSpeechSystem(TextToSpeechSystem):
             )
 
             # Add silence if using manual break intervals
-            if (break_type == BreakType.MAJOR) and (major_break_ms is not None):
+            if add_major_silence:
+                assert major_break_ms is not None
                 self.add_break(major_break_ms)
-            elif (break_type == BreakType.MINOR) and (minor_break_ms is not None):
+            elif add_minor_silence:
+                assert minor_break_ms is not None
                 self.add_break(minor_break_ms)
 
     # pylint: disable=arguments-differ
