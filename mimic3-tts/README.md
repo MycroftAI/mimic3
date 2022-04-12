@@ -232,7 +232,7 @@ DefaultModule mimic3-generic
 Restart speech-dispatcher with:
 
 ``` sh
-sudo systemd restart speech-dispatcher
+sudo systemctl restart speech-dispatcher
 ```
 
 and test it out with:
@@ -263,19 +263,19 @@ Make sure to change `/path/to/mimic3-server` to wherever you installed Mimic 3.
 Refresh the systemd services:
 
 ``` sh
-systemd --user daemon-reload
+systemctl --user daemon-reload
 ```
 
 Now try starting the service:
 
 ``` sh
-systemd --user start mimic3
+systemctl --user start mimic3
 ```
 
 If that's successful, ensure it starts at boot:
 
 ``` sh
-systemd --user enable mimic3
+systemctl --user enable mimic3
 ```
 
 
