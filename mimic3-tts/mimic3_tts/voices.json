@@ -458,6 +458,52 @@
         "speakers": [],
         "properties": {}
     },
+    "es_ES/m-ailabs_low": {
+        "files": {
+            "ALIASES": {
+                "size_bytes": 15,
+                "sha256_sum": "befad301f096030e66e069a215113125aceaaa4d3d280abfa004bed0d845e9b9"
+            },
+            "LICENSE": {
+                "size_bytes": 1372,
+                "sha256_sum": "fdd78a909fb9384d869363522b967557bc9e28e5b65874921f24e48cbb82f38c"
+            },
+            "README.md": {
+                "size_bytes": 194,
+                "sha256_sum": "3c145192b7b2705be8c92424db01286a2ba003fac65448fc495e4fff7b121376"
+            },
+            "SOURCE": {
+                "size_bytes": 61,
+                "sha256_sum": "841520f6a8cc616e307a92552355691f8c3087fadda2e9b7a03a7863b2d0cf6a"
+            },
+            "config.json": {
+                "size_bytes": 3591,
+                "sha256_sum": "0fbba7584b6a80430e22bb8bd0cae1a455dd664fc0c93e288b717ba833660412"
+            },
+            "generator.onnx": {
+                "size_bytes": 76331359,
+                "sha256_sum": "4325c927d70cffd4f7d2d08e51b12f6077af0f2c2d60d97d00e1f6a01afb2d7d"
+            },
+            "phonemes.txt": {
+                "size_bytes": 274,
+                "sha256_sum": "75cff0a67bf04c4dcede90ef061e893f6faec9fff10a91a7b30f9398022c1621"
+            },
+            "speaker_map.csv": {
+                "size_bytes": 71,
+                "sha256_sum": "1e1c46230d9383ee58a93153923c5385364f5a5f3a82805df80194b45286708c"
+            },
+            "speakers.txt": {
+                "size_bytes": 38,
+                "sha256_sum": "c4d4d4ea4cafd3cb158096c2c8a4286727649784d6a45c6f86d0c6958efd7b0b"
+            }
+        },
+        "speakers": [
+            "tux",
+            "victor_villarraza",
+            "karen_savage"
+        ],
+        "properties": {}
+    },
     "fi_FI/harri-tapani-ylilammi_low": {
         "files": {
             "ALIASES": {
