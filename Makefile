@@ -16,7 +16,9 @@
 .PHONY: dist install docker binaries
 
 SHELL := bash
-DOCKER_PLATFORM ?= linux/amd64  # linux/arm64 linux/arm/v7
+
+# linux/amd64 linux/arm64 linux/arm/v7
+DOCKER_PLATFORM ?= linux/amd64
 DOCKER_OUTPUT ?= --load
 
 dist:
@@ -38,6 +40,7 @@ docker-gpu:
 	docker buildx build . -f Dockerfile.gpu --tag 'mycroftai/mimic3:gpu' $(DOCKER_OUTPUT)
 
 binaries:
-	docker buildx build . -f Dockerfile.binary --platform $(DOCKER_PLATFORM) --output type=local,dest=dist/$(DOCKER_PLATFORM)
+	rm -rf "dist/$(DOCKER_PLATFORM)"
+	docker buildx build . -f Dockerfile.binary --platform $(DOCKER_PLATFORM) --output "type=local,dest=dist/$(DOCKER_PLATFORM)"
 
 debian:
