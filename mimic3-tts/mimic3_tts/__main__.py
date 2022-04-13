@@ -340,6 +340,7 @@ def process_line(
     line_voice: typing.Optional[str] = None,
 ):
     assert state.result_queue is not None
+    args = state.args
 
     if state.tts:
         # Local TTS
@@ -370,8 +371,18 @@ def process_line(
         # Remote TTS
         from mimic3_tts import AudioResult
 
+        voice: typing.Optional[str] = None
+        if line_voice:
+            if line_voice.startswith("#"):
+                # Same voice, but different speaker
+                if args.voice:
+                    voice = f"{args.voice}{line_voice}"
+            else:
+                # Different voice
+                voice = line_voice
+
         # Get remote WAV data and repackage as AudioResult
-        wav_bytes = get_remote_wav_bytes(state, line)
+        wav_bytes = get_remote_wav_bytes(state, line, voice=voice)
         with io.BytesIO(wav_bytes) as wav_io:
             wav_reader: wave.Wave_read = wave.open(wav_io, "rb")
             with wav_reader as wav_file:
@@ -525,7 +536,11 @@ def get_remote_voices(state: CommandLineInterfaceState) -> typing.List:
     return [Voice(**voice_args) for voice_args in voices_json]
 
 
-def get_remote_wav_bytes(state: CommandLineInterfaceState, text: str) -> bytes:
+def get_remote_wav_bytes(
+    state: CommandLineInterfaceState,
+    text: str,
+    voice: typing.Optional[str] = None,
+) -> bytes:
     import requests
 
     args = state.args
@@ -537,7 +552,9 @@ def get_remote_wav_bytes(state: CommandLineInterfaceState, text: str) -> bytes:
 
     params: typing.Dict[str, str] = {}
 
-    if args.voice:
+    if voice:
+        params["voice"] = voice
+    elif args.voice:
         if args.speaker:
             params["voice"] = f"{args.voice}#{args.speaker}"
         else:
