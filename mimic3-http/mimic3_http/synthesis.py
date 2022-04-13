@@ -26,6 +26,7 @@ def do_synthesis(item: SynthesisRequest, mimic3: Mimic3TextToSpeechSystem) -> by
     Returns: WAV bytes
     """
     params = item.params
+    mimic3.speaker = None
     mimic3.voice = params.voice
 
     mimic3.settings.length_scale = params.length_scale
