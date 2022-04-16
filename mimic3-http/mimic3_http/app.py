@@ -49,8 +49,9 @@ def get_app(args: argparse.Namespace, request_queue: Queue, temp_dir: str):
 
     _TEMP_DIR: typing.Optional[Path] = None
 
-    # TODO: args.voices_dirs
-    _MIMIC3 = Mimic3TextToSpeechSystem(Mimic3Settings())
+    _MIMIC3 = Mimic3TextToSpeechSystem(
+        Mimic3Settings(voices_directories=args.voices_dir)
+    )
 
     if args.cache_dir != _MISSING:
         if args.cache_dir is None:

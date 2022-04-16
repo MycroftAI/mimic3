@@ -141,13 +141,25 @@
                 "size_bytes": 18,
                 "sha256_sum": "8197ffe96f3b6772797357e007d63cde409573a0bd3fe174489e01a5faa95553"
             },
+            "_generator-opt.onnx": {
+                "size_bytes": 62674344,
+                "sha256_sum": "4244f801bd0cd64e4079295e116ceb830de1f6575764b59f8e5d0e0e7fd14dc7"
+            },
             "config.json": {
                 "size_bytes": 3434,
                 "sha256_sum": "1fdaa1124e02cc177eb776fbc6e08c838b56bd2e86c82d8d7fe434d9337806b0"
             },
-            "generator.onnx": {
-                "size_bytes": 62792219,
-                "sha256_sum": "0b5a323500ebd022351db12da2b3aab8cdd47d0826d173e780a58b93604618c9"
+            "generator.fp16.onnx": {
+                "size_bytes": 31564712,
+                "sha256_sum": "106188c8b75f137f490213c350943fdc28b55e892c25ab1743277b2104c2c1a1"
+            },
+            "generator.quant.onnx": {
+                "size_bytes": 18191527,
+                "sha256_sum": "38832936c39fc7cc46cb042f4e6f3817f69d3c5861bdd93c51a385c1ae60456d"
+            },
+            "generator.squant.onnx": {
+                "size_bytes": 18191458,
+                "sha256_sum": "acc2bba2f1a866896192fc1487dc36d7d598640d8c66c83ad6c8f10d7f002811"
             },
             "phoneme_map.txt": {
                 "size_bytes": 15,
@@ -1143,6 +1155,65 @@
             }
         },
         "speakers": [],
+        "properties": {}
+    },
+    "yo/crowdsourced_low": {
+        "files": {
+            "LICENSE": {
+                "size_bytes": 20141,
+                "sha256_sum": "884c02e0d3e811e912507288e4d77a441e9b4e16b39b12963c8dc7de4e2e1fbe"
+            },
+            "README.md": {
+                "size_bytes": 166,
+                "sha256_sum": "ec78bc0786a17727183db9542b2cc116dfbf25ea17c5e269d0eba614192e26ae"
+            },
+            "SOURCE": {
+                "size_bytes": 27,
+                "sha256_sum": "1506dd4714f1c2c4bf89462047b7e18ff8d9827139b8579b97daa2049ca0be6f"
+            },
+            "config.json": {
+                "size_bytes": 4459,
+                "sha256_sum": "7ac9855af01f14c3cd39f6900c02c9c3400024115ae122806fdcaa76d009e2bc"
+            },
+            "generator.onnx": {
+                "size_bytes": 76366177,
+                "sha256_sum": "4131039fffce758b324f470b945ae2340adf96cfcdb84e63432cc530d2347b29"
+            },
+            "phonemes.txt": {
+                "size_bytes": 264,
+                "sha256_sum": "b3e736f3bc709f656acf455e44e71cf2f5928f561824a767befac6ee03e70efc"
+            },
+            "speaker_map.csv": {
+                "size_bytes": 450,
+                "sha256_sum": "3681f4e57befc5f7f8fa6b43ae934eba7023a685e28543cc65faeac4416fe9a2"
+            },
+            "speakers.txt": {
+                "size_bytes": 140,
+                "sha256_sum": "11fbe32b51d47788be3d55da548efa3b38d03a4d22e2ad7287833cfbef33f294"
+            }
+        },
+        "speakers": [
+            "00295",
+            "02484",
+            "01208",
+            "03034",
+            "08784",
+            "02121",
+            "06136",
+            "04310",
+            "03397",
+            "07508",
+            "09334",
+            "08421",
+            "02436",
+            "07049",
+            "07505",
+            "00610",
+            "09697",
+            "05223",
+            "01523",
+            "03349"
+        ],
         "properties": {}
     }
 }

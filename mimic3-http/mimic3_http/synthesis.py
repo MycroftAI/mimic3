@@ -84,6 +84,7 @@ def do_synthesis_proc(args: argparse.Namespace, request_queue: Queue):
                 noise_scale=args.noise_scale,
                 noise_w=args.noise_w,
                 use_cuda=args.cuda,
+                voices_directories=args.voices_dir,
             )
         )
 
