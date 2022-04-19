@@ -75,16 +75,22 @@ RUN .venv/bin/pyinstaller \
     --collect-data "gruut_lang_ru" \
     --hidden-import "gruut_lang_sw" \
     --collect-data "gruut_lang_sw" \
+    --hidden-import "gruut_lang_fa" \
+    --collect-data "gruut_lang_fa" \
     --collect-data 'espeak_phonemizer' \
     --collect-data 'phonemes2ids' \
     --hidden-import 'swagger_ui' \
     --hidden-import 'epitran' \
-    --hidden-import 'epitran' \
-    --collect-data 'panphon' \
+    --hidden-import 'hazm' \
+    --collect-data 'hazm' \
     --collect-data 'panphon' \
     --collect-data 'mimic3_tts' \
     --collect-data 'mimic3_http' \
     pyinstaller/mimic3.py
+
+# Have to manually copy these over for some reason
+RUN find .venv -name 'wapiti' -type d -exec cp -R {} dist/mimic3/ \;
+RUN find .venv -name 'libwapiti.*.so' -type f -exec cp {} dist/mimic3/ \;
 
 # Clean up unused lexicons
 RUN find dist/mimic3/ -wholename '*/gruut_lang_*/espeak' -type d | \

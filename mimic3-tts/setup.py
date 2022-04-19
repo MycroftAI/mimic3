@@ -50,6 +50,7 @@ extras = {}
 for lang in [
     "de",
     "es",
+    "fa",
     "fr",
     "it",
     "nl",
@@ -57,6 +58,7 @@ for lang in [
     "sw",
 ]:
     extras[f"gruut[{lang}]"] = [lang]
+
 
 # Add "all" tag
 for tags in extras.values():

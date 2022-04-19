@@ -329,7 +329,20 @@ class Mimic3Voice(metaclass=ABCMeta):
 
         if config.phonemizer == Phonemizer.ESPEAK:
             # Phonemes from eSpeak-ng: https://github.com/espeak-ng/espeak-ng
-            return EspeakVoice(
+            voice_class = EspeakVoice
+
+            if config.text_language == "fa":
+                try:
+                    # Check if hazm is available
+                    # https://github.com/sobhe/hazm
+                    import hazm  # noqa: F401
+
+                    voice_class = HazmEspeakVoice
+                except ImportError:
+                    _LOGGER.warning("hazm is highly recommended for language 'fa'")
+                    _LOGGER.warning("pip install 'hazm>=0.7.0'")
+
+            return voice_class(
                 config=config,
                 onnx_model=onnx_model,
                 phoneme_to_id=phoneme_to_id,
@@ -574,6 +587,109 @@ class EspeakVoice(Mimic3Voice):
         """Make voice name from language name"""
         # en_US -> en-us
         return language.strip().lower().replace("_", "-")
+
+
+class HazmEspeakVoice(EspeakVoice):
+    """Persian espeak-ng voice that uses hazm (https://github.com/sobhe/hazm) for pre-processing"""
+
+    def __init__(self, *args, **kwargs):
+        import gruut_lang_fa
+        import hazm
+
+        super().__init__(*args, **kwargs)
+
+        self._normalizer = hazm.Normalizer()
+        self._sent_tokenizer = hazm.SentenceTokenizer()
+        self._word_tokenizer = hazm.WordTokenizer()
+
+        # Load part of speech tagger from gruut[fa]
+        self._tagger = hazm.POSTagger(
+            model=str(gruut_lang_fa.get_lang_dir() / "pos" / "postagger.model")
+        )
+
+    def text_to_phonemes(
+        self, text: str, text_language: typing.Optional[str] = None
+    ) -> TEXT_TO_PHONEMES_TYPE:
+        phoneme_separator = ""
+        word_separator = self.config.phonemes.word_separator
+
+        text_language = text_language or self.config.text_language or DEFAULT_LANGUAGE
+        voice = self._language_to_voice(text_language)
+
+        # Normalize with hazm
+        sentences = self._preprocess_text(text)
+
+        for sentence in sentences:
+            sent_text = " ".join(sentence)
+            sent_phoneme_str = self._phonemizer.phonemize(
+                sent_text,
+                voice=voice,
+                keep_clause_breakers=True,
+                phoneme_separator=phoneme_separator,
+                word_separator=word_separator,
+                punctuation_separator=phoneme_separator,
+            )
+
+            sent_word_phonemes = [
+                list(IPA.graphemes(wp_str))
+                for wp_str in sent_phoneme_str.split(word_separator)
+            ]
+
+            yield sent_word_phonemes, BreakType.UTTERANCE
+
+    def word_to_phonemes(
+        self,
+        word_text: str,
+        word_role: typing.Optional[str] = None,
+        text_language: typing.Optional[str] = None,
+    ) -> typing.List[PHONEME_TYPE]:
+        word_text = self._fix_words([word_text])[0]
+
+        return super().word_to_phonemes(
+            word_text, word_role=word_role, text_language=text_language
+        )
+
+    def say_as_to_phonemes(
+        self,
+        text: str,
+        interpret_as: str,
+        say_format: typing.Optional[str] = None,
+        text_language: typing.Optional[str] = None,
+    ) -> WORD_PHONEMES_TYPE:
+        sentences = self._preprocess_text(text)
+        text = " ".join(
+            " ".join(word_text for word_text in words) for words in sentences
+        )
+
+        return super().say_as_to_phonemes(
+            text, interpret_as, say_format=say_format, text_language=text_language
+        )
+
+    def _preprocess_text(self, text: str) -> typing.List[typing.List[str]]:
+        """Split/normalize text into sentences/words with hazm"""
+        text = self._normalizer.normalize(text)
+        processed_sentences = []
+
+        for sentence in self._sent_tokenizer.tokenize(text):
+            words = self._word_tokenizer.tokenize(sentence)
+            processed_words = self._fix_words(words)
+            processed_sentences.append(processed_words)
+
+        return processed_sentences
+
+    def _fix_words(self, words: typing.List[str]) -> typing.List[str]:
+        fixed_words = []
+
+        for word, pos in self._tagger.tag(words):
+            if pos[-1] == "e":
+                if word[-1] != "ِ":
+                    if (word[-1] == "ه") and (word[-2] != "ا"):
+                        word += "‌ی"
+                    word += "ِ"
+
+            fixed_words.append(word)
+
+        return fixed_words
 
 
 # -----------------------------------------------------------------------------

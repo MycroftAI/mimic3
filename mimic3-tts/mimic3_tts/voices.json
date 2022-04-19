@@ -141,25 +141,13 @@
                 "size_bytes": 18,
                 "sha256_sum": "8197ffe96f3b6772797357e007d63cde409573a0bd3fe174489e01a5faa95553"
             },
-            "_generator-opt.onnx": {
-                "size_bytes": 62674344,
-                "sha256_sum": "4244f801bd0cd64e4079295e116ceb830de1f6575764b59f8e5d0e0e7fd14dc7"
-            },
             "config.json": {
                 "size_bytes": 3434,
                 "sha256_sum": "1fdaa1124e02cc177eb776fbc6e08c838b56bd2e86c82d8d7fe434d9337806b0"
             },
-            "generator.fp16.onnx": {
-                "size_bytes": 31564712,
-                "sha256_sum": "106188c8b75f137f490213c350943fdc28b55e892c25ab1743277b2104c2c1a1"
-            },
-            "generator.quant.onnx": {
-                "size_bytes": 18191527,
-                "sha256_sum": "38832936c39fc7cc46cb042f4e6f3817f69d3c5861bdd93c51a385c1ae60456d"
-            },
-            "generator.squant.onnx": {
-                "size_bytes": 18191458,
-                "sha256_sum": "acc2bba2f1a866896192fc1487dc36d7d598640d8c66c83ad6c8f10d7f002811"
+            "generator.onnx": {
+                "size_bytes": 62792219,
+                "sha256_sum": "0b5a323500ebd022351db12da2b3aab8cdd47d0826d173e780a58b93604618c9"
             },
             "phoneme_map.txt": {
                 "size_bytes": 15,
@@ -274,6 +262,56 @@
             }
         },
         "speakers": [],
+        "properties": {}
+    },
+    "en_US/m-ailabs_low": {
+        "files": {
+            "ALIASES": {
+                "size_bytes": 15,
+                "sha256_sum": "7bb223e3ab3fd2fb2f376bf6648bd9ffb60c1f94ebed81b6ab224b04ade583a2"
+            },
+            "LICENSE": {
+                "size_bytes": 1372,
+                "sha256_sum": "fdd78a909fb9384d869363522b967557bc9e28e5b65874921f24e48cbb82f38c"
+            },
+            "README.md": {
+                "size_bytes": 204,
+                "sha256_sum": "bbfa383da209e57d7432ff5a3f6fc2eb4f751f469fda7fa556fef361646ee814"
+            },
+            "SOURCE": {
+                "size_bytes": 61,
+                "sha256_sum": "841520f6a8cc616e307a92552355691f8c3087fadda2e9b7a03a7863b2d0cf6a"
+            },
+            "config.json": {
+                "size_bytes": 3656,
+                "sha256_sum": "4cc13cff911251e35c6b9e9c62d3239c59edc75a144753aaed6606adf23fc36f"
+            },
+            "generator.onnx": {
+                "size_bytes": 76329055,
+                "sha256_sum": "e92b3bb30462fee4bb7bfed8b341995f6665c1ffcd8d0489acfa42229647f036"
+            },
+            "phoneme_map.txt": {
+                "size_bytes": 26,
+                "sha256_sum": "be897ed405d294ec18acb94cd2d33fe262e90b5bbafc3f01cbd75694027a0856"
+            },
+            "phonemes.txt": {
+                "size_bytes": 263,
+                "sha256_sum": "8f9c3e6ced14d7fc5426e4e1bc7f7cc1037a20a645ca34110abcb76148fa8bfd"
+            },
+            "speaker_map.csv": {
+                "size_bytes": 71,
+                "sha256_sum": "2883321465b6aeab0b2bad54d9aef76cd7c767b6f7e704662ec1589f22df2524"
+            },
+            "speakers.txt": {
+                "size_bytes": 38,
+                "sha256_sum": "66aecfe5f8e8cb7e223e78b3e8cae7a7f2a93e6ae09083d3211e2d1f645b48fb"
+            }
+        },
+        "speakers": [
+            "elliot_miller",
+            "judy_bieber",
+            "mary_ann"
+        ],
         "properties": {}
     },
     "en_US/vctk_low": {
@@ -516,6 +554,36 @@
         ],
         "properties": {}
     },
+    "fa/haaniye_low": {
+        "files": {
+            "LICENSE": {
+                "size_bytes": 5,
+                "sha256_sum": "958246282e394a96727515ee6d834073ea09314be61a5730d03bf6d540ae0c26"
+            },
+            "README.md": {
+                "size_bytes": 145,
+                "sha256_sum": "b7a0d433277c03526bfd3d116f0b8ba25b8f41baa8abf744291c8847f89d1fdd"
+            },
+            "SOURCE": {
+                "size_bytes": 4,
+                "sha256_sum": "76f602b1dfc2d548fa1f5eddf29315c947bec31f71c95d49653927204486be39"
+            },
+            "config.json": {
+                "size_bytes": 3667,
+                "sha256_sum": "fd6d675532c06e014080df6abffc870b3c299dd31e28515044858072d2e6741a"
+            },
+            "generator.onnx": {
+                "size_bytes": 62783767,
+                "sha256_sum": "84ab78157850c4f80a884f730d88f3e091a69c98772645da87b418fc325e23e9"
+            },
+            "phonemes.txt": {
+                "size_bytes": 183,
+                "sha256_sum": "85753b8b47cdb68d817c3c2fd3a47ebe85abcd3757d5348e86204c30595a4fa2"
+            }
+        },
+        "speakers": [],
+        "properties": {}
+    },
     "fi_FI/harri-tapani-ylilammi_low": {
         "files": {
             "ALIASES": {
@@ -710,6 +778,88 @@
             }
         },
         "speakers": [],
+        "properties": {}
+    },
+    "it_IT/mls_low": {
+        "files": {
+            "ALIASES": {
+                "size_bytes": 10,
+                "sha256_sum": "a9e36d6496c023b6a062cbad69f72b3d97ac3f460fcfde05e58c8b1fee563005"
+            },
+            "LICENSE": {
+                "size_bytes": 11,
+                "sha256_sum": "e133cf7dafe75a1763bd79fd3dc16859d9bfef17b5687c37eab1c88b7f5d12ca"
+            },
+            "README.md": {
+                "size_bytes": 150,
+                "sha256_sum": "7a8f7a21659afc8efbca65dee85bbfc29318b7b787c9ff6194b0d262f8a56214"
+            },
+            "SOURCE": {
+                "size_bytes": 27,
+                "sha256_sum": "e381746e5212214dc753e4dd5b74e31da0271cfb0f529b2aaa9b721da5a0a84f"
+            },
+            "config.json": {
+                "size_bytes": 3634,
+                "sha256_sum": "36158d2347a4cf896125c5b4adf4444f9a21e2b1184b358d36e1f2964a62dc09"
+            },
+            "generator.onnx": {
+                "size_bytes": 76396641,
+                "sha256_sum": "98125e13d9809353c723d5800a717b57ead070f76875dc1024cd60129e63ac69"
+            },
+            "phonemes.txt": {
+                "size_bytes": 210,
+                "sha256_sum": "282837161676bffa5b304cbb878eace1c8da670a46e08e8e800515f924ecfde3"
+            },
+            "speaker_map.csv": {
+                "size_bytes": 495,
+                "sha256_sum": "4dd7a8a3c9e1b85c60948c22b4eab98408125269601d5b2529ad1dea7b90e36e"
+            },
+            "speakers.txt": {
+                "size_bytes": 232,
+                "sha256_sum": "bbbeceb499b9b59b704de555aba3202d20afa1d3a6c854112e3f229b8fef52f3"
+            }
+        },
+        "speakers": [
+            "1595",
+            "4974",
+            "4998",
+            "6807",
+            "1989",
+            "2033",
+            "2019",
+            "659",
+            "4649",
+            "9772",
+            "1725",
+            "10446",
+            "6348",
+            "6001",
+            "9185",
+            "8842",
+            "8828",
+            "12428",
+            "8181",
+            "7440",
+            "8207",
+            "277",
+            "5421",
+            "12804",
+            "4705",
+            "7936",
+            "844",
+            "6299",
+            "644",
+            "8384",
+            "1157",
+            "7444",
+            "643",
+            "4971",
+            "4975",
+            "6744",
+            "8461",
+            "7405",
+            "5010"
+        ],
         "properties": {}
     },
     "it_IT/riccardo-fasol_low": {
