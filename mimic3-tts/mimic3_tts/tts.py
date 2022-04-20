@@ -117,6 +117,9 @@ class Mimic3Settings:
     rate: float = DEFAULT_RATE
     """Voice speaking rate (< 1 is slower, > 1 is faster)"""
 
+    use_deterministic_compute: bool = False
+    """Force onnxruntime to use deterministic compute mode. For fully deterministic synthesis, also set noise_scale and noise_w to 0."""
+
 
 @dataclass
 class Mimic3Phonemes:
@@ -543,6 +546,7 @@ class Mimic3TextToSpeechSystem(TextToSpeechSystem):
             model_dir,
             providers=providers,
             share_models=self.settings.share_onnx_models_between_threads,
+            use_deterministic_compute=self.settings.use_deterministic_compute,
         )
 
         _LOGGER.info("Loaded voice from %s", model_dir)

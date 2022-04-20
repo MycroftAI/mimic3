@@ -70,6 +70,11 @@ def get_app(args: argparse.Namespace, request_queue: Queue, temp_dir: str):
 
         Returns: WAV bytes
         """
+        if args.deterministic:
+            # Disable noise
+            _LOGGER.debug("Disabling noise in deterministic mode")
+            params.noise_scale = 0.0
+            params.noise_w = 0.0
 
         _LOGGER.debug(params)
 

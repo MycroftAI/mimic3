@@ -252,6 +252,7 @@ class Mimic3Voice(metaclass=ABCMeta):
             ]
         ] = None,
         share_models: bool = True,
+        use_deterministic_compute: bool = False,
     ) -> "Mimic3Voice":
         """Load a Mimic 3 voice from a directory"""
         voice_dir = Path(voice_dir)
@@ -283,6 +284,7 @@ class Mimic3Voice(metaclass=ABCMeta):
                         generator_path,
                         session_options=session_options,
                         providers=providers,
+                        use_deterministic_compute=use_deterministic_compute,
                     )
 
                     Mimic3Voice._SHARED_MODELS[model_key] = onnx_model
@@ -293,6 +295,7 @@ class Mimic3Voice(metaclass=ABCMeta):
                 generator_path,
                 session_options=session_options,
                 providers=providers,
+                use_deterministic_compute=use_deterministic_compute,
             )
 
         # phoneme -> phoneme, phoneme, ...
@@ -381,6 +384,7 @@ class Mimic3Voice(metaclass=ABCMeta):
                 typing.Union[str, typing.Tuple[str, typing.Dict[str, typing.Any]]]
             ]
         ] = None,
+        use_deterministic_compute: bool = False,
     ) -> onnxruntime.InferenceSession:
         _LOGGER.debug("Loading model from %s", generator_path)
 
@@ -393,6 +397,8 @@ class Mimic3Voice(metaclass=ABCMeta):
                 session_options.graph_optimization_level = (
                     onnxruntime.GraphOptimizationLevel.ORT_DISABLE_ALL
                 )
+
+        session_options.use_deterministic_compute = use_deterministic_compute
 
         onnx_model = onnxruntime.InferenceSession(
             str(generator_path), sess_options=session_options, providers=providers

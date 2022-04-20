@@ -71,6 +71,11 @@ def get_args(argv=None) -> argparse.Namespace:
         help="Use Onnx CUDA execution provider (requires onnxruntime-gpu)",
     )
     parser.add_argument(
+        "--deterministic",
+        action="store_true",
+        help="Ensure that the same audio is always synthesized from the same text",
+    )
+    parser.add_argument(
         "--num-threads",
         type=int,
         default=1,

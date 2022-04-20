@@ -221,6 +221,12 @@ def initialize_args(state: CommandLineInterfaceState):
         # Split apart voice
         args.voice, args.speaker = args.voice.split("#", maxsplit=1)
 
+    if args.deterministic:
+        # Disable noise
+        _LOGGER.debug("Disabling noise in deterministic mode")
+        args.noise_scale = 0.0
+        args.noise_w = 0.0
+
 
 def initialize_tts(state: CommandLineInterfaceState):
     """Create Mimic 3 TTS from command-line arguments"""
@@ -232,9 +238,13 @@ def initialize_tts(state: CommandLineInterfaceState):
         # Local TTS
         state.tts = Mimic3TextToSpeechSystem(
             Mimic3Settings(
+                length_scale=args.length_scale,
+                noise_scale=args.noise_scale,
+                noise_w=args.noise_w,
                 voices_directories=args.voices_dir,
                 speaker=args.speaker,
                 use_cuda=args.cuda,
+                use_deterministic_compute=args.deterministic,
             )
         )
 
@@ -693,6 +703,11 @@ def get_args(argv=None):
         "--cuda",
         action="store_true",
         help="Use Onnx CUDA execution provider (requires onnxruntime-gpu)",
+    )
+    parser.add_argument(
+        "--deterministic",
+        action="store_true",
+        help="Ensure that the same audio is always synthesized from the same text",
     )
     parser.add_argument("--seed", type=int, help="Set random seed (default: not set)")
     parser.add_argument("--version", action="store_true", help="Print version and exit")
