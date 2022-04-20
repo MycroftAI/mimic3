@@ -22,13 +22,7 @@ DOCKER_PLATFORM ?= linux/amd64
 DOCKER_OUTPUT ?= --load
 
 dist:
-	cd opentts-abc && python3 setup.py sdist
-	cd mimic3-tts && python3 setup.py sdist
-	cd mimic3-http && python3 setup.py sdist
-	mkdir -p dist
-	cp opentts-abc/dist/opentts_abc-*.tar.gz dist/
-	cp mimic3-tts/dist/mimic3_tts-*.tar.gz dist/
-	cp mimic3-http/dist/mimic3_http-*.tar.gz dist/
+	./build-dist.sh
 
 install:
 	./install.sh
