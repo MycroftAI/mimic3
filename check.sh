@@ -23,6 +23,26 @@ set -eo pipefail
 # Directory of *this* script
 this_dir="$( cd "$( dirname "$0" )" && pwd )"
 
+# Path to virtual environment
+: "${venv:=${base_dir}/.venv}"
+
+if [ -d "${venv}" ]; then
+    # Activate virtual environment if available
+    source "${venv}/bin/activate"
+fi
+
+python_files=("${this_dir}/tests"/*.py)
+
+# Format code
+black "${python_files[@]}"
+isort "${python_files[@]}"
+
+# Check
+flake8 "${python_files[@]}"
+pylint "${python_files[@]}"
+mypy "${python_files[@]}"
+
+# Check submodules
 script_name='check.sh'
 
 find "${this_dir}" -mindepth 2 -maxdepth 2 -name "${script_name}" -type f | \

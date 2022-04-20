@@ -243,7 +243,7 @@ class TextToSpeechSystem(AbstractContextManager, metaclass=ABCMeta):
         """Begins a new utterance"""
 
     @abstractmethod
-    def speak_text(self, text: str):
+    def speak_text(self, text: str, text_language: typing.Optional[str] = None):
         """Speaks text using the underlying system's tokenization mechanism.
 
         Becomes an AudioResult in end_utterance()
@@ -276,3 +276,40 @@ class TextToSpeechSystem(AbstractContextManager, metaclass=ABCMeta):
 
         Returns an iterable of results (audio, marks, etc.)
         """
+
+    def text_to_wav(
+        self, text: str, text_language: typing.Optional[str] = None
+    ) -> bytes:
+        """Synthesize text with current voice settings and return WAV audio"""
+        with io.BytesIO() as wav_io:
+            wav_file: wave.Wave_write = wave.open(wav_io, "wb")
+            wav_params_set = False
+
+            with wav_file:
+                try:
+                    self.begin_utterance()
+                    self.speak_text(text, text_language=text_language)
+                    results = self.end_utterance()
+
+                    for result in results:
+                        # Add audio to existing WAV file
+                        if isinstance(result, AudioResult):
+                            if not wav_params_set:
+                                wav_file.setframerate(result.sample_rate_hz)
+                                wav_file.setsampwidth(result.sample_width_bytes)
+                                wav_file.setnchannels(result.num_channels)
+                                wav_params_set = True
+
+                            wav_file.writeframes(result.audio_bytes)
+                except Exception as e:
+                    if not wav_params_set:
+                        # Set default parameters so exception can propagate
+                        wav_file.setframerate(22050)
+                        wav_file.setsampwidth(2)
+                        wav_file.setnchannels(1)
+
+                    raise e
+
+            wav_bytes = wav_io.getvalue()
+
+            return wav_bytes

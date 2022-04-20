@@ -51,6 +51,49 @@
         ],
         "properties": {}
     },
+    "de_DE/thorsten-emotion_low": {
+        "files": {
+            "LICENSE": {
+                "size_bytes": 31,
+                "sha256_sum": "19b4afb2e1c2c9f2cb07da14acd2d34098a4e11c13fccb09356845c4748fb50c"
+            },
+            "SOURCE": {
+                "size_bytes": 28,
+                "sha256_sum": "f351b9304a8fa1e6e58db9b3411f92387e192bb4b57fcbe3e8f839424b13f3c8"
+            },
+            "config.json": {
+                "size_bytes": 3756,
+                "sha256_sum": "e0ae97001a4a9b69040f4531de804b08ec865223bab807310652852fafdad909"
+            },
+            "generator.onnx": {
+                "size_bytes": 76346209,
+                "sha256_sum": "164defc5bffcf739996b04855a6a0c76b600b44f73dfe4801d24e838eea5e112"
+            },
+            "phonemes.txt": {
+                "size_bytes": 339,
+                "sha256_sum": "4820e701ece71e34c5d32f9640db6b103391093943ac071c001222d27b891e5f"
+            },
+            "speaker_map.csv": {
+                "size_bytes": 222,
+                "sha256_sum": "371546cc49cefe755562da2e8404ae857206e6593fa777f70860bf1fff070b89"
+            },
+            "speakers.txt": {
+                "size_bytes": 62,
+                "sha256_sum": "b12e946f3867f124f3d07c48a13362edda6564fa91b13e46aba6dee41193f4aa"
+            }
+        },
+        "speakers": [
+            "amused",
+            "angry",
+            "disgusted",
+            "drunk",
+            "neutral",
+            "sleepy",
+            "surprised",
+            "whisper"
+        ],
+        "properties": {}
+    },
     "de_DE/thorsten_low": {
         "files": {
             "ALIASES": {
@@ -556,6 +599,10 @@
     },
     "fa/haaniye_low": {
         "files": {
+            "ALIASES": {
+                "size_bytes": 11,
+                "sha256_sum": "9d5c7cf903a22b8d0d3f4768583664b2533ba4252367d8d6892ca4e398a811bc"
+            },
             "LICENSE": {
                 "size_bytes": 5,
                 "sha256_sum": "958246282e394a96727515ee6d834073ea09314be61a5730d03bf6d540ae0c26"
