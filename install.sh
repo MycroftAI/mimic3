@@ -56,6 +56,10 @@ popd 2>/dev/null
 
 pip3 ${PIP_INSTALL} -e "${this_dir}/mimic3-http"
 
+if [ -f "${this_dir}/requirements_dev.txt" ]; then
+    pip3 ${PIP_INSTALL} -r "${this_dir}/requirements_dev.txt"
+fi
+
 # -----------------------------------------------------------------------------
 
 echo "OK"
