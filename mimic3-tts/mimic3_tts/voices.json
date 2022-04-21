@@ -67,7 +67,7 @@
             },
             "generator.onnx": {
                 "size_bytes": 76346209,
-                "sha256_sum": "164defc5bffcf739996b04855a6a0c76b600b44f73dfe4801d24e838eea5e112"
+                "sha256_sum": "5a2588308d23e51874f6c87dd9651fce2375302f4b26bdb98dfe125547d283a5"
             },
             "phonemes.txt": {
                 "size_bytes": 339,
@@ -1086,6 +1086,44 @@
             "phoneme_map.txt": {
                 "size_bytes": 21,
                 "sha256_sum": "18b9c5fe46201cd5b0b20e88dc78c64ef3bcaaf87a428386420757f2d0bf7bb3"
+            },
+            "phonemes.txt": {
+                "size_bytes": 336,
+                "sha256_sum": "355389fee04f97557232cdde7fb8d4cf03ae2aabd7b0b26ed5978ebbf6575dd4"
+            }
+        },
+        "speakers": [],
+        "properties": {}
+    },
+    "nl/pmk_low": {
+        "files": {
+            "ALIASES": {
+                "size_bytes": 7,
+                "sha256_sum": "b252753cd8512ee4a590ed2c09fea49836fcaf65081b5becf7e2a296c009776b"
+            },
+            "LICENSE": {
+                "size_bytes": 5,
+                "sha256_sum": "958246282e394a96727515ee6d834073ea09314be61a5730d03bf6d540ae0c26"
+            },
+            "README.md": {
+                "size_bytes": 125,
+                "sha256_sum": "446fd89e442b615b351f105b9f75745608c327e9e13a67bed0eca9a4785b932e"
+            },
+            "SOURCE": {
+                "size_bytes": 4,
+                "sha256_sum": "76f602b1dfc2d548fa1f5eddf29315c947bec31f71c95d49653927204486be39"
+            },
+            "config.json": {
+                "size_bytes": 3638,
+                "sha256_sum": "325b363c9e604646c28f498fdce2491d1bee70b41f13710f305a6b150beb713a"
+            },
+            "generator.onnx": {
+                "size_bytes": 62800663,
+                "sha256_sum": "d7df18c4abc42e2a11e72314f901c306ee1d93d812d71d1281907e45c9a300aa"
+            },
+            "phoneme_map.txt": {
+                "size_bytes": 15,
+                "sha256_sum": "4003f421fc91ed1d5a343442659db6cf9d58bd1c6d8d771abc1999cc24d7694d"
             },
             "phonemes.txt": {
                 "size_bytes": 336,

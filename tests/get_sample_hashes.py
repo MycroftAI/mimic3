@@ -101,7 +101,6 @@ def synthesize(output_dir: Path, voice: Voice) -> typing.Iterable[str]:
 
     key = voice.key
     language = voice.language
-    speakers = voice.speakers or [""]
 
     # Try en_US and en
     text = _TEST_SENTENCES.get(language, _TEST_SENTENCES.get(language.split("_")[0]))
@@ -115,25 +114,20 @@ def synthesize(output_dir: Path, voice: Voice) -> typing.Iterable[str]:
     voice_dir.mkdir(parents=True, exist_ok=True)
 
     results = []
-    for speaker in sorted(speakers):
-        if speaker:
-            # Multi-speaker
-            voice_key = f"{key}#{speaker}"
-            sample_path = voice_dir / f"sample_{speaker}.wav"
-        else:
-            # Single speaker
-            voice_key = key
-            sample_path = voice_dir / "sample.wav"
 
-        if not sample_path.is_file():
-            tts.voice = voice_key
-            wav_bytes = tts.text_to_wav(text)
-            sample_path.write_bytes(wav_bytes)
+    # First speaker only
+    voice_key = key
+    sample_path = voice_dir / "sample.wav"
 
-        wav_hash = hashlib.sha256(sample_path.read_bytes()).hexdigest()
-        _LOGGER.info(sample_path)
+    if not sample_path.is_file():
+        tts.voice = voice_key
+        wav_bytes = tts.text_to_wav(text)
+        sample_path.write_bytes(wav_bytes)
 
-        results.append(f"{voice_key} {wav_hash}")
+    wav_hash = hashlib.sha256(sample_path.read_bytes()).hexdigest()
+    _LOGGER.info(sample_path)
+
+    results.append(f"{voice_key} {wav_hash}")
 
     return results
 
