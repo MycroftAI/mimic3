@@ -1,0 +1,42 @@
+# Copyright 2022 Mycroft AI Inc.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# -----------------------------------------------------------------------------
+# Dockerfile for Mimic 3 (https://github.com/MycroftAI/mimic3)
+#
+# Runs code checks and creates source code distributions for PyPI.
+#
+# Requires Docker buildx: https://docs.docker.com/buildx/working-with-buildx/
+# -----------------------------------------------------------------------------
+FROM python:3.9
+
+ARG TARGETARCH
+ARG TARGETVARIANT
+
+ENV LANG C.UTF-8
+ENV DEBIAN_FRONTEND=noninteractive
+
+WORKDIR /build/mimic3
+COPY ./ ./
+
+# Install mimic3 and development dependencies
+RUN --mount=type=cache,id=pip-venv,target=/root/.cache/pip \
+    ./install.sh develop
+
+# Check code
+RUN ./check.sh
+
+# Create sdists
+RUN ./build-dist.sh
