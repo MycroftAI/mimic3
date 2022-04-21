@@ -242,11 +242,13 @@ def initialize_tts(state: CommandLineInterfaceState):
                 noise_scale=args.noise_scale,
                 noise_w=args.noise_w,
                 voices_directories=args.voices_dir,
-                speaker=args.speaker,
                 use_cuda=args.cuda,
                 use_deterministic_compute=args.deterministic,
             )
         )
+
+        state.tts.voice = args.voice
+        state.tts.speaker = args.speaker
 
     if args.voices:
         # Don't bother with the rest of the initialization
