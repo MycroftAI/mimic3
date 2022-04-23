@@ -340,7 +340,7 @@ class Mimic3TextToSpeechSystem(TextToSpeechSystem):
     def speak_text(self, text: str, text_language: typing.Optional[str] = None):
         voice = self._get_or_load_voice(self.voice)
 
-        minor_break_ms = voice.config.inference.major_break_ms
+        minor_break_ms = voice.config.inference.minor_break_ms
         major_break_ms = voice.config.inference.major_break_ms
 
         for sent_phonemes, break_type in voice.text_to_phonemes(
