@@ -1,4 +1,52 @@
 {
+    "af_ZA/google_nwu": {
+        "files": {
+            "LICENSE": {
+                "size_bytes": 56,
+                "sha256_sum": "9de32c12fbae55d90964a887d50116a3369962799532fcd7663d32f55c1945fe"
+            },
+            "README.md": {
+                "size_bytes": 186,
+                "sha256_sum": "14ef9a5565a8b73cf7460098b181268ce1e638c6feb7065dc3544f038f1d20ab"
+            },
+            "SOURCE": {
+                "size_bytes": 27,
+                "sha256_sum": "8a9a0d5d775c0264004b68c4ca850fd51c3d8e63cdbc9df61ec257a3ee97e025"
+            },
+            "config.json": {
+                "size_bytes": 3881,
+                "sha256_sum": "3f7c44b4ad3ca0bd5aad619f9920d25676f8b02f8a936b9c84fcaa272c0b0935"
+            },
+            "generator.onnx": {
+                "size_bytes": 76351329,
+                "sha256_sum": "8366e03683ea3c15f25ba0163aa1b6e87c1692674cf27b1fb6ba479dbef7e0bb"
+            },
+            "phonemes.txt": {
+                "size_bytes": 322,
+                "sha256_sum": "fab165ba2b5d964f994f0917abb14307f8ef49310dbd40d262a7488461efc9d4"
+            },
+            "speaker_map.csv": {
+                "size_bytes": 189,
+                "sha256_sum": "29dd47e2acc3bf107beb717a86ec02410298fe477803277eabcbaab0011bea5a"
+            },
+            "speakers.txt": {
+                "size_bytes": 45,
+                "sha256_sum": "672a1a0b000c2acc51d43b2544ce27e8c3c2f08fa03bd67b73eca3fdf2952a37"
+            }
+        },
+        "speakers": [
+            "7214",
+            "8963",
+            "7130",
+            "8924",
+            "8148",
+            "1919",
+            "2418",
+            "6590",
+            "0184"
+        ],
+        "properties": {}
+    },
     "de_DE/m-ailabs_low": {
         "files": {
             "ALIASES": {
@@ -56,6 +104,10 @@
             "LICENSE": {
                 "size_bytes": 31,
                 "sha256_sum": "19b4afb2e1c2c9f2cb07da14acd2d34098a4e11c13fccb09356845c4748fb50c"
+            },
+            "README.md": {
+                "size_bytes": 178,
+                "sha256_sum": "f8e51cdf7e7907ae3ac8ed45c017fb64aea318ae3e2eeb2d4259ed7e333f9c1f"
             },
             "SOURCE": {
                 "size_bytes": 28,

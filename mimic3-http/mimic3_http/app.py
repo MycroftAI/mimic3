@@ -100,6 +100,7 @@ def get_app(args: argparse.Namespace, request_queue: Queue, temp_dir: str):
         if _TEMP_DIR and (not no_cache):
             # Store in cache
             wav_path = _TEMP_DIR / f"{params.cache_key}.wav"
+            wav_path.parent.mkdir(parents=True, exist_ok=True)
             wav_path.write_bytes(wav_bytes)
 
             _LOGGER.debug("Cached WAV at %s", wav_path.absolute())
@@ -170,27 +171,32 @@ def get_app(args: argparse.Namespace, request_queue: Queue, temp_dir: str):
 
         # TTS settings
         noise_scale = request.args.get("noiseScale")
-        if noise_scale is not None:
+        if noise_scale:
             tts_args["noise_scale"] = float(noise_scale)
 
         noise_w = request.args.get("noiseW")
-        if noise_w is not None:
+        if noise_w:
             tts_args["noise_w"] = float(noise_w)
 
         length_scale = request.args.get("lengthScale")
-        if length_scale is not None:
+        if length_scale:
             tts_args["length_scale"] = float(length_scale)
 
         # Set SSML flag either from arg or content type
         ssml_str = request.args.get("ssml")
-        if ssml_str is not None:
+        if ssml_str:
             tts_args["ssml"] = _to_bool(ssml_str)
         elif request.content_type == "application/ssml+xml":
             tts_args["ssml"] = True
 
         text_language = request.args.get("textLanguage")
-        if text_language is not None:
+        if text_language:
             tts_args["text_language"] = str(text_language)
+
+        # Id used for cache
+        cache_id = request.args.get("cacheId")
+        if cache_id:
+            tts_args["cache_id"] = str(cache_id)
 
         # Text can come from POST body or GET ?text arg
         if request.method == "POST":

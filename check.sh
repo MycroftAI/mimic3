@@ -24,7 +24,7 @@ set -eo pipefail
 this_dir="$( cd "$( dirname "$0" )" && pwd )"
 
 # Path to virtual environment
-: "${venv:=${base_dir}/.venv}"
+: "${venv:=${this_dir}/.venv}"
 
 if [ -d "${venv}" ]; then
     # Activate virtual environment if available

@@ -30,9 +30,13 @@ class TextToWavParams:
     length_scale: float
     ssml: bool = False
     text_language: typing.Optional[str] = None
+    cache_id: typing.Optional[str] = None
 
     @property
     def cache_key(self) -> str:
+        if self.cache_id:
+            return self.cache_id
+
         return hashlib.md5(repr(self).encode()).hexdigest()
 
 

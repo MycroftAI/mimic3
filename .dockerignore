@@ -1,9 +1,17 @@
 *
 !LICENSE
 !install.sh
+!build-dist.sh
+!check.sh
+!requirements_dev.txt
+!.isort.cfg
+!pylintrc
+!setup.cfg
 !pyinstaller/*.py
 !pyinstaller/mimic3-server
 !pyinstaller/mimic3-download
+!tests/*.py
+!tests/sample_hashes.txt
 
 # opentts-abc
 !opentts-abc/setup.py
@@ -11,6 +19,7 @@
 !opentts-abc/MANIFEST.in
 !opentts-abc/opentts_abc/*.py
 !opentts-abc/opentts_abc/VERSION
+!opentts-abc/opentts_abc/py.typed
 
 # Mimic 3 TTS
 !mimic3-tts/setup.py
@@ -20,6 +29,7 @@
 !mimic3-tts/mimic3_tts/*.py
 !mimic3-tts/mimic3_tts/voices.json
 !mimic3-tts/mimic3_tts/VERSION
+!mimic3-tts/mimic3_tts/py.typed
 
 # HTTP server
 !mimic3-http/setup.py
@@ -31,3 +41,4 @@
 !mimic3-http/mimic3_http/templates/
 !mimic3-http/mimic3_http/*.py
 !mimic3-http/mimic3_http/VERSION
+!mimic3-http/mimic3_http/py.typed
