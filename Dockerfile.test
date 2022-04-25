@@ -28,6 +28,14 @@ ARG TARGETVARIANT
 ENV LANG C.UTF-8
 ENV DEBIAN_FRONTEND=noninteractive
 
+RUN echo "Dir::Cache var/cache/apt/${TARGETARCH}${TARGETVARIANT};" > /etc/apt/apt.conf.d/01cache
+
+RUN --mount=type=cache,id=apt-run,target=/var/cache/apt \
+    mkdir -p /var/cache/apt/${TARGETARCH}${TARGETVARIANT}/archives/partial && \
+    apt-get update && \
+    apt-get install --yes --no-install-recommends \
+        libespeak-ng1
+
 WORKDIR /build/mimic3
 COPY ./ ./
 
