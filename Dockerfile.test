@@ -44,5 +44,5 @@ RUN --mount=type=cache,id=pip-venv,target=/root/.cache/pip \
     ./install.sh
 
 # Run tests
-COPY voices/ /root/.local/share/mimic3/voices/
+COPY voices/ /usr/share/mimic3/voices/
 RUN ./test.sh
