@@ -33,6 +33,9 @@ from mimic3_tts import Mimic3Settings, Mimic3TextToSpeechSystem, Voice
 # -----------------------------------------------------------------------------
 
 _TEST_SENTENCES = {
+    "af": """'n Reënboog is 'n boog van gekleurde lig wat ontstaan wanneer die
+        son teen 'n waterdruppel skyn en die wit lig dan deur middel van
+        ligbreking in die volledige kleurspektrum opgebreek word.""",
     "de": """Der Regenbogen ist ein atmosphärisch-optisches Phänomen, das als
         kreisbogenförmiges farbiges Lichtband in einer von der Sonne
         beschienenen Regenwand oder -wolke wahrgenommen wird.""",

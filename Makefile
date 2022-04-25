@@ -36,10 +36,15 @@ docker-gpu:
 binaries:
 	echo "$(DOCKER_PLATFORM)" | sed -e 's/,/\n/g' | \
         while read -r platform; do \
-            echo "$${platform}"; \
             rm -rf "dist/$${platform}"; \
             docker buildx build . -f Dockerfile.binary --platform "$${platform}" --output "type=local,dest=dist/$${platform}"; \
         done
 
 debian:
 	debian/build-debian.sh
+
+test:
+	echo "$(DOCKER_PLATFORM)" | sed -e 's/,/\n/g' | \
+        while read -r platform; do \
+            docker buildx build . -f Dockerfile.test --platform "$${platform}"; \
+        done

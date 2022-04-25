@@ -3,6 +3,7 @@
 !install.sh
 !build-dist.sh
 !check.sh
+!test.sh
 !requirements_dev.txt
 !.isort.cfg
 !pylintrc

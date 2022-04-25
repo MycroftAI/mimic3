@@ -12,3 +12,5 @@ dist/
 .venv/
 *.wav
 *.spec
+
+/samples
