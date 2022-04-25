@@ -17,7 +17,7 @@
 
 SHELL := bash
 
-# linux/amd64 linux/arm64 linux/arm/v7
+# linux/amd64,linux/arm64,linux/arm/v7
 DOCKER_PLATFORM ?= linux/amd64
 DOCKER_OUTPUT ?= --load
 
@@ -34,7 +34,12 @@ docker-gpu:
 	docker buildx build . -f Dockerfile.gpu --tag 'mycroftai/mimic3:gpu' $(DOCKER_OUTPUT)
 
 binaries:
-	rm -rf "dist/$(DOCKER_PLATFORM)"
-	docker buildx build . -f Dockerfile.binary --platform $(DOCKER_PLATFORM) --output "type=local,dest=dist/$(DOCKER_PLATFORM)"
+	echo "$(DOCKER_PLATFORM)" | sed -e 's/,/\n/g' | \
+        while read -r platform; do \
+            echo "$${platform}"; \
+            rm -rf "dist/$${platform}"; \
+            docker buildx build . -f Dockerfile.binary --platform "$${platform}" --output "type=local,dest=dist/$${platform}"; \
+        done
 
 debian:
+	debian/build-debian.sh
