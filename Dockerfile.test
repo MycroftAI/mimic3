@@ -20,7 +20,7 @@
 #
 # Requires Docker buildx: https://docs.docker.com/buildx/working-with-buildx/
 # -----------------------------------------------------------------------------
-FROM python:3.9
+FROM debian:bullseye
 
 ARG TARGETARCH
 ARG TARGETVARIANT
@@ -34,7 +34,7 @@ RUN --mount=type=cache,id=apt-run,target=/var/cache/apt \
     mkdir -p /var/cache/apt/${TARGETARCH}${TARGETVARIANT}/archives/partial && \
     apt-get update && \
     apt-get install --yes --no-install-recommends \
-        libespeak-ng1
+        python3 python3-venv python3-pip libespeak-ng1
 
 WORKDIR /build/mimic3
 COPY ./ ./
