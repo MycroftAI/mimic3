@@ -37,4 +37,4 @@ if [ -d "${venv}" ]; then
     source "${venv}/bin/activate"
 fi
 
-diff "${expected_hashes}" <(python3 tests/get_sample_hashes.py)
+diff "${expected_hashes}" <(python3 tests/get_sample_hashes.py "$@")

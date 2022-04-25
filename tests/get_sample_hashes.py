@@ -91,7 +91,9 @@ _LOGGER = logging.getLogger("get_samples")
 # -----------------------------------------------------------------------------
 
 
-def synthesize(output_dir: Path, voice: Voice) -> typing.Iterable[str]:
+def synthesize(
+    output_dir: Path, voice: Voice, args: argparse.Namespace
+) -> typing.Iterable[str]:
     """Generate samples for voice in a separate process"""
     tts = Mimic3TextToSpeechSystem(
         Mimic3Settings(
@@ -99,6 +101,7 @@ def synthesize(output_dir: Path, voice: Voice) -> typing.Iterable[str]:
             noise_scale=0.0,
             noise_w=0.0,
             use_deterministic_compute=True,
+            no_download=args.no_download,
         )
     )
 
@@ -142,6 +145,9 @@ def main():
     """Generate WAV samples from Mimic 3 in deterministic mode for testing"""
     parser = argparse.ArgumentParser()
     parser.add_argument("--output-dir", help="Directory to write samples")
+    parser.add_argument(
+        "--no-download", action="store_true", help="Don't download voices"
+    )
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.INFO)
@@ -163,7 +169,9 @@ def main():
 
     with temp_dir, Pool() as pool:
         voices = sorted(tts.get_voices(), key=lambda v: v.key)
-        for results in pool.map(functools.partial(synthesize, output_dir), voices):
+        for results in pool.map(
+            functools.partial(synthesize, output_dir, args), voices
+        ):
             for result in results:
                 print(result)
 
