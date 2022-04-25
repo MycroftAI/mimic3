@@ -13,6 +13,7 @@
 !pyinstaller/mimic3-download
 !tests/*.py
 !tests/sample_hashes.txt
+!voices/
 
 # opentts-abc
 !opentts-abc/setup.py
