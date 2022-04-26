@@ -35,8 +35,7 @@ RUN --mount=type=cache,id=apt-build,target=/var/cache/apt \
    mkdir -p /var/cache/apt/${TARGETARCH}${TARGETVARIANT}/archives/partial && \
    apt-get update && \
    apt-get install --yes --no-install-recommends \
-       python3 python3-pip python3-venv \
-       build-essential python3-dev
+       python3 python3-pip python3-venv
 
 WORKDIR /home/mimic3/app
 

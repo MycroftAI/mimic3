@@ -1,18 +1,7 @@
 *
-!LICENSE
 !install.sh
-!build-dist.sh
-!check.sh
-!test.sh
-!requirements_dev.txt
-!.isort.cfg
-!pylintrc
-!setup.cfg
-!pyinstaller/*.py
-!pyinstaller/mimic3-server
-!pyinstaller/mimic3-download
-!tests/*.py
-!tests/sample_hashes.txt
+!tests/apope_sample.txt
+!tests/apope_sample_*.wav
 !voices/
 
 # opentts-abc

@@ -40,13 +40,17 @@ RUN --mount=type=cache,id=apt-run,target=/var/cache/apt \
 
 WORKDIR /home/mimic3/app
 
-COPY ./ ./
+COPY opentts-abc/ ./opentts-abc/
+COPY mimic3-http/ ./mimic3-http/
+COPY mimic3-tts/ ./mimic3-tts/
+COPY install.sh ./
 
-# Fix requirements
+# Use GPU version of onnxruntime
 RUN sed -i 's/onnxruntime/onnxruntime-gpu/' mimic3-tts/requirements.txt
 
 # Install mimic3
 RUN --mount=type=cache,id=pip-requirements,target=/root/.cache/pip \
+    PIP_INSTALL='install -f https://synesthesiam.github.io/prebuilt-apps/' \
     ./install.sh
 
 RUN useradd -ms /bin/bash mimic3
