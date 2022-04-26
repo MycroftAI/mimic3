@@ -64,6 +64,11 @@ _TEST_SENTENCES = {
     "nl": """Een regenboog is een gekleurde cirkelboog die aan de hemel
         waargenomen kan worden als de, laagstaande, zon tegen een nevel van
         waterdruppeltjes aan schijnt en de zon zich achter de waarnemer bevindt.""",
+    "pl": """Tęcza, zjawisko optyczne i meteorologiczne, występujące w postaci
+        charakterystycznego wielobarwnego łuku powstającego w wyniku
+        rozszczepienia światła widzialnego, zwykle promieniowania słonecznego,
+        załamującego się i odbijającego wewnątrz licznych kropli wody mających
+        kształt zbliżony do kulistego.""",
     "pt": """Um arco-íris, também popularmente denominado arco-da-velha, é um
         fenômeno óptico e meteorológico que separa a luz do sol em seu espectro
         contínuo quando o sol brilha sobre gotículas de água suspensas no ar.""",
@@ -76,6 +81,9 @@ _TEST_SENTENCES = {
     "sw": """Upinde wa mvua ni tao la rangi mbalimbali angani ambalo linaweza
         kuonekana wakati Jua huangaza kupitia matone ya mvua inayoanguka.""",
     "te": """ఇంద్ర ధనుస్సు దృష్టి విద్యా సంబంధమయిన వాతావరణ శాస్త్ర సంబంధమయిన దృగ్విషయం.""",
+    "tn": """Batho botlhe ba tsetswe ba gololosegile le go lekalekana ka seriti
+        le ditshwanelo. Ba abetswe go akanya le maikutlo, mme ba tshwanetse go
+        direlana ka mowa wa bokaulengwe.""",
     "uk": """Весе́лка, також ра́йдуга оптичне явище в атмосфері, що являє собою
         одну, дві чи декілька різнокольорових дуг (або кіл, якщо дивитися з
         повітря), що спостерігаються на тлі хмари, якщо вона розташована проти

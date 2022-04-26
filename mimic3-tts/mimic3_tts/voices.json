@@ -1,5 +1,5 @@
 {
-    "af_ZA/google_nwu": {
+    "af_ZA/google-nwu_low": {
         "files": {
             "LICENSE": {
                 "size_bytes": 56,
@@ -14,8 +14,8 @@
                 "sha256_sum": "8a9a0d5d775c0264004b68c4ca850fd51c3d8e63cdbc9df61ec257a3ee97e025"
             },
             "config.json": {
-                "size_bytes": 3881,
-                "sha256_sum": "3f7c44b4ad3ca0bd5aad619f9920d25676f8b02f8a936b9c84fcaa272c0b0935"
+                "size_bytes": 3915,
+                "sha256_sum": "484c3ba1581274b63f19e8eae0aa0533fe731136f5f75af0e68159b4f4567896"
             },
             "generator.onnx": {
                 "size_bytes": 76351329,
@@ -1223,6 +1223,51 @@
         "speakers": [],
         "properties": {}
     },
+    "pl_PL/m-ailabs_low": {
+        "files": {
+            "ALIASES": {
+                "size_bytes": 15,
+                "sha256_sum": "87d98f3b3b5eaae7d5acb11d3781eabe06a8ef4ef0c446a1499d4f9ad9230c84"
+            },
+            "LICENSE": {
+                "size_bytes": 1372,
+                "sha256_sum": "fdd78a909fb9384d869363522b967557bc9e28e5b65874921f24e48cbb82f38c"
+            },
+            "README.md": {
+                "size_bytes": 192,
+                "sha256_sum": "b78139a85d9fb800852437309e81bc214287365a5adc388a9200f6520c7a249b"
+            },
+            "SOURCE": {
+                "size_bytes": 61,
+                "sha256_sum": "841520f6a8cc616e307a92552355691f8c3087fadda2e9b7a03a7863b2d0cf6a"
+            },
+            "config.json": {
+                "size_bytes": 3635,
+                "sha256_sum": "bb120183dd6153b2e5851e9af7daddf074d8a468314ad98928a1354611907b4c"
+            },
+            "generator.onnx": {
+                "size_bytes": 76326239,
+                "sha256_sum": "5e19ef55e499664648205ee059d0cf79fb1532c2263c12365cd64508a86cada9"
+            },
+            "phonemes.txt": {
+                "size_bytes": 244,
+                "sha256_sum": "c1fcdbb56a3a00ec1cdeccfb0ec5ef84b4539ae1d8a5fead1872caa4364aa4f4"
+            },
+            "speaker_map.csv": {
+                "size_bytes": 47,
+                "sha256_sum": "c1136cf577345e40f67fa63d24eac9db89b4cb675bd1c646a5c3a4e9243ac76f"
+            },
+            "speakers.txt": {
+                "size_bytes": 23,
+                "sha256_sum": "32b36232b632bad2f0fb04cee37c2d1164332ff6bf5c2b4a0ae64657761b01af"
+            }
+        },
+        "speakers": [
+            "piotr_nater",
+            "nina_brown"
+        ],
+        "properties": {}
+    },
     "ru_RU/multi_low": {
         "files": {
             "ALIASES": {
@@ -1358,6 +1403,71 @@
             "ss",
             "sk",
             "kpn"
+        ],
+        "properties": {}
+    },
+    "tn_ZA/google-nwu_low": {
+        "files": {
+            "LICENSE": {
+                "size_bytes": 56,
+                "sha256_sum": "9de32c12fbae55d90964a887d50116a3369962799532fcd7663d32f55c1945fe"
+            },
+            "README.md": {
+                "size_bytes": 184,
+                "sha256_sum": "8f55845c87eb5f01af3cf686247ca3807c94e27cb3a021c8f5a61eb40bfb4ecc"
+            },
+            "SOURCE": {
+                "size_bytes": 27,
+                "sha256_sum": "8a9a0d5d775c0264004b68c4ca850fd51c3d8e63cdbc9df61ec257a3ee97e025"
+            },
+            "config.json": {
+                "size_bytes": 3885,
+                "sha256_sum": "169a746efc5836d4cdc5aecbae7347e0dcdab070e29511afd56a2471d9f5ac7d"
+            },
+            "generator.onnx": {
+                "size_bytes": 76376929,
+                "sha256_sum": "556648cbcc83acd896919bc9e2a7e0ca3d64ab9a411307ccd5584af2bc5b4391"
+            },
+            "phonemes.txt": {
+                "size_bytes": 252,
+                "sha256_sum": "b8974c85be943cbd25dc4de58e42b69ddb0c67812b5f8b269f9ca22a1355bdcf"
+            },
+            "speaker_map.csv": {
+                "size_bytes": 562,
+                "sha256_sum": "ed50cf529d8332c032756ed11b8ebbd31e46186cdd79f0dfa3768f356832a65e"
+            },
+            "speakers.txt": {
+                "size_bytes": 130,
+                "sha256_sum": "bf0e54741d96aba0c3862feffe63b658f3b2f2de60377a78c18546e2d7f69bf9"
+            }
+        },
+        "speakers": [
+            "1932",
+            "0045",
+            "3342",
+            "4850",
+            "6206",
+            "3629",
+            "9061",
+            "6116",
+            "7674",
+            "0378",
+            "5628",
+            "8333",
+            "8512",
+            "0441",
+            "6459",
+            "4506",
+            "7866",
+            "8532",
+            "2839",
+            "7896",
+            "1498",
+            "1483",
+            "8914",
+            "6234",
+            "9365",
+            "7693"
         ],
         "properties": {}
     },

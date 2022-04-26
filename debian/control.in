@@ -2,7 +2,7 @@ Package: mimic3-tts
 Version: ${VERSION}
 Section: utils
 Priority: optional
-Depends: libespeak-ng1
+Depends: libespeak-ng1 libatomic1 libgomp1
 Recommends: sox
 Architecture: ${DEBIAN_ARCH}
 Maintainer: Mycroft AI

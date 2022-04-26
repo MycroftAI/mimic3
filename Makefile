@@ -13,38 +13,53 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-.PHONY: dist install docker binaries
+.PHONY: dist install docker docker-gpu debian sample
 
 SHELL := bash
 
 # linux/amd64,linux/arm64,linux/arm/v7
 DOCKER_PLATFORM ?= linux/amd64
 DOCKER_OUTPUT ?= --load
+DOCKER_TAG ?= mycroftai/mimic3
 
+# Build source distributions for PyPI.
+# Also tests installation.
 dist:
-	./build-dist.sh
+	echo "$(DOCKER_PLATFORM)" | sed -e 's/,/\n/g' | \
+        while read -r platform; do \
+            docker buildx build . -f Dockerfile.dist --platform $(DOCKER_PLATFORM) --output "type=local,dest=dist/"; \
+        done
 
+# Create virtual environment and install in editable mode locally.
 install:
 	./install.sh
 
+# Create self-contained Docker image.
+# Also tests functionality.
 docker:
-	docker buildx build . -f Dockerfile --platform $(DOCKER_PLATFORM) --tag mycroftai/mimic3 $(DOCKER_OUTPUT)
-
-docker-gpu:
-	docker buildx build . -f Dockerfile.gpu --tag 'mycroftai/mimic3:gpu' $(DOCKER_OUTPUT)
-
-binaries:
 	echo "$(DOCKER_PLATFORM)" | sed -e 's/,/\n/g' | \
         while read -r platform; do \
-            rm -rf "dist/$${platform}"; \
-            docker buildx build . -f Dockerfile.binary --platform "$${platform}" --output "type=local,dest=dist/$${platform}"; \
+            docker buildx build . -f Dockerfile --platform $(DOCKER_PLATFORM) --tag "$(DOCKER_TAG)" $(DOCKER_OUTPUT); \
         done
 
-debian:
-	debian/build-debian.sh
+# Create self-container Docker image with GPU support.
+# Requires nvidia-docker.
+docker-gpu:
+	docker buildx build . -f Dockerfile.gpu --tag "$(DOCKER_TAG):gpu" $(DOCKER_OUTPUT)
 
-test:
+# Create sample WAV files that are elsewhere for testing.
+# These are different per platform (amd64, etc.).
+# It's critical that deterministic mode is used to generate and test.
+sample:
 	echo "$(DOCKER_PLATFORM)" | sed -e 's/,/\n/g' | \
         while read -r platform; do \
-            docker buildx build . -f Dockerfile.test --platform "$${platform}"; \
+            docker buildx build . -f Dockerfile.sample --platform $(DOCKER_PLATFORM) --output "type=local,dest=tests/"; \
+        done
+
+# Create Debian packages (packaged with apope voice).
+# Also tests installation.
+debian:
+	echo "$(DOCKER_PLATFORM)" | sed -e 's/,/\n/g' | \
+        while read -r platform; do \
+            docker buildx build . -f Dockerfile.debian --platform $(DOCKER_PLATFORM) --output "type=local,dest=dist/"; \
         done

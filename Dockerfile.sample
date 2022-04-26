@@ -16,10 +16,11 @@
 # -----------------------------------------------------------------------------
 # Dockerfile for Mimic 3 (https://github.com/MycroftAI/mimic3)
 #
-# Creates source code distributions for PyPI.
+# Generates a deterministic sample WAV used for testing.
 #
 # Requires Docker buildx: https://docs.docker.com/buildx/working-with-buildx/
 # -----------------------------------------------------------------------------
+
 FROM debian:bullseye as build
 ARG TARGETARCH
 ARG TARGETVARIANT
@@ -30,57 +31,30 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN echo "Dir::Cache var/cache/apt/${TARGETARCH}${TARGETVARIANT};" > /etc/apt/apt.conf.d/01cache
 
 RUN --mount=type=cache,id=apt-build,target=/var/cache/apt \
-    mkdir -p /var/cache/apt/${TARGETARCH}${TARGETVARIANT}/archives/partial && \
-    apt-get update && \
-    apt-get install --yes --no-install-recommends \
-        python3 python3-venv python3-pip
+   mkdir -p /var/cache/apt/${TARGETARCH}${TARGETVARIANT}/archives/partial && \
+   apt-get update && \
+   apt-get install --yes --no-install-recommends \
+       python3 python3-pip python3-venv \
+       build-essential python3-dev
 
-WORKDIR /build/mimic3
+WORKDIR /home/mimic3/app
 
 COPY opentts-abc/ ./opentts-abc/
 COPY mimic3-http/ ./mimic3-http/
 COPY mimic3-tts/ ./mimic3-tts/
-COPY build-dist.sh ./
+COPY install.sh ./
 
-# Create sdists
-RUN ./build-dist.sh
-
-# -----------------------------------------------------------------------------
-
-FROM debian:bullseye as test
-ARG TARGETARCH
-ARG TARGETVARIANT
-
-ENV LANG C.UTF-8
-ENV DEBIAN_FRONTEND=noninteractive
-
-RUN echo "Dir::Cache var/cache/apt/${TARGETARCH}${TARGETVARIANT};" > /etc/apt/apt.conf.d/01cache
-
-RUN --mount=type=cache,id=apt-run,target=/var/cache/apt \
-    mkdir -p /var/cache/apt/${TARGETARCH}${TARGETVARIANT}/archives/partial && \
-    apt-get update && \
-    apt-get install --yes --no-install-recommends \
-        python3 python3-venv python3-pip \
-        libespeak-ng1 libatomic1 libgomp1
-
-WORKDIR /test
-
-COPY --from=build /build/mimic3/dist/*.tar.gz ./dist/
-
-# Install mimic3 using source distribution
+# Install mimic3
 RUN --mount=type=cache,id=pip-requirements,target=/root/.cache/pip \
-    python3 -m venv .venv && \
-    .venv/bin/pip3 install \
-        -f https://synesthesiam.github.io/prebuilt-apps/ \
-        -f dist/ \
-        mimic3-tts
+    PIP_INSTALL='install -f https://synesthesiam.github.io/prebuilt-apps/' \
+    ./install.sh
 
 # Download default voice
 COPY voices/ /root/.local/share/mimic3/voices/
 RUN .venv/bin/mimic3-download 'en_UK/apope_low'
 
-# Run test
-COPY tests/apope_sample.txt tests/apope_sample_*.wav tests/
+# Generate sample
+COPY tests/apope_sample.txt tests/
 
 # Generate sample and check
 RUN export expected_sample="tests/apope_sample_${TARGETARCH}${TARGETVARIANT}.wav" && \
@@ -88,16 +62,10 @@ RUN export expected_sample="tests/apope_sample_${TARGETARCH}${TARGETVARIANT}.wav
     --deterministic \
     --voice 'en_UK/apope_low' \
     < tests/apope_sample.txt \
-    > tests/actual_sample.wav && \
-    diff tests/actual_sample.wav "${expected_sample}"
+    > "tests/apope_sample_${TARGETARCH}${TARGETVARIANT}.wav"
 
 # -----------------------------------------------------------------------------
 
 FROM scratch
-ARG TARGETARCH
-ARG TARGETVARIANT
 
-COPY --from=build /build/mimic3/dist/*.tar.gz /
-
-# Ensure test runs
-COPY --from=test /test/tests/actual_sample.wav "/apope_sample_${TARGETARCH}${TARGETVARIANT}.wav"
+COPY --from=build /home/mimic3/app/tests/apope_sample_*.wav ./

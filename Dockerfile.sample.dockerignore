@@ -1,0 +1,34 @@
+*
+!install.sh
+!tests/apope_sample.txt
+!voices/
+
+# opentts-abc
+!opentts-abc/setup.py
+!opentts-abc/LICENSE
+!opentts-abc/MANIFEST.in
+!opentts-abc/opentts_abc/*.py
+!opentts-abc/opentts_abc/VERSION
+!opentts-abc/opentts_abc/py.typed
+
+# Mimic 3 TTS
+!mimic3-tts/setup.py
+!mimic3-tts/LICENSE
+!mimic3-tts/MANIFEST.in
+!mimic3-tts/requirements.txt
+!mimic3-tts/mimic3_tts/*.py
+!mimic3-tts/mimic3_tts/voices.json
+!mimic3-tts/mimic3_tts/VERSION
+!mimic3-tts/mimic3_tts/py.typed
+
+# HTTP server
+!mimic3-http/setup.py
+!mimic3-http/LICENSE
+!mimic3-http/MANIFEST.in
+!mimic3-http/requirements.txt
+!mimic3-http/mimic3_http/css/
+!mimic3-http/mimic3_http/img/
+!mimic3-http/mimic3_http/templates/
+!mimic3-http/mimic3_http/*.py
+!mimic3-http/mimic3_http/VERSION
+!mimic3-http/mimic3_http/py.typed
