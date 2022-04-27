@@ -4,6 +4,7 @@
 !tests/apope_sample_*.wav
 !voices/
 !wheels/
+!debian/control.in.*
 
 # opentts-abc
 !opentts-abc/setup.py

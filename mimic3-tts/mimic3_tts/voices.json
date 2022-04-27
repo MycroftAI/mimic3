@@ -321,6 +321,56 @@
         ],
         "properties": {}
     },
+    "en_US/hifi-tts_low": {
+        "files": {
+            "ALIASES": {
+                "size_bytes": 15,
+                "sha256_sum": "193592c118c555b769e3b7eeca7ba4325accc7576473cc403b4ff42987643a0e"
+            },
+            "LICENSE": {
+                "size_bytes": 199,
+                "sha256_sum": "27a903cab1081b055dba1bcef7b543572318eb2f255ec8999103f368f845df24"
+            },
+            "README.md": {
+                "size_bytes": 173,
+                "sha256_sum": "1240c01f4690ae5c9a758562cf61bcc63e83f38c9a553b6f12b7ac450df35d00"
+            },
+            "SOURCE": {
+                "size_bytes": 28,
+                "sha256_sum": "dcfc704446de47e8438a04cb4029c0aaa86a4931d10685080b307cec98345862"
+            },
+            "config.json": {
+                "size_bytes": 3660,
+                "sha256_sum": "eb5ba8f05a968c8281334912f779566e19d5873f1c999631c65f8a53222744d6"
+            },
+            "generator.onnx": {
+                "size_bytes": 76329055,
+                "sha256_sum": "45983e12395beadf7527cf5a043b52c93368f753d21c411ee103a7496c9190cb"
+            },
+            "phoneme_map.txt": {
+                "size_bytes": 15,
+                "sha256_sum": "4003f421fc91ed1d5a343442659db6cf9d58bd1c6d8d771abc1999cc24d7694d"
+            },
+            "phonemes.txt": {
+                "size_bytes": 263,
+                "sha256_sum": "8f9c3e6ced14d7fc5426e4e1bc7f7cc1037a20a645ca34110abcb76148fa8bfd"
+            },
+            "speaker_map.csv": {
+                "size_bytes": 49,
+                "sha256_sum": "265bdaecffe484f41962e78c8cf7f7ef78a43d2de7c10277ca996f874d3146cd"
+            },
+            "speakers.txt": {
+                "size_bytes": 13,
+                "sha256_sum": "7dce6a2c4af708b94215d1a4226d5c0d0f48ceded8a3bdd21fb1ef85c216227c"
+            }
+        },
+        "speakers": [
+            "9017",
+            "6097",
+            "92"
+        ],
+        "properties": {}
+    },
     "en_US/ljspeech_low": {
         "files": {
             "ALIASES": {

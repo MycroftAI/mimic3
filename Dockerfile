@@ -31,12 +31,16 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN echo "Dir::Cache var/cache/apt/${TARGETARCH}${TARGETVARIANT};" > /etc/apt/apt.conf.d/01cache
 
+COPY debian/control.in.* ./debian/
+
+# Use dependencies from Debian package control file
 RUN --mount=type=cache,id=apt-build,target=/var/cache/apt \
-   mkdir -p /var/cache/apt/${TARGETARCH}${TARGETVARIANT}/archives/partial && \
-   apt-get update && \
-   apt-get install --yes --no-install-recommends \
-       python3 python3-pip python3-venv \
-       build-essential python3-dev
+    mkdir -p /var/cache/apt/${TARGETARCH}${TARGETVARIANT}/archives/partial && \
+    apt-get update && \
+    grep 'Depends:' "debian/control.in.${TARGETARCH}${TARGETVARIANT}" | cut -d' ' -f2- | sed -e 's/,/\n/g' | \
+    xargs apt-get install --yes --no-install-recommends \
+        python3 python3-pip python3-venv \
+        build-essential python3-dev
 
 
 WORKDIR /home/mimic3/app
@@ -67,24 +71,28 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN echo "Dir::Cache var/cache/apt/${TARGETARCH}${TARGETVARIANT};" > /etc/apt/apt.conf.d/01cache
 
+WORKDIR /home/mimic3/app
+
+COPY debian/control.in.* ./debian/
+
+# Use dependencies from Debian package control file
 RUN --mount=type=cache,id=apt-run,target=/var/cache/apt \
     mkdir -p /var/cache/apt/${TARGETARCH}${TARGETVARIANT}/archives/partial && \
     apt-get update && \
-    apt-get install --yes --no-install-recommends \
-        python3 ca-certificates libespeak-ng1 libatomic1 libgomp1
+    grep 'Depends:' "debian/control.in.${TARGETARCH}${TARGETVARIANT}" | cut -d' ' -f2- | sed -e 's/,/\n/g' | \
+    xargs apt-get install --yes --no-install-recommends \
+        python3 ca-certificates
 
 RUN useradd -ms /bin/bash mimic3
 
 # Copy virtual environment and source code
-COPY --from=build /home/mimic3/app/ /home/mimic3/app/
+COPY --from=build /home/mimic3/app/ ./
 
 # Copy pre-downloaded voice(s)
 COPY --from=build /root/.local/share/mimic3/voices/ /usr/share/mimic3/voices/
 
-WORKDIR /home/mimic3/app
-
 # Run test
-COPY tests/apope_sample.txt tests/apope_sample_*.wav tests/
+COPY tests/apope_sample.txt tests/apope_sample_*.wav ./tests/
 
 # Generate sample and check
 RUN export expected_sample="tests/apope_sample_${TARGETARCH}${TARGETVARIANT}.wav" && \

@@ -35,7 +35,7 @@ this_dir="$( cd "$( dirname "$0" )" && pwd )"
 
 # pip install command
 if [ -z "${PIP_INSTALL}" ]; then
-    PIP_INSTALL="install -f "${this_dir}/wheels""
+    PIP_INSTALL="install -f "${this_dir}/wheels" -f https://synesthesiam.github.io/prebuilt-apps/"
 fi
 
 python_version="$(${PYTHON} --version)"

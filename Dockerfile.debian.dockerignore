@@ -9,7 +9,7 @@
 !wheels/
 
 # Debian packaging
-!debian/control.in
+!debian/control.in.*
 !debian/bin/*
 
 # opentts-abc
