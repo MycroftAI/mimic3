@@ -34,7 +34,9 @@ this_dir="$( cd "$( dirname "$0" )" && pwd )"
 : "${PYTHON=python3}"
 
 # pip install command
-: "${PIP_INSTALL=install}"
+if [ -z "${PIP_INSTALL}" ]; then
+    PIP_INSTALL="install -f "${this_dir}/wheels""
+fi
 
 python_version="$(${PYTHON} --version)"
 

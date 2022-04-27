@@ -37,6 +37,8 @@ RUN --mount=type=cache,id=apt-build,target=/var/cache/apt \
 
 WORKDIR /build/mimic3
 
+COPY wheels/ ./wheels/
+
 COPY opentts-abc/ ./opentts-abc/
 COPY mimic3-http/ ./mimic3-http/
 COPY mimic3-tts/ ./mimic3-tts/
@@ -65,6 +67,8 @@ RUN --mount=type=cache,id=apt-run,target=/var/cache/apt \
 
 WORKDIR /test
 
+COPY wheels/ ./wheels/
+
 COPY --from=build /build/mimic3/dist/*.tar.gz ./dist/
 
 # Install mimic3 using source distribution
@@ -72,6 +76,7 @@ RUN --mount=type=cache,id=pip-requirements,target=/root/.cache/pip \
     python3 -m venv .venv && \
     .venv/bin/pip3 install \
         -f https://synesthesiam.github.io/prebuilt-apps/ \
+        -f https://www.piwheels.hostedpi.com/simple/numpy/ \
         -f dist/ \
         mimic3-tts
 

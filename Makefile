@@ -19,7 +19,7 @@ SHELL := bash
 
 # linux/amd64,linux/arm64,linux/arm/v7
 DOCKER_PLATFORM ?= linux/amd64
-DOCKER_OUTPUT ?= --load
+DOCKER_OUTPUT ?=
 DOCKER_TAG ?= mycroftai/mimic3
 
 # Build source distributions for PyPI.

@@ -6,6 +6,7 @@
 !tests/apope_sample.txt
 !tests/apope_sample_*.wav
 !voices/
+!wheels/
 
 # Debian packaging
 !debian/control.in

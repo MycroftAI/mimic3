@@ -2,6 +2,7 @@
 !install.sh
 !tests/apope_sample.txt
 !voices/
+!wheels/
 
 # opentts-abc
 !opentts-abc/setup.py

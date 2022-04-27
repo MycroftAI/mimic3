@@ -35,9 +35,13 @@ RUN --mount=type=cache,id=apt-build,target=/var/cache/apt \
    mkdir -p /var/cache/apt/${TARGETARCH}${TARGETVARIANT}/archives/partial && \
    apt-get update && \
    apt-get install --yes --no-install-recommends \
-       python3 python3-pip python3-venv
+       python3 python3-pip python3-venv \
+       build-essential python3-dev
+
 
 WORKDIR /home/mimic3/app
+
+COPY wheels/ ./wheels/
 
 COPY opentts-abc/ ./opentts-abc/
 COPY mimic3-http/ ./mimic3-http/
@@ -46,7 +50,6 @@ COPY install.sh ./
 
 # Install mimic3
 RUN --mount=type=cache,id=pip-requirements,target=/root/.cache/pip \
-    PIP_INSTALL='install -f https://synesthesiam.github.io/prebuilt-apps/' \
     ./install.sh
 
 # Download default voice

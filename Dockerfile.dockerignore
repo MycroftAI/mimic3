@@ -3,6 +3,7 @@
 !tests/apope_sample.txt
 !tests/apope_sample_*.wav
 !voices/
+!wheels/
 
 # opentts-abc
 !opentts-abc/setup.py
