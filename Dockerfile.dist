@@ -88,7 +88,7 @@ COPY voices/ /root/.local/share/mimic3/voices/
 RUN .venv/bin/mimic3-download 'en_UK/apope_low'
 
 # Run test
-COPY tests/apope_sample.txt tests/apope_sample_*.wav tests/
+COPY tests/* tests/
 
 # Generate sample and check
 RUN export expected_sample="tests/apope_sample_${TARGETARCH}${TARGETVARIANT}.wav" && \
@@ -97,7 +97,7 @@ RUN export expected_sample="tests/apope_sample_${TARGETARCH}${TARGETVARIANT}.wav
     --voice 'en_UK/apope_low' \
     < tests/apope_sample.txt \
     > tests/actual_sample.wav && \
-    diff tests/actual_sample.wav "${expected_sample}"
+    tests/samples_match.sh tests/actual_sample.wav "${expected_sample}"
 
 # -----------------------------------------------------------------------------
 

@@ -2,6 +2,7 @@
 !build-dist.sh
 !tests/apope_sample.txt
 !tests/apope_sample_*.wav
+!tests/samples_match.sh
 !voices/
 !wheels/
 !debian/control.in.*
