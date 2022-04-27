@@ -78,8 +78,8 @@ COPY --from=build /build/mimic3/dist/*.tar.gz ./dist/
 # Install mimic3 using source distribution
 RUN --mount=type=cache,id=pip-requirements,target=/root/.cache/pip \
     python3 -m venv .venv && \
-    .venv/bin/pip3 install --upgrade pip \
-    .venv/bin/pip3 install --upgrade wheel setuptools \
+    .venv/bin/pip3 install --upgrade pip && \
+    .venv/bin/pip3 install --upgrade wheel setuptools && \
     .venv/bin/pip3 install \
         -f wheels/ \
         -f https://synesthesiam.github.io/prebuilt-apps/ \
