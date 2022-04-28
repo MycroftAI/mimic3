@@ -5,7 +5,7 @@
 !pyinstaller/mimic3-download
 !tests/apope_sample.txt
 !tests/apope_sample_*.wav
-!tests/samples_match.sh
+!tests/samples_match.py
 !voices/
 !wheels/
 

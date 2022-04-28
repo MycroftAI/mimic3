@@ -100,7 +100,7 @@ RUN export expected_sample="tests/apope_sample_${TARGETARCH}${TARGETVARIANT}.wav
     --voice 'en_UK/apope_low' \
     < tests/apope_sample.txt \
     > tests/actual_sample.wav && \
-    tests/samples_match.sh tests/actual_sample.wav "${expected_sample}"
+    tests/samples_match.py tests/actual_sample.wav "${expected_sample}"
 
 # -----------------------------------------------------------------------------
 
