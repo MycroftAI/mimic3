@@ -168,6 +168,9 @@ class Voice:
     aliases: typing.Optional[typing.Set[str]] = None
     """Alternative keys for this voice"""
 
+    version: typing.Optional[typing.Set[str]] = None
+    """Version of this voice"""
+
     @property
     def is_multispeaker(self) -> bool:
         """True if voice has multiple speakers"""

@@ -13,6 +13,10 @@
                 "size_bytes": 27,
                 "sha256_sum": "8a9a0d5d775c0264004b68c4ca850fd51c3d8e63cdbc9df61ec257a3ee97e025"
             },
+            "VERSION": {
+                "size_bytes": 6,
+                "sha256_sum": "e9dd8507f4bf0c6f42458e41aea833ad0bd3f6127272335eee9bf4d58541ed67"
+            },
             "config.json": {
                 "size_bytes": 3915,
                 "sha256_sum": "484c3ba1581274b63f19e8eae0aa0533fe731136f5f75af0e68159b4f4567896"
@@ -45,7 +49,8 @@
             "6590",
             "0184"
         ],
-        "properties": {}
+        "properties": {},
+        "version": "0.1.0"
     },
     "de_DE/m-ailabs_low": {
         "files": {
@@ -64,6 +69,10 @@
             "SOURCE": {
                 "size_bytes": 61,
                 "sha256_sum": "841520f6a8cc616e307a92552355691f8c3087fadda2e9b7a03a7863b2d0cf6a"
+            },
+            "VERSION": {
+                "size_bytes": 6,
+                "sha256_sum": "e9dd8507f4bf0c6f42458e41aea833ad0bd3f6127272335eee9bf4d58541ed67"
             },
             "config.json": {
                 "size_bytes": 3611,
@@ -97,7 +106,8 @@
             "eva_k",
             "angela_merkel"
         ],
-        "properties": {}
+        "properties": {},
+        "version": "0.1.0"
     },
     "de_DE/thorsten-emotion_low": {
         "files": {
@@ -112,6 +122,10 @@
             "SOURCE": {
                 "size_bytes": 28,
                 "sha256_sum": "f351b9304a8fa1e6e58db9b3411f92387e192bb4b57fcbe3e8f839424b13f3c8"
+            },
+            "VERSION": {
+                "size_bytes": 6,
+                "sha256_sum": "e9dd8507f4bf0c6f42458e41aea833ad0bd3f6127272335eee9bf4d58541ed67"
             },
             "config.json": {
                 "size_bytes": 3756,
@@ -144,7 +158,8 @@
             "surprised",
             "whisper"
         ],
-        "properties": {}
+        "properties": {},
+        "version": "0.1.0"
     },
     "de_DE/thorsten_low": {
         "files": {
@@ -164,6 +179,10 @@
                 "size_bytes": 61,
                 "sha256_sum": "5913b6f0cf4fc4d751aade453924bfa05413245075d3a294f6c70e6497e7e01c"
             },
+            "VERSION": {
+                "size_bytes": 6,
+                "sha256_sum": "e9dd8507f4bf0c6f42458e41aea833ad0bd3f6127272335eee9bf4d58541ed67"
+            },
             "config.json": {
                 "size_bytes": 3736,
                 "sha256_sum": "27ad9d2e36d3beaf2fd797537edf0b2243b73795eb57742b2aa69525258dd088"
@@ -182,7 +201,8 @@
             }
         },
         "speakers": [],
-        "properties": {}
+        "properties": {},
+        "version": "0.1.0"
     },
     "el_GR/rapunzelina_low": {
         "files": {
@@ -202,6 +222,10 @@
                 "size_bytes": 69,
                 "sha256_sum": "c3d41e924e28a9a5d6384af1be84a140ff3ab957f338f56680a076fef07d12b3"
             },
+            "VERSION": {
+                "size_bytes": 6,
+                "sha256_sum": "e9dd8507f4bf0c6f42458e41aea833ad0bd3f6127272335eee9bf4d58541ed67"
+            },
             "config.json": {
                 "size_bytes": 3397,
                 "sha256_sum": "5d4da9a6d55500c067a66b29d21aa14df4d6fe53e9e5ce5b3ee1b2d8ecbb98fc"
@@ -216,7 +240,8 @@
             }
         },
         "speakers": [],
-        "properties": {}
+        "properties": {},
+        "version": "0.1.0"
     },
     "en_UK/apope_low": {
         "files": {
@@ -236,6 +261,10 @@
                 "size_bytes": 18,
                 "sha256_sum": "8197ffe96f3b6772797357e007d63cde409573a0bd3fe174489e01a5faa95553"
             },
+            "VERSION": {
+                "size_bytes": 6,
+                "sha256_sum": "59854984853104df5c353e2f681a15fc7924742f9a2e468c29af248dce45ce03"
+            },
             "config.json": {
                 "size_bytes": 3434,
                 "sha256_sum": "1fdaa1124e02cc177eb776fbc6e08c838b56bd2e86c82d8d7fe434d9337806b0"
@@ -254,7 +283,8 @@
             }
         },
         "speakers": [],
-        "properties": {}
+        "properties": {},
+        "version": "1.0.0"
     },
     "en_US/cmu-arctic_low": {
         "files": {
@@ -273,6 +303,10 @@
             "SOURCE": {
                 "size_bytes": 35,
                 "sha256_sum": "234919f888057ce202730f2ce9e87ab526c6db4b410047a3c9ca52b1cf51de2b"
+            },
+            "VERSION": {
+                "size_bytes": 6,
+                "sha256_sum": "e9dd8507f4bf0c6f42458e41aea833ad0bd3f6127272335eee9bf4d58541ed67"
             },
             "config.json": {
                 "size_bytes": 3550,
@@ -319,7 +353,8 @@
             "eey",
             "gka"
         ],
-        "properties": {}
+        "properties": {},
+        "version": "0.1.0"
     },
     "en_US/hifi-tts_low": {
         "files": {
@@ -338,6 +373,10 @@
             "SOURCE": {
                 "size_bytes": 28,
                 "sha256_sum": "dcfc704446de47e8438a04cb4029c0aaa86a4931d10685080b307cec98345862"
+            },
+            "VERSION": {
+                "size_bytes": 6,
+                "sha256_sum": "e9dd8507f4bf0c6f42458e41aea833ad0bd3f6127272335eee9bf4d58541ed67"
             },
             "config.json": {
                 "size_bytes": 3660,
@@ -369,7 +408,8 @@
             "6097",
             "92"
         ],
-        "properties": {}
+        "properties": {},
+        "version": "0.1.0"
     },
     "en_US/ljspeech_low": {
         "files": {
@@ -389,6 +429,10 @@
                 "size_bytes": 40,
                 "sha256_sum": "f72dc7596d10484aea8dbd1b907728ff332acf8899a38dbca468197a26c3c5d9"
             },
+            "VERSION": {
+                "size_bytes": 6,
+                "sha256_sum": "e9dd8507f4bf0c6f42458e41aea833ad0bd3f6127272335eee9bf4d58541ed67"
+            },
             "config.json": {
                 "size_bytes": 3495,
                 "sha256_sum": "7f89388f366789ede1a32756d98b576a18e410f0f1a9af2ce64d0fbbcd0d971f"
@@ -407,7 +451,8 @@
             }
         },
         "speakers": [],
-        "properties": {}
+        "properties": {},
+        "version": "0.1.0"
     },
     "en_US/m-ailabs_low": {
         "files": {
@@ -426,6 +471,10 @@
             "SOURCE": {
                 "size_bytes": 61,
                 "sha256_sum": "841520f6a8cc616e307a92552355691f8c3087fadda2e9b7a03a7863b2d0cf6a"
+            },
+            "VERSION": {
+                "size_bytes": 6,
+                "sha256_sum": "e9dd8507f4bf0c6f42458e41aea833ad0bd3f6127272335eee9bf4d58541ed67"
             },
             "config.json": {
                 "size_bytes": 3656,
@@ -457,7 +506,8 @@
             "judy_bieber",
             "mary_ann"
         ],
-        "properties": {}
+        "properties": {},
+        "version": "0.1.0"
     },
     "en_US/vctk_low": {
         "files": {
@@ -476,6 +526,10 @@
             "SOURCE": {
                 "size_bytes": 45,
                 "sha256_sum": "fe147d22acd80ce096d7c3069bb66ece887db8b72fb5f38ac6017f7aa98a9698"
+            },
+            "VERSION": {
+                "size_bytes": 6,
+                "sha256_sum": "e9dd8507f4bf0c6f42458e41aea833ad0bd3f6127272335eee9bf4d58541ed67"
             },
             "config.json": {
                 "size_bytes": 3555,
@@ -613,7 +667,8 @@
             "p225",
             "p362"
         ],
-        "properties": {}
+        "properties": {},
+        "version": "0.1.0"
     },
     "es_ES/carlfm_low": {
         "files": {
@@ -633,6 +688,10 @@
                 "size_bytes": 47,
                 "sha256_sum": "afb36ff925af99bf47b97ff5f753a4dc1402e4a3f3e491a7898ad38791b7920c"
             },
+            "VERSION": {
+                "size_bytes": 6,
+                "sha256_sum": "e9dd8507f4bf0c6f42458e41aea833ad0bd3f6127272335eee9bf4d58541ed67"
+            },
             "config.json": {
                 "size_bytes": 3401,
                 "sha256_sum": "e4da85d44a84c729310d8bffe81a4452bd86b7a1d3874ce3243f0e1d494e704f"
@@ -651,7 +710,8 @@
             }
         },
         "speakers": [],
-        "properties": {}
+        "properties": {},
+        "version": "0.1.0"
     },
     "es_ES/m-ailabs_low": {
         "files": {
@@ -670,6 +730,10 @@
             "SOURCE": {
                 "size_bytes": 61,
                 "sha256_sum": "841520f6a8cc616e307a92552355691f8c3087fadda2e9b7a03a7863b2d0cf6a"
+            },
+            "VERSION": {
+                "size_bytes": 6,
+                "sha256_sum": "e9dd8507f4bf0c6f42458e41aea833ad0bd3f6127272335eee9bf4d58541ed67"
             },
             "config.json": {
                 "size_bytes": 3591,
@@ -697,7 +761,8 @@
             "victor_villarraza",
             "karen_savage"
         ],
-        "properties": {}
+        "properties": {},
+        "version": "0.1.0"
     },
     "fa/haaniye_low": {
         "files": {
@@ -717,6 +782,10 @@
                 "size_bytes": 4,
                 "sha256_sum": "76f602b1dfc2d548fa1f5eddf29315c947bec31f71c95d49653927204486be39"
             },
+            "VERSION": {
+                "size_bytes": 6,
+                "sha256_sum": "e9dd8507f4bf0c6f42458e41aea833ad0bd3f6127272335eee9bf4d58541ed67"
+            },
             "config.json": {
                 "size_bytes": 3667,
                 "sha256_sum": "fd6d675532c06e014080df6abffc870b3c299dd31e28515044858072d2e6741a"
@@ -731,7 +800,8 @@
             }
         },
         "speakers": [],
-        "properties": {}
+        "properties": {},
+        "version": "0.1.0"
     },
     "fi_FI/harri-tapani-ylilammi_low": {
         "files": {
@@ -751,6 +821,10 @@
                 "size_bytes": 71,
                 "sha256_sum": "f5d064abd622989907fbf4116caa1d9914c30dc11b2fd83447d2ba9da8cec1f7"
             },
+            "VERSION": {
+                "size_bytes": 6,
+                "sha256_sum": "e9dd8507f4bf0c6f42458e41aea833ad0bd3f6127272335eee9bf4d58541ed67"
+            },
             "config.json": {
                 "size_bytes": 3399,
                 "sha256_sum": "2c7ddf22d83670542cf21b17b8177f53cdcf4e57d581a7fc92ff3c266985c826"
@@ -765,7 +839,8 @@
             }
         },
         "speakers": [],
-        "properties": {}
+        "properties": {},
+        "version": "0.1.0"
     },
     "fr_FR/m-ailabs_low": {
         "files": {
@@ -784,6 +859,10 @@
             "SOURCE": {
                 "size_bytes": 61,
                 "sha256_sum": "841520f6a8cc616e307a92552355691f8c3087fadda2e9b7a03a7863b2d0cf6a"
+            },
+            "VERSION": {
+                "size_bytes": 6,
+                "sha256_sum": "e9dd8507f4bf0c6f42458e41aea833ad0bd3f6127272335eee9bf4d58541ed67"
             },
             "config.json": {
                 "size_bytes": 3608,
@@ -817,7 +896,8 @@
             "zeckou",
             "gilles_g_le_blanc"
         ],
-        "properties": {}
+        "properties": {},
+        "version": "0.1.0"
     },
     "fr_FR/siwis_low": {
         "files": {
@@ -837,6 +917,10 @@
                 "size_bytes": 48,
                 "sha256_sum": "e81bea943c3a359cef9dafdd66dd29ec6af41bed92dfc2de28879ffa44ba5c84"
             },
+            "VERSION": {
+                "size_bytes": 6,
+                "sha256_sum": "e9dd8507f4bf0c6f42458e41aea833ad0bd3f6127272335eee9bf4d58541ed67"
+            },
             "config.json": {
                 "size_bytes": 3390,
                 "sha256_sum": "9545c9bdda9692175fae0658c754d2cd1cc786615a6ca673eae3cd6eb1b567ed"
@@ -855,7 +939,8 @@
             }
         },
         "speakers": [],
-        "properties": {}
+        "properties": {},
+        "version": "0.1.0"
     },
     "fr_FR/tom_low": {
         "files": {
@@ -875,6 +960,10 @@
                 "size_bytes": 50,
                 "sha256_sum": "96978fc4977928015e2999d4497f667edb562fd1a44211a31ac2c15c94ced664"
             },
+            "VERSION": {
+                "size_bytes": 6,
+                "sha256_sum": "e9dd8507f4bf0c6f42458e41aea833ad0bd3f6127272335eee9bf4d58541ed67"
+            },
             "config.json": {
                 "size_bytes": 3634,
                 "sha256_sum": "203dc4bafb3d3dacc0cee09959a41494ac173e53c57b3c3b75e2af1593c3859a"
@@ -893,7 +982,8 @@
             }
         },
         "speakers": [],
-        "properties": {}
+        "properties": {},
+        "version": "0.1.0"
     },
     "hu_HU/diana-majlinger_low": {
         "files": {
@@ -913,6 +1003,10 @@
                 "size_bytes": 73,
                 "sha256_sum": "b8d62d6f483feb8fb6a6ccac36bdc4080a4771cbbf38ab3c4f6f9d0e93a977d6"
             },
+            "VERSION": {
+                "size_bytes": 6,
+                "sha256_sum": "e9dd8507f4bf0c6f42458e41aea833ad0bd3f6127272335eee9bf4d58541ed67"
+            },
             "config.json": {
                 "size_bytes": 3396,
                 "sha256_sum": "f91d65016d5d2b8f3c1076552344121db024c3e49c11fcadb8dcdad65e9a192f"
@@ -927,7 +1021,8 @@
             }
         },
         "speakers": [],
-        "properties": {}
+        "properties": {},
+        "version": "0.1.0"
     },
     "it_IT/mls_low": {
         "files": {
@@ -946,6 +1041,10 @@
             "SOURCE": {
                 "size_bytes": 27,
                 "sha256_sum": "e381746e5212214dc753e4dd5b74e31da0271cfb0f529b2aaa9b721da5a0a84f"
+            },
+            "VERSION": {
+                "size_bytes": 6,
+                "sha256_sum": "e9dd8507f4bf0c6f42458e41aea833ad0bd3f6127272335eee9bf4d58541ed67"
             },
             "config.json": {
                 "size_bytes": 3634,
@@ -1009,7 +1108,8 @@
             "7405",
             "5010"
         ],
-        "properties": {}
+        "properties": {},
+        "version": "0.1.0"
     },
     "it_IT/riccardo-fasol_low": {
         "files": {
@@ -1029,6 +1129,10 @@
                 "size_bytes": 61,
                 "sha256_sum": "841520f6a8cc616e307a92552355691f8c3087fadda2e9b7a03a7863b2d0cf6a"
             },
+            "VERSION": {
+                "size_bytes": 6,
+                "sha256_sum": "e9dd8507f4bf0c6f42458e41aea833ad0bd3f6127272335eee9bf4d58541ed67"
+            },
             "config.json": {
                 "size_bytes": 3417,
                 "sha256_sum": "e60ee585ce2c1709c47d8bf21af6ba7fcc75e50fd533ce479ba2b00408630f8f"
@@ -1047,7 +1151,8 @@
             }
         },
         "speakers": [],
-        "properties": {}
+        "properties": {},
+        "version": "0.1.0"
     },
     "ko_KO/kss_low": {
         "files": {
@@ -1067,6 +1172,10 @@
                 "size_bytes": 70,
                 "sha256_sum": "0c424cc057609d0547bf29e94a9c6dbda619787fde8ff21cc7e404d1c62d562c"
             },
+            "VERSION": {
+                "size_bytes": 6,
+                "sha256_sum": "e9dd8507f4bf0c6f42458e41aea833ad0bd3f6127272335eee9bf4d58541ed67"
+            },
             "config.json": {
                 "size_bytes": 3357,
                 "sha256_sum": "2433ba5cefa3dd957dc1276b7a501ab7e8f4a867b6ea8daa3543a5582560157c"
@@ -1081,7 +1190,8 @@
             }
         },
         "speakers": [],
-        "properties": {}
+        "properties": {},
+        "version": "0.1.0"
     },
     "nl/bart-de-leeuw_low": {
         "files": {
@@ -1101,6 +1211,10 @@
                 "size_bytes": 69,
                 "sha256_sum": "b7c9a4b2358be26c8cd98ef6f6ef731b64f6a945611db86020faead59278391c"
             },
+            "VERSION": {
+                "size_bytes": 6,
+                "sha256_sum": "e9dd8507f4bf0c6f42458e41aea833ad0bd3f6127272335eee9bf4d58541ed67"
+            },
             "config.json": {
                 "size_bytes": 3628,
                 "sha256_sum": "3f2d000a7a72ff3764f3f2f33636419f12e6d4b6e644de3308a2f2630ff1efc0"
@@ -1119,7 +1233,8 @@
             }
         },
         "speakers": [],
-        "properties": {}
+        "properties": {},
+        "version": "0.1.0"
     },
     "nl/flemishguy_low": {
         "files": {
@@ -1139,6 +1254,10 @@
                 "size_bytes": 52,
                 "sha256_sum": "47ed4627b3caa192570bf1c8d8810b3fb69ce8bf9ed85fc981f0b87df40b40b8"
             },
+            "VERSION": {
+                "size_bytes": 6,
+                "sha256_sum": "e9dd8507f4bf0c6f42458e41aea833ad0bd3f6127272335eee9bf4d58541ed67"
+            },
             "config.json": {
                 "size_bytes": 3621,
                 "sha256_sum": "32243780361d3e8885ca85238fae167c617b5426b71e744b81d44af0c7e7222b"
@@ -1157,7 +1276,8 @@
             }
         },
         "speakers": [],
-        "properties": {}
+        "properties": {},
+        "version": "0.1.0"
     },
     "nl/nathalie_low": {
         "files": {
@@ -1177,6 +1297,10 @@
                 "size_bytes": 50,
                 "sha256_sum": "6422e7d891e0d77db7a7cd9643bc8cff4c26f47d652b83b651a0179682ce65c7"
             },
+            "VERSION": {
+                "size_bytes": 6,
+                "sha256_sum": "e9dd8507f4bf0c6f42458e41aea833ad0bd3f6127272335eee9bf4d58541ed67"
+            },
             "config.json": {
                 "size_bytes": 3604,
                 "sha256_sum": "e8e1acf414067657bd377965eb822c51f55483e2ad9a498398e473b0eae4c137"
@@ -1195,7 +1319,8 @@
             }
         },
         "speakers": [],
-        "properties": {}
+        "properties": {},
+        "version": "0.1.0"
     },
     "nl/pmk_low": {
         "files": {
@@ -1215,6 +1340,10 @@
                 "size_bytes": 4,
                 "sha256_sum": "76f602b1dfc2d548fa1f5eddf29315c947bec31f71c95d49653927204486be39"
             },
+            "VERSION": {
+                "size_bytes": 6,
+                "sha256_sum": "e9dd8507f4bf0c6f42458e41aea833ad0bd3f6127272335eee9bf4d58541ed67"
+            },
             "config.json": {
                 "size_bytes": 3638,
                 "sha256_sum": "325b363c9e604646c28f498fdce2491d1bee70b41f13710f305a6b150beb713a"
@@ -1233,7 +1362,8 @@
             }
         },
         "speakers": [],
-        "properties": {}
+        "properties": {},
+        "version": "0.1.0"
     },
     "nl/rdh_low": {
         "files": {
@@ -1253,6 +1383,10 @@
                 "size_bytes": 37,
                 "sha256_sum": "e4874bd5a71c42ef3f963944571e107734928b9db960f17dfadb6e2afce2956b"
             },
+            "VERSION": {
+                "size_bytes": 6,
+                "sha256_sum": "e9dd8507f4bf0c6f42458e41aea833ad0bd3f6127272335eee9bf4d58541ed67"
+            },
             "config.json": {
                 "size_bytes": 3378,
                 "sha256_sum": "1b9a50cd5e70e44c3aac6fa01bf4b1607627973814fc4ce7e0d4bf1166ce4305"
@@ -1271,7 +1405,8 @@
             }
         },
         "speakers": [],
-        "properties": {}
+        "properties": {},
+        "version": "0.1.0"
     },
     "pl_PL/m-ailabs_low": {
         "files": {
@@ -1290,6 +1425,10 @@
             "SOURCE": {
                 "size_bytes": 61,
                 "sha256_sum": "841520f6a8cc616e307a92552355691f8c3087fadda2e9b7a03a7863b2d0cf6a"
+            },
+            "VERSION": {
+                "size_bytes": 6,
+                "sha256_sum": "e9dd8507f4bf0c6f42458e41aea833ad0bd3f6127272335eee9bf4d58541ed67"
             },
             "config.json": {
                 "size_bytes": 3635,
@@ -1316,7 +1455,8 @@
             "piotr_nater",
             "nina_brown"
         ],
-        "properties": {}
+        "properties": {},
+        "version": "0.1.0"
     },
     "ru_RU/multi_low": {
         "files": {
@@ -1331,6 +1471,10 @@
             "SOURCE": {
                 "size_bytes": 132,
                 "sha256_sum": "9c3b3fd5fe49e2e1d4e5daa5c643a713da955415d06fccf50add1185301f351a"
+            },
+            "VERSION": {
+                "size_bytes": 6,
+                "sha256_sum": "e9dd8507f4bf0c6f42458e41aea833ad0bd3f6127272335eee9bf4d58541ed67"
             },
             "config.json": {
                 "size_bytes": 3923,
@@ -1378,7 +1522,8 @@
             "minaev",
             "nikolaev"
         ],
-        "properties": {}
+        "properties": {},
+        "version": "0.1.0"
     },
     "sw/lanfrica_low": {
         "files": {
@@ -1394,6 +1539,10 @@
                 "size_bytes": 48,
                 "sha256_sum": "1553a74483d9094830d5d249ed6db286eb52f0e7057f0b903efd8c45656bcfeb"
             },
+            "VERSION": {
+                "size_bytes": 6,
+                "sha256_sum": "e9dd8507f4bf0c6f42458e41aea833ad0bd3f6127272335eee9bf4d58541ed67"
+            },
             "config.json": {
                 "size_bytes": 3387,
                 "sha256_sum": "3b8f3876f998624fff4760015cbdf7cf7e8110eed9753e45a99479fdc8ba8817"
@@ -1408,7 +1557,8 @@
             }
         },
         "speakers": [],
-        "properties": {}
+        "properties": {},
+        "version": "0.1.0"
     },
     "te_IN/cmu-indic_low": {
         "files": {
@@ -1427,6 +1577,10 @@
             "SOURCE": {
                 "size_bytes": 30,
                 "sha256_sum": "d79737ae72d64666485e1899ec32badf1f1043be2619463139d502d5f88f4167"
+            },
+            "VERSION": {
+                "size_bytes": 6,
+                "sha256_sum": "e9dd8507f4bf0c6f42458e41aea833ad0bd3f6127272335eee9bf4d58541ed67"
             },
             "config.json": {
                 "size_bytes": 3647,
@@ -1454,7 +1608,8 @@
             "sk",
             "kpn"
         ],
-        "properties": {}
+        "properties": {},
+        "version": "0.1.0"
     },
     "tn_ZA/google-nwu_low": {
         "files": {
@@ -1469,6 +1624,10 @@
             "SOURCE": {
                 "size_bytes": 27,
                 "sha256_sum": "8a9a0d5d775c0264004b68c4ca850fd51c3d8e63cdbc9df61ec257a3ee97e025"
+            },
+            "VERSION": {
+                "size_bytes": 6,
+                "sha256_sum": "e9dd8507f4bf0c6f42458e41aea833ad0bd3f6127272335eee9bf4d58541ed67"
             },
             "config.json": {
                 "size_bytes": 3885,
@@ -1519,7 +1678,8 @@
             "9365",
             "7693"
         ],
-        "properties": {}
+        "properties": {},
+        "version": "0.1.0"
     },
     "uk_UK/m-ailabs_low": {
         "files": {
@@ -1538,6 +1698,10 @@
             "SOURCE": {
                 "size_bytes": 61,
                 "sha256_sum": "841520f6a8cc616e307a92552355691f8c3087fadda2e9b7a03a7863b2d0cf6a"
+            },
+            "VERSION": {
+                "size_bytes": 6,
+                "sha256_sum": "e9dd8507f4bf0c6f42458e41aea833ad0bd3f6127272335eee9bf4d58541ed67"
             },
             "config.json": {
                 "size_bytes": 5197,
@@ -1568,7 +1732,8 @@
             "sumska",
             "pysariev"
         ],
-        "properties": {}
+        "properties": {},
+        "version": "0.1.0"
     },
     "vi_VN/vais1000_low": {
         "files": {
@@ -1588,6 +1753,10 @@
                 "size_bytes": 81,
                 "sha256_sum": "fb9722c013a1bf36d8d0d21892cc0127e1804d1e601fd28cc8c8b37e81e4b6d1"
             },
+            "VERSION": {
+                "size_bytes": 6,
+                "sha256_sum": "e9dd8507f4bf0c6f42458e41aea833ad0bd3f6127272335eee9bf4d58541ed67"
+            },
             "config.json": {
                 "size_bytes": 3641,
                 "sha256_sum": "2e6ed61ee8a981ccf8ed65372cc21885ec6049930535b55dc4c1164ae7323dc5"
@@ -1602,7 +1771,8 @@
             }
         },
         "speakers": [],
-        "properties": {}
+        "properties": {},
+        "version": "0.1.0"
     },
     "yo/crowdsourced_low": {
         "files": {
@@ -1617,6 +1787,10 @@
             "SOURCE": {
                 "size_bytes": 27,
                 "sha256_sum": "1506dd4714f1c2c4bf89462047b7e18ff8d9827139b8579b97daa2049ca0be6f"
+            },
+            "VERSION": {
+                "size_bytes": 6,
+                "sha256_sum": "e9dd8507f4bf0c6f42458e41aea833ad0bd3f6127272335eee9bf4d58541ed67"
             },
             "config.json": {
                 "size_bytes": 4459,
@@ -1661,6 +1835,7 @@
             "01523",
             "03349"
         ],
-        "properties": {}
+        "properties": {},
+        "version": "0.1.0"
     }
 }

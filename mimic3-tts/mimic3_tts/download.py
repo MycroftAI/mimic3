@@ -15,6 +15,7 @@
 #
 """A command-line tool for downloading Mimic 3 voices"""
 import argparse
+import itertools
 import json
 import logging
 import re
@@ -49,11 +50,30 @@ class VoiceFile:
     sha256_sum: typing.Optional[str] = None
 
 
+def is_later_version(version1: str, version2: str) -> bool:
+    """True if version1 is later than version2"""
+    v1_parts = [int(n) for n in version1.split(".")]
+    v2_parts = [int(n) for n in version2.split(".")]
+
+    for p1, p2 in itertools.zip_longest(v1_parts, v2_parts, fillvalue=0):
+        if p1 > p2:
+            # 2.0 vs 1.0
+            return True
+
+        if p1 < p2:
+            # 1.0 vs 2.0
+            return False
+
+    # 1.0 vs 1.0
+    return False
+
+
 def download_voice(
     voice_key: str,
     url_base: str,
     voice_files: typing.Iterable[VoiceFile],
     voices_dir: typing.Union[str, Path],
+    voice_version: str,
     chunk_bytes: int = 4096,
     redownload: bool = False,
 ):
@@ -68,6 +88,18 @@ def download_voice(
     voice_dir.mkdir(parents=True, exist_ok=True)
 
     _LOGGER.debug("Downloading voice %s to %s", voice_key, voice_dir)
+
+    version_path = voice_dir / "VERSION"
+    if version_path.is_file():
+        actual_version = version_path.read_text(encoding="utf-8").strip()
+        if is_later_version(voice_version, actual_version):
+            redownload = True
+            _LOGGER.debug(
+                "Replacing version %s of %s with version %s",
+                actual_version,
+                voice_key,
+                voice_version,
+            )
 
     for voice_file in voice_files:
         file_url = f"{url_base}/{voice_file.relative_path}"
@@ -145,8 +177,10 @@ def main(argv=None):
 
     if args.debug:
         logging.basicConfig(level=logging.DEBUG)
+        logging.getLogger().setLevel(logging.DEBUG)
     else:
         logging.basicConfig(level=logging.INFO)
+        logging.getLogger().setLevel(logging.INFO)
 
     _LOGGER.debug(args)
 
@@ -194,6 +228,7 @@ def main(argv=None):
                     VoiceFile(file_key, sha256_sum=file_info.get("sha256_sum"))
                     for file_key, file_info in voice_files.items()
                 ],
+                voice_version=voice_info["version"],
                 voices_dir=args.output_dir,
                 redownload=args.redownload,
             )
