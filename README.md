@@ -93,9 +93,9 @@ docker pull mycroftai/mimic3
 
 Once installed, check out the following scripts for running:
 
-    * [`mimic3`](docker/mimic3)
-    * [`mimic3-server`](docker/mimic3-server)
-    * [`mimic3-download`](docker/mimic3-download)
+* [`mimic3`](docker/mimic3)
+* [`mimic3-server`](docker/mimic3-server)
+* [`mimic3-download`](docker/mimic3-download)
     
 Or you can manually run the web server with:
 
