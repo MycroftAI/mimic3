@@ -133,12 +133,14 @@ pip install mimic3-http[all]
 ```
 
 Once installed, the following commands will be available:
+
     * `mimic3-server`
 
 Language support can be selectively installed by replacing `all` with:
 
 * `de` - German
 * `es` - Spanish
+* `fa` - Farsi
 * `fr` - French
 * `it` - Italian
 * `nl` - Dutch
@@ -316,6 +318,7 @@ SSML `<say-as>` support varies between voice types:
 
 * [gruut](https://github.com/rhasspy/gruut/#ssml)
 * [eSpeak-ng](http://espeak.sourceforge.net/ssml.html)
+* [epitran](https://github.com/dmort27/epitran/) voices do not currently support `<say-as>`
 * Character-based voices do not currently support `<say-as>`
 
 
