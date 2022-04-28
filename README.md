@@ -129,9 +129,9 @@ sudo apt install ./mimic3-tts_<version>_<platform>.deb
 
 Once installed, the following commands will be available in `/usr/bin`:
 
-    * `mimic3`
-    * `mimic3-server`
-    * `mimic3-download`
+* `mimic3`
+* `mimic3-server`
+* `mimic3-download`
 
 
 ### Using pip
@@ -144,8 +144,8 @@ pip install mimic3-tts[all]
 
 Once installed, the following commands will be available:
 
-    * `mimic3`
-    * `mimic3-download`
+* `mimic3`
+* `mimic3-download`
 
 Install the HTTP web server:
 
@@ -155,7 +155,7 @@ pip install mimic3-http[all]
 
 Once installed, the following commands will be available:
 
-    * `mimic3-server`
+* `mimic3-server`
 
 Language support can be selectively installed by replacing `all` with:
 
@@ -190,9 +190,9 @@ A virtual environment will be created in `mimic3/.venv` and each of the Python m
 
 Once installed, the following commands will be available in `.venv/bin`:
 
-    * `mimic3`
-    * `mimic3-server`
-    * `mimic3-download`
+* `mimic3`
+* `mimic3-server`
+* `mimic3-download`
 
 
 ## Voice Keys
