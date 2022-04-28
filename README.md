@@ -2,7 +2,7 @@
 
 ![mimic 3 mark 2](img/mimic3-mark-ii.png)
 
-A fast and local neural text to speech system for [Mycroft](https://mycroft.ai/) and the [Mark II](https://mycroft.ai/product/mark-ii/).
+A fast and local neural text to speech system developed by [Mycroft](https://mycroft.ai/) for the [Mark II](https://mycroft.ai/product/mark-ii/).
 
 * [Available voices](https://github.com/MycroftAI/mimic3-voices)
 * [How does it work?](mimic3-tts/#architecture)
@@ -11,10 +11,14 @@ A fast and local neural text to speech system for [Mycroft](https://mycroft.ai/)
 ## Use Cases
 
 * [Mycroft TTS plugin](#mycroft-tts-plugin)
+    * `mycroft-say 'Hello world.'`
 * [Web server](#web-server-and-client)
+    * `curl -X POST --data 'Hello world.' --output - localhost:59125/api/tts | aplay`
     * Drop-in [replacement for MaryTTS](#marytts-compatibility)
 * [Command-line tool](#command-line-tools)
+    * `mimic3 'Hello world.' | aplay`
 * [Voice for screen reader](mimic3-tts/#speech-dispatcher)
+    * `spd-say 'Hello world.'`
 
 
 ## Dependencies
@@ -37,6 +41,12 @@ Some voices depend on [eSpeak-ng](https://github.com/espeak-ng/espeak-ng), speci
 sudo apt-get install libespeak-ng1
 ```
 
+On 32-bit ARM platforms (a.k.a. `armv7l` or `armhf`), you will also need some extra libraries:
+
+``` sh
+sudo apt-get install libatomic1 libgomp1 libatlas-base-dev
+```
+
 
 ### Mycroft TTS Plugin
 
@@ -51,6 +61,15 @@ Enable the plugin in your [mycroft.conf](https://mycroft-ai.gitbook.io/docs/usin
 ``` sh
 mycroft-config set tts.module mimic3_tts_plug
 ```
+
+or you can manually add the following to `mycroft.conf` with `mycroft-config edit user`:
+
+``` json
+"tts": {
+  "module": "mimic3_tts_plug"
+}
+```
+
 
 See the [plugin's documentation](https://github.com/MycroftAI/plugin-tts-mimic3) for more options.
 
@@ -88,6 +107,8 @@ docker run \
        'mycroftai/mimic3'
 ```
 
+Voices will be automatically downloaded to `${HOME}/.local/share/mimic3/voices`
+
 
 ### Debian Package
 
@@ -100,13 +121,13 @@ Grab the Debian package from the [latest release](https://github.com/mycroftAI/m
 * `mimic3-tts_<version>_armhf.deb`
     * For Raspberry Pi 1/2/3/4 and Zero 2 with 32-bit Pi OS
     
-Once downloaded, install the package with:
+Once downloaded, install the package with (note the `./`):
 
 ``` sh
 sudo apt install ./mimic3-tts_<version>_<platform>.deb
 ```
 
-Once installed, the following commands will be available:
+Once installed, the following commands will be available in `/usr/bin`:
 
     * `mimic3`
     * `mimic3-server`
@@ -168,6 +189,7 @@ cd mimic3/
 A virtual environment will be created in `mimic3/.venv` and each of the Python modules will be installed in editiable mode (`pip install -e`).
 
 Once installed, the following commands will be available in `.venv/bin`:
+
     * `mimic3`
     * `mimic3-server`
     * `mimic3-download`
