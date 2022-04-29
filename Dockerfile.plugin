@@ -51,7 +51,7 @@ RUN ./build-dist.sh
 COPY plugin-tts-mimic3 ./plugin-tts-mimic3/
 RUN cd plugin-tts-mimic3 && \
     python3 setup.py sdist && \
-    cp plugin-tts-mimic3/dist/*.tar.gz dist/
+    cp dist/*.tar.gz ../dist/
 
 # -----------------------------------------------------------------------------
 
