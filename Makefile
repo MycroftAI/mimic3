@@ -70,5 +70,5 @@ debian:
 plugin-dist:
 	echo "$(DOCKER_PLATFORM)" | sed -e 's/,/\n/g' | \
         while read -r platform; do \
-            docker buildx build . -f Dockerfile.plugin --platform $(DOCKER_PLATFORM) --output "type=local,dest/dist/"; \
+            docker buildx build . -f Dockerfile.plugin --platform $(DOCKER_PLATFORM) --output "type=local,dest=dist/"; \
         done
