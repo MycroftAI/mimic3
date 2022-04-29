@@ -16,7 +16,7 @@
 # -----------------------------------------------------------------------------
 # Dockerfile for Mimic 3 (https://github.com/MycroftAI/mimic3)
 #
-# Tests TTS plugin with Mycroft.
+# Builds and tests TTS plugin with Mycroft.
 #
 # Requires Docker buildx: https://docs.docker.com/buildx/working-with-buildx/
 # -----------------------------------------------------------------------------
@@ -46,6 +46,12 @@ COPY build-dist.sh ./
 
 # Create sdists
 RUN ./build-dist.sh
+
+# Build plugin sdist
+COPY plugin-tts-mimic3 ./plugin-tts-mimic3/
+RUN cd plugin-tts-mimic3 && \
+    python3 setup.py sdist && \
+    cp plugin-tts-mimic3/dist/*.tar.gz dist/
 
 # -----------------------------------------------------------------------------
 

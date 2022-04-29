@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-.PHONY: dist install docker docker-gpu debian sample plugin-test
+.PHONY: dist install docker docker-gpu debian sample plugin-dist
 
 SHELL := bash
 
@@ -64,11 +64,11 @@ debian:
             docker buildx build . -f Dockerfile.debian --platform $(DOCKER_PLATFORM) --output "type=local,dest=dist/"; \
         done
 
-# Tests TTS plugin with Mycroft.
+# Build TTS plugin distribution package.
 # https://github.com/MycroftAI/plugin-tts-mimic3
-# Enable local --output to get generated sample and log.
-plugin-test:
+# Also tests with latest Mycroft.
+plugin-dist:
 	echo "$(DOCKER_PLATFORM)" | sed -e 's/,/\n/g' | \
         while read -r platform; do \
-            docker buildx build . -f tests/Dockerfile.plugin --platform $(DOCKER_PLATFORM); \
+            docker buildx build . -f Dockerfile.plugin --platform $(DOCKER_PLATFORM) --output "type=local,dest/dist/"; \
         done

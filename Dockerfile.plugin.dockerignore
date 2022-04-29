@@ -7,6 +7,15 @@
 !wheels/
 !debian/control.in.*
 
+# plugin-tts-mimic3
+!plugin-tts-mimic3/setup.py
+!plugin-tts-mimic3/LICENSE
+!plugin-tts-mimic3/MANIFEST.in
+!plugin-tts-mimic3/requirements.txt
+!plugin-tts-mimic3/plugin_tts_mimic3/*.py
+!plugin-tts-mimic3/plugin_tts_mimic3/VERSION
+!plugin-tts-mimic3/plugin_tts_mimic3/py.typed
+
 # opentts-abc
 !opentts-abc/setup.py
 !opentts-abc/LICENSE
