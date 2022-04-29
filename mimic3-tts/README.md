@@ -326,6 +326,23 @@ Voices that use [epitran](https://github.com/dmort27/epitran/) for phonemization
 epitran uses rules to generate phonetic pronunciations from text. It does not support text normalization, however, so numbers, dates, etc. must be written out.
 
 
+### Components of a Voice Model
+
+Voice models are stored in a directory with a specific layout:
+
+* `<language>_<region>` (e.g., `en_UK`)
+    * `<voice-name>_<quality>`  (e.g., `apope_low`)
+        * `ALIASES` - alternative names for the voice, one per line (optional)
+        * `config.json` - training/inference configuration (see [code](https://github.com/MycroftAI/mimic3/blob/master/mimic3-tts/mimic3_tts/config.py) for details)
+        * `generator.onnx` - exported inference model (see `ids_to_audio` method in [`voice.py`](https://github.com/MycroftAI/mimic3/blob/master/mimic3-tts/mimic3_tts/voice.py))
+        * `LICENSE` - text, name, or URL of voice model license
+        * `phoneme_map.txt` - mapping from source phoneme to destination phoneme(s) (optional)
+        * `phonemes.txt` - mapping from integer ids to phonemes (`_` = padding, `^` = beginning of utterance, `$` = end of utterance, `#` = word break)
+        * `README.md` - description of the voice
+        * `SOURCE` - URL(s) of the dataset(s) this voice was trained on
+        * `VERSION` - version of the voice in the format "MAJOR.Minor.bugfix" (e.g. "1.0.2")
+
+
 ## License
 
 See [license file](LICENSE)
