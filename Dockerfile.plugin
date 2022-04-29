@@ -84,7 +84,7 @@ RUN git clone https://github.com/MycroftAI/mycroft-core.git
 RUN --mount=type=cache,id=apt-run,target=/var/cache/apt \
     --mount=type=cache,id=pip-requirements,target=/root/.cache/pip \
     cd mycroft-core && \
-    CI=true bash dev_setup.sh --allow-root
+    CI=true bash dev_setup.sh --allow-root -sm
 
 COPY wheels/ ./wheels/
 

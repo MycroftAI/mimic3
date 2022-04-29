@@ -985,6 +985,57 @@
         "properties": {},
         "version": "0.1.0"
     },
+    "gu_IN/cmu-indic_low": {
+        "files": {
+            "ALIASES": {
+                "size_bytes": 16,
+                "sha256_sum": "93a432eec0dd88b792da5bbd9e269e68ef27c760021f9927e2bc5d79e016a10b"
+            },
+            "LICENSE": {
+                "size_bytes": 960,
+                "sha256_sum": "244ff21a910baf28bcb27b1975620a79d2be8611815ecc599f08eb06dd6f000e"
+            },
+            "README.md": {
+                "size_bytes": 171,
+                "sha256_sum": "20c513163ecf0efe6f9c6b9c0eb755dee7ac5cc568030186365378828aa641ac"
+            },
+            "SOURCE": {
+                "size_bytes": 30,
+                "sha256_sum": "d79737ae72d64666485e1899ec32badf1f1043be2619463139d502d5f88f4167"
+            },
+            "VERSION": {
+                "size_bytes": 6,
+                "sha256_sum": "e9dd8507f4bf0c6f42458e41aea833ad0bd3f6127272335eee9bf4d58541ed67"
+            },
+            "config.json": {
+                "size_bytes": 3694,
+                "sha256_sum": "01402296fc2a090053f2ebf28efe87aaf47dd2b17fa5c7d078ef5ec4216bad84"
+            },
+            "generator.onnx": {
+                "size_bytes": 76334431,
+                "sha256_sum": "841a843c8bde83948b464c14835d2d9065d4a63afc41f57a7ee3e6d1de7e3fdc"
+            },
+            "phonemes.txt": {
+                "size_bytes": 293,
+                "sha256_sum": "e7206d444c8eebb0df3df961a4db64ca3900cabf76452f144624132693f5ae13"
+            },
+            "speaker_map.csv": {
+                "size_bytes": 93,
+                "sha256_sum": "accb50068461942cefedea9c01861c58588bd6ecd3e712130f732bc17f3001f0"
+            },
+            "speakers.txt": {
+                "size_bytes": 51,
+                "sha256_sum": "0431e4e24e4494a6792f04d8fed2d22c0975c4a320135cfebb774715def57e75"
+            }
+        },
+        "speakers": [
+            "cmu_indic_guj_dp",
+            "cmu_indic_guj_ad",
+            "cmu_indic_guj_kt"
+        ],
+        "properties": {},
+        "version": "0.1.0"
+    },
     "hu_HU/diana-majlinger_low": {
         "files": {
             "ALIASES": {
