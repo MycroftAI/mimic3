@@ -26,7 +26,6 @@ from urllib.parse import parse_qs
 from uuid import uuid4
 
 import quart_cors
-from mimic3_tts import DEFAULT_VOICE, Mimic3Settings, Mimic3TextToSpeechSystem
 from quart import (
     Quart,
     Response,
@@ -36,6 +35,8 @@ from quart import (
     send_from_directory,
 )
 from swagger_ui import api_doc
+
+from mimic3_tts import DEFAULT_VOICE, Mimic3Settings, Mimic3TextToSpeechSystem
 
 from ._resources import _DIR, _PACKAGE
 from .args import _MISSING

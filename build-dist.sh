@@ -26,12 +26,6 @@ this_dir="$( cd "$( dirname "$0" )" && pwd )"
 dist_dir="${this_dir}/dist"
 mkdir -p "${dist_dir}"
 
-for module_dir in opentts-abc mimic3-tts mimic3-http; do
-    # Kebab to snake case
-    module_name="$(echo "${module_dir}" | sed -e 's/-/_/g')"
-
-    pushd "${this_dir}/${module_dir}"
-    python3 setup.py sdist
-    cp "dist/${module_name}"-*.tar.gz "${dist_dir}/"
-    popd
-done
+pushd "${this_dir}"
+python3 setup.py sdist
+popd

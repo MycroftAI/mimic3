@@ -33,6 +33,10 @@ fi
 
 python_files=("${this_dir}/tests"/*.py)
 
+for module_name in 'mimic3_tts' 'mimic3_http' 'opentts_abc'; do
+    python_files+=("${module_name}")
+done
+
 # Format code
 black "${python_files[@]}"
 isort "${python_files[@]}"
@@ -41,14 +45,3 @@ isort "${python_files[@]}"
 flake8 "${python_files[@]}"
 pylint "${python_files[@]}"
 mypy "${python_files[@]}"
-
-# Check submodules
-script_name='check.sh'
-
-find "${this_dir}" -mindepth 2 -maxdepth 2 -name "${script_name}" -type f | \
-    while read -r check_script; do
-        script_dir="$(dirname "${check_script}")"
-        pushd "${script_dir}"
-        "./${script_name}" "$@"
-        popd
-    done

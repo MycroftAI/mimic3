@@ -5,7 +5,7 @@
 A fast and local neural text to speech system developed by [Mycroft](https://mycroft.ai/) for the [Mark II](https://mycroft.ai/product/mark-ii/).
 
 * [Available voices](https://github.com/MycroftAI/mimic3-voices)
-* [How does it work?](mimic3-tts/#architecture)
+* [How does it work?](mimic3_tts/#architecture)
 
 
 ## Use Cases
@@ -17,7 +17,7 @@ A fast and local neural text to speech system developed by [Mycroft](https://myc
     * Drop-in [replacement for MaryTTS](#marytts-compatibility)
 * [Command-line tool](#command-line-tools)
     * `mimic3 'Hello world.' | aplay`
-* [Voice for screen reader](mimic3-tts/#speech-dispatcher)
+* [Voice for screen reader](mimic3_tts/#speech-dispatcher)
     * `spd-say 'Hello world.'`
 
 
@@ -139,22 +139,13 @@ Once installed, the following commands will be available in `/usr/bin`:
 Install the command-line tool:
 
 ``` sh
-pip install mimic3-tts[all]
+pip install mycroft-mimic3-tts[all]
 ```
 
 Once installed, the following commands will be available:
 
 * `mimic3`
 * `mimic3-download`
-
-Install the HTTP web server:
-
-``` sh
-pip install mimic3-http[all]
-```
-
-Once installed, the following commands will be available:
-
 * `mimic3-server`
 
 Language support can be selectively installed by replacing `all` with:
@@ -225,7 +216,7 @@ mimic3 --voice 'en_UK/apope_low' 'My hovercraft is full of eels.' > hovercraft_e
 
 See [voice keys](#voice-keys) for how to reference voices and speakers.
 
-See `mimic3 --help` or the [CLI documentation](mimic3-tts/) for more details.
+See `mimic3 --help` or the [CLI documentation](mimic3_tts/) for more details.
 
 
 #### Downloading Voices
@@ -247,7 +238,7 @@ See `mimic3-download --help` for more options.
 
 Start a web server with `mimic3-server` and visit `http://localhost:59125` to view the web UI.
 
-![screenshot of web interface](mimic3-http/img/server_screenshot.jpg)
+![screenshot of web interface](img/server_screenshot.jpg)
 
 The following endpoints are available:
 
@@ -260,7 +251,7 @@ The following endpoints are available:
     
 An [OpenAPI](https://www.openapis.org/) test page is also available at `http://localhost:59125/openapi`
 
-See `mimic3-server --help` for the [web server documentation](mimic3-http/) for more details.
+See `mimic3-server --help` for the [web server documentation](mimic3_http/) for more details.
 
 
 #### Web Client
@@ -312,7 +303,7 @@ and then adding the following:
 
 ## SSML
 
-A [subset of SSML](mimic3-tts/#SSML) (Speech Synthesis Markup Language) is supported.
+A [subset of SSML](mimic3_tts/#SSML) (Speech Synthesis Markup Language) is supported.
 
 For example:
 

@@ -12,6 +12,8 @@ dist/
 .venv/
 *.wav
 *.spec
+*.egg-info/
+.ipynb_checkpoints/
 
 /samples/
 /voices/

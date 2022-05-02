@@ -2,5 +2,10 @@ include requirements.txt
 include requirements_dev.txt
 include LICENSE
 include README.md
+include mimic3_tts/VERSION
 include mimic3_http/VERSION
 include mimic3_http/swagger.yaml
+include mimic3_http/css
+include mimic3_http/img
+include mimic3_http/templates
+include opentts_abc/VERSION

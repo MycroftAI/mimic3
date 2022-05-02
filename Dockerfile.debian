@@ -45,9 +45,10 @@ WORKDIR /build/mimic3
 
 COPY wheels/ ./wheels/
 
-COPY opentts-abc/ ./opentts-abc/
-COPY mimic3-http/ ./mimic3-http/
-COPY mimic3-tts/ ./mimic3-tts/
+COPY opentts_abc/ ./opentts_abc/
+COPY mimic3_http/ ./mimic3_http/
+COPY mimic3_tts/ ./mimic3_tts/
+COPY LICENSE MANIFEST.in README.md setup.py requirements.txt ./
 COPY install.sh ./
 
 # Install mimic3
@@ -119,7 +120,7 @@ COPY debian/ debian/
 COPY voices/ voices/
 
 RUN mkdir -p "${package_dir}/DEBIAN" && \
-    export VERSION="$(cat mimic3-tts/mimic3_tts/VERSION)" && \
+    export VERSION="$(cat mimic3_tts/VERSION)" && \
     envsubst \
     < "debian/control.in.${TARGETARCH}${TARGETVARIANT}" \
     > "${package_dir}/DEBIAN/control" && \
@@ -149,12 +150,12 @@ RUN --mount=type=cache,id=apt-run,target=/var/cache/apt \
     mkdir -p /var/cache/apt/${TARGETARCH}${TARGETVARIANT}/archives/partial && \
     apt-get update && \
     apt-get install --yes --no-install-recommends \
-        dpkg-dev
+        dpkg-dev python3
 
 WORKDIR /test
 
 COPY --from=build /package/*.deb ./
-COPY mimic3-tts/mimic3_tts/VERSION ./
+COPY mimic3_tts/VERSION ./
 
 # Install mimic3 for current architecture
 RUN --mount=type=cache,id=apt-run,target=/var/cache/apt \

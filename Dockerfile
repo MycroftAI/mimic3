@@ -47,9 +47,10 @@ WORKDIR /home/mimic3/app
 
 COPY wheels/ ./wheels/
 
-COPY opentts-abc/ ./opentts-abc/
-COPY mimic3-http/ ./mimic3-http/
-COPY mimic3-tts/ ./mimic3-tts/
+COPY opentts_abc/ ./opentts_abc/
+COPY mimic3_http/ ./mimic3_http/
+COPY mimic3_tts/ ./mimic3_tts/
+COPY LICENSE MANIFEST.in README.md setup.py requirements.txt ./
 COPY install.sh ./
 
 # Install mimic3

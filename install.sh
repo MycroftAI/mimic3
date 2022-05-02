@@ -52,14 +52,9 @@ pip3 ${PIP_INSTALL} --upgrade pip
 pip3 ${PIP_INSTALL} --upgrade wheel setuptools
 
 # Install Mimic 3
-pip3 ${PIP_INSTALL} -e "${this_dir}/opentts-abc"
-
-# Include support for languages besides English
-pushd "${this_dir}/mimic3-tts" 2>/dev/null
+pushd "${this_dir}/" 2>/dev/null
 pip3 ${PIP_INSTALL} -e '.[all]'
 popd 2>/dev/null
-
-pip3 ${PIP_INSTALL} -e "${this_dir}/mimic3-http"
 
 if [ "$1" = 'develop' ]; then
     pip3 ${PIP_INSTALL} -r "${this_dir}/requirements_dev.txt"

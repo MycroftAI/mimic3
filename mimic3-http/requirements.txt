@@ -1,4 +1,0 @@
-mimic3-tts<1.0
-quart>=0.16,<1.0
-quart-cors
-swagger-ui-py>=21,<22

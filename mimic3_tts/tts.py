@@ -23,6 +23,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from gruut_ipa import IPA
+from xdgenvpy import XDG
+
 from opentts_abc import (
     AudioResult,
     BaseResult,
@@ -34,7 +36,6 @@ from opentts_abc import (
     Voice,
     Word,
 )
-from xdgenvpy import XDG
 
 from ._resources import _VOICES
 from .config import TrainingConfig
@@ -572,6 +573,7 @@ class Mimic3TextToSpeechSystem(TextToSpeechSystem):
             voice_key=voice_key,
             url_base=voice_url,
             voice_files=[VoiceFile(file_key) for file_key in voice_files.keys()],
+            voice_version=voice_info["version"],
             voices_dir=self.settings.voices_download_dir,
         )
 

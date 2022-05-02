@@ -14,13 +14,14 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
+from collections import defaultdict
 from pathlib import Path
 
 import setuptools
 from setuptools import setup
 
 this_dir = Path(__file__).parent
-module_dir = this_dir / "opentts_abc"
+module_dir = this_dir / "mimic3_tts"
 
 # -----------------------------------------------------------------------------
 
@@ -42,18 +43,65 @@ with open(version_path, "r", encoding="utf-8") as version_file:
 
 # -----------------------------------------------------------------------------
 
+# dependency => [tags]
+extras = {}
+
+# Create language-specific extras
+for lang in [
+    "de",
+    "es",
+    "fa",
+    "fr",
+    "it",
+    "nl",
+    "ru",
+    "sw",
+]:
+    extras[f"gruut[{lang}]"] = [lang]
+
+
+# Add "all" tag
+for tags in extras.values():
+    tags.append("all")
+
+# Invert for setup
+extras_require = defaultdict(list)
+for dep, tags in extras.items():
+    for tag in tags:
+        extras_require[tag].append(dep)
+
+# -----------------------------------------------------------------------------
+
 setup(
-    name="opentts_abc",
+    name="mycroft_mimic3_tts",
     version=version,
-    description="Abstract base classes for Open Text to Speech system",
-    url="http://github.com/MycroftAI//mimic3",
+    description="A fast and local neural text to speech system for Mycroft",
+    url="http://github.com/MycroftAI/mimic3",
     author="Michael Hansen",
     author_email="michael.hansen@mycroft.ai",
     license="AGPLv3+",
     packages=setuptools.find_packages(),
-    package_data={"opentts_abc": ["VERSION", "py.typed"]},
+    package_data={
+        "mimic3_tts": ["VERSION", "py.typed", "voices.json"],
+        "mimic3_http": [
+            "VERSION",
+            "py.typed",
+            "templates",
+            "css",
+            "img",
+            "swagger.yaml",
+        ],
+        "opentts_abc": ["VERSION", "py.typed"],
+    },
     install_requires=requirements,
-    extras_require={':python_version<"3.9"': ["importlib_resources"]},
+    extras_require={':python_version<"3.9"': ["importlib_resources"], **extras_require},
+    entry_points={
+        "console_scripts": [
+            "mimic3 = mimic3_tts.__main__:main",
+            "mimic3-download = mimic3_tts.download:main",
+            "mimic3-server = mimic3_http.__main__:main",
+        ]
+    },
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
@@ -62,6 +110,6 @@ setup(
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
-        "Programming Language :: Python :: 3.10",
     ],
+    keywords="mycroft tts speech mimic",
 )
