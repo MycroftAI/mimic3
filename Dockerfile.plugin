@@ -97,7 +97,7 @@ RUN --mount=type=cache,id=pip-requirements,target=/root/.cache/pip \
         -f wheels/ \
         -f https://synesthesiam.github.io/prebuilt-apps/ \
         -f dist/ \
-        plugin-tts-mimic3
+        mycroft-plugin-tts-mimic3
 
 # Download default voice
 COPY voices/ /root/.local/share/mimic3/voices/
