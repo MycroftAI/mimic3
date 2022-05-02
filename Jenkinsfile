@@ -24,18 +24,9 @@ pipeline {
     agent any
 
     environment {
-        // https://docs.docker.com/buildx/working-with-buildx/
         DOCKER_BUILDKIT = '1'
-
-        // x86_64, ARM 32/64-bit
         DOCKER_PLATFORM = 'linux/amd64,linux/arm64,linux/arm/v7'
-
-        // https://github.com/MycroftAI/mimic3-voices/tree/master/voices/en_UK/apope_low
         DEFAULT_VOICE = 'en_UK/apope_low'
-
-
-        // git clone https://github.com/MycroftAI/mimic3-voices.git /home/jenkins/.local/share/mimic3
-        // requires git-lfs (https://git-lfs.github.com/)
         DEFAULT_VOICE_PATH = '/home/jenkins/.local/share/mimic3/voices'
     }
 
@@ -47,31 +38,41 @@ pipeline {
                     credentialsId: 'devops-mycroft',
                     url: 'https://github.com/MycroftAI/mimic3.git'
 
+                // Mycroft TTS plugin
+                dir('plugin-tts-mimic3') {
+                    git branch: 'master',
+                        credentialsId: 'devops-mycroft',
+                        url: 'https://github.com/MycroftAI/plugin-tts-mimic3'
+                }
             }
         }
 
         // Copy default voice
-        stage('Copy voice') {
+        stage('Copy voices') {
             steps {
                 sh 'mkdir -p voices/${DEFAULT_VOICE}'
                 sh 'rsync -r --link-dest="${DEFAULT_VOICE_PATH}/${DEFAULT_VOICE}/" "${DEFAULT_VOICE_PATH}/${DEFAULT_VOICE}/" voices/${DEFAULT_VOICE}/'
             }
         }
+        // Build, test, and publish plugin distribution package to PyPI
+        stage('Plugin dist') {
+            steps {
+                sh 'make plugin-dist'
+            }
+        }
 
-        // Build and publish source distribution packages to PyPI
+        // Build, test, and publish source distribution packages to PyPI
         stage('Dist') {
             steps {
                 sh 'make dist'
             }
         }
 
-        // TODO: Mycroft Plugin
-
         // Build and publish multi-platform Docker image to Dockerhub
         stage('Docker') {
             steps {
                 sh 'make docker'
-                //sh 'make docker-gpu'
+              //sh 'make docker-gpu'
             }
         }
 
