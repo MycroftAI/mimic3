@@ -52,6 +52,86 @@
         "properties": {},
         "version": "0.1.0"
     },
+    "bn/multi_low": {
+        "files": {
+            "ALIASES": {
+                "size_bytes": 9,
+                "sha256_sum": "4abbddc008fc3256d7e0e84ff4d59fb3dcc0ffc58d152a47ebb230cbd336d27d"
+            },
+            "README.md": {
+                "size_bytes": 193,
+                "sha256_sum": "d1620c87fbc6164451ce4e7e3ec3754edfb0d87cd10b62a7fdaac5469b574ecc"
+            },
+            "SOURCE": {
+                "size_bytes": 57,
+                "sha256_sum": "ceec0d7af1ba8282fc677ce74f7e36b09779258a3c2b8528cc8247df717c36d3"
+            },
+            "VERSION": {
+                "size_bytes": 6,
+                "sha256_sum": "e9dd8507f4bf0c6f42458e41aea833ad0bd3f6127272335eee9bf4d58541ed67"
+            },
+            "cmu-indic/LICENSE": {
+                "size_bytes": 960,
+                "sha256_sum": "244ff21a910baf28bcb27b1975620a79d2be8611815ecc599f08eb06dd6f000e"
+            },
+            "cmu-indic/SOURCE": {
+                "size_bytes": 30,
+                "sha256_sum": "d79737ae72d64666485e1899ec32badf1f1043be2619463139d502d5f88f4167"
+            },
+            "config.json": {
+                "size_bytes": 3689,
+                "sha256_sum": "ceb948ed13888a287889bbd0f51ade2cceaf6eddbddb7c7b63e8ff63e390a545"
+            },
+            "generator.onnx": {
+                "size_bytes": 76363361,
+                "sha256_sum": "115ebb90476abbd2d2828db90b549792e932340d731df885699f2ebdca697ba3"
+            },
+            "google/LICENSE": {
+                "size_bytes": 42,
+                "sha256_sum": "be8e709c7447c67a5c7f65eca8b4cbca4b4216b0433bb65e2ade71e7e130a896"
+            },
+            "google/SOURCE": {
+                "size_bytes": 27,
+                "sha256_sum": "528f5f0d832697403f6ad8b84a439ccb8832e1b7f8b89eb57adf9714fa189803"
+            },
+            "phoneme_map.txt": {
+                "size_bytes": 6,
+                "sha256_sum": "7e6bbeb5d446667d2cfb7f39a6430c4a8ebcedd5ea034d17a43c6382f91202d7"
+            },
+            "phonemes.txt": {
+                "size_bytes": 309,
+                "sha256_sum": "f7df45fdee28f849e9c5556fcdcfc871aab65782809f79dfe2bc12ce8c412505"
+            },
+            "speaker_map.csv": {
+                "size_bytes": 282,
+                "sha256_sum": "350f0d24e30b11ce96b93448e3a02ffeb435474c5fc71b56fb9be4bd6da1ca78"
+            },
+            "speakers.txt": {
+                "size_bytes": 84,
+                "sha256_sum": "cf886edd3ed6b72e32f53ceb8ed072605aed0e50953c5537747fa46fc687f5b3"
+            }
+        },
+        "speakers": [
+            "rm",
+            "03042",
+            "00737",
+            "01232",
+            "02194",
+            "3108",
+            "3713",
+            "1010",
+            "00779",
+            "9169",
+            "4046",
+            "5958",
+            "01701",
+            "4811",
+            "0834",
+            "3958"
+        ],
+        "properties": {},
+        "version": "0.1.0"
+    },
     "de_DE/m-ailabs_low": {
         "files": {
             "ALIASES": {
