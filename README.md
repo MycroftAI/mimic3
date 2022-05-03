@@ -53,7 +53,7 @@ sudo apt-get install libatomic1 libgomp1 libatlas-base-dev
 Install the plugin:
 
 ``` sh
-mycroft-pip install plugin-tts-mimic3[all]
+mycroft-pip install mycroft-plugin-tts-mimic3[all]
 ```
 
 Enable the plugin in your [mycroft.conf](https://mycroft-ai.gitbook.io/docs/using-mycroft-ai/customizations/mycroft-conf) file:
