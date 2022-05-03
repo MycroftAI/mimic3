@@ -53,6 +53,9 @@ RUN sed -i 's/onnxruntime/onnxruntime-gpu/' mimic3-tts/requirements.txt
 RUN --mount=type=cache,id=pip-requirements,target=/root/.cache/pip \
     ./install.sh
 
+# Copy default voice
+COPY voices/ /usr/local/share/mycroft/mimic3/voices/
+
 RUN useradd -ms /bin/bash mimic3
 
 USER mimic3

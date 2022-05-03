@@ -18,7 +18,7 @@
 // Jenkins pipeline for building Mimic 3 artifacts.
 //
 // Requires Docker buildx: https://docs.docker.com/buildx/working-with-buildx/
-// Assumes the en_UK/apope_low voice is in /home/jenkins/.local/share/mycroft-mimic3-tts/voices
+// Assumes the en_UK/apope_low voice is in /home/jenkins/.local/share/mycroft/mimic3/voices
 
 pipeline {
     agent any
@@ -27,7 +27,7 @@ pipeline {
         DOCKER_BUILDKIT = '1'
         DOCKER_PLATFORM = 'linux/amd64,linux/arm64,linux/arm/v7'
         DEFAULT_VOICE = 'en_UK/apope_low'
-        DEFAULT_VOICE_PATH = '/home/jenkins/.local/share/mycroft-mimic3-tts/voices'
+        DEFAULT_VOICE_PATH = '/home/jenkins/.local/share/mycroft/mimic3/voices'
     }
 
     stages {

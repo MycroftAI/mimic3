@@ -58,7 +58,7 @@ RUN --mount=type=cache,id=pip-requirements,target=/root/.cache/pip \
     ./install.sh
 
 # Download default voice
-COPY voices/ /root/.local/share/mycroft-mimic3-tts/voices/
+COPY voices/ /root/.local/share/mycroft/mimic3/voices/
 RUN .venv/bin/mimic3-download 'en_UK/apope_low'
 
 # -----------------------------------------------------------------------------
@@ -90,7 +90,7 @@ RUN useradd -ms /bin/bash mimic3
 COPY --from=build /home/mimic3/app/ ./
 
 # Copy pre-downloaded voice(s)
-COPY --from=build /root/.local/share/mycroft-mimic3-tts/voices/ /usr/share/mycroft-mimic3-tts/voices/
+COPY --from=build /root/.local/share/mycroft/mimic3/voices/ /usr/share/mycroft/mimic3/voices/
 
 # Run test
 COPY tests/* ./tests/

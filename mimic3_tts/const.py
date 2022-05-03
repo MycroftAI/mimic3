@@ -22,7 +22,7 @@ DEFAULT_LANGUAGE = "en_UK"
 DEFAULT_VOICES_URL_FORMAT = (
     "https://github.com/MycroftAI/mimic3-voices/raw/master/voices/{lang}/{name}"
 )
-DEFAULT_VOICES_DOWNLOAD_DIR = Path(XDG().XDG_DATA_HOME) / "mimic3" / "voices"
+DEFAULT_VOICES_DOWNLOAD_DIR = Path(XDG().XDG_DATA_HOME) / "mycroft" / "mimic3" / "voices"
 
 DEFAULT_VOLUME = 100.0
 DEFAULT_RATE = 1.0

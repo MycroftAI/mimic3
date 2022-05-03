@@ -103,28 +103,28 @@ Or you can manually run the web server with:
 docker run \
        -it \
        -p 59125:59125 \
-       -v "${HOME}/.local/share/mimic3:/home/mimic3/.local/share/mimic3" \
+       -v "${HOME}/.local/share/mycroft/mimic3:/home/mimic3/.local/share/mycroft/mimic3" \
        'mycroftai/mimic3'
 ```
 
-Voices will be automatically downloaded to `${HOME}/.local/share/mycroft-mimic3-tts/voices`
+Voices will be automatically downloaded to `${HOME}/.local/share/mycroft/mimic3/voices`
 
 
 ### Debian Package
 
 Grab the Debian package from the [latest release](https://github.com/mycroftAI/mimic3/releases) for your platform:
 
-* `mimic3-tts_<version>_amd64.deb`
+* `mycroft-mimic3-tts_<version>_amd64.deb`
     * For desktops and laptops (`x86_64` CPUs)
-* `mimic3-tts_<version>_arm64.deb`
+* `mycroft-mimic3-tts_<version>_arm64.deb`
     * For Raspberry 3/4 and Zero 2 with [64-bit Pi OS](https://www.raspberrypi.com/news/raspberry-pi-os-64-bit/)
-* `mimic3-tts_<version>_armhf.deb`
+* `mycroft-mimic3-tts_<version>_armhf.deb`
     * For Raspberry Pi 1/2/3/4 and Zero 2 with 32-bit Pi OS
     
 Once downloaded, install the package with (note the `./`):
 
 ``` sh
-sudo apt install ./mimic3-tts_<version>_<platform>.deb
+sudo apt install ./mycroft-mimic3-tts_<version>_<platform>.deb
 ```
 
 Once installed, the following commands will be available in `/usr/bin`:
@@ -200,7 +200,7 @@ Mimic 3 references voices with the format:
 For example, the default [Alan Pope](https://popey.me/) voice key is `en_UK/apope_low`. 
 The [CMU Arctic voice](https://github.com/MycroftAI/mimic3-voices/tree/master/voices/en_US/cmu-arctic_low) contains multiple speakers, with a commonly used voice being `en_US/cmu-arctic_low#slt`.
 
-Voices are automatically downloaded from [Github](https://github.com/MycroftAI/mimic3-voices) and stored in `${HOME}/.local/share/mimic3` (technically `${XDG_DATA_HOME}/mimic3`). You can also [manually download them](#downloading-voices).
+Voices are automatically downloaded from [Github](https://github.com/MycroftAI/mimic3-voices) and stored in `${HOME}/.local/share/mycroft/mimic3` (technically `${XDG_DATA_HOME}/mycroft/mimic3`). You can also [manually download them](#downloading-voices).
 
 
 ## Running
@@ -229,7 +229,7 @@ For example:
 mimic3-download 'en_US/*'
 ```
 
-will download all U.S. English voices to `${HOME}/.local/share/mimic3`.
+will download all U.S. English voices to `${HOME}/.local/share/mycroft/mimic3/voices`.
 
 See `mimic3-download --help` for more options.
 

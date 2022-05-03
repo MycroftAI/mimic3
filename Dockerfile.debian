@@ -124,11 +124,11 @@ RUN mkdir -p "${package_dir}/DEBIAN" && \
     envsubst \
     < "debian/control.in.${TARGETARCH}${TARGETVARIANT}" \
     > "${package_dir}/DEBIAN/control" && \
-    mkdir -p "${package_dir}/usr/lib/mycroft-mimic3-tts" && \
-    rsync -av "dist/mimic3/" "${package_dir}/usr/lib/mycroft-mimic3-tts/" && \
+    mkdir -p "${package_dir}/usr/lib/mycroft/mimic3" && \
+    rsync -av "dist/mimic3/" "${package_dir}/usr/lib/mycroft/mimic3/" && \
     mkdir -p "${package_dir}/usr/bin/" && \
     rsync -av "debian/bin/" "${package_dir}/usr/bin/" && \
-    export dest_voice_dir="${package_dir}/usr/share/mycroft-mimic3-tts/voices/en_UK/apope_low" && \
+    export dest_voice_dir="${package_dir}/usr/share/mycroft/mimic3/voices/en_UK/apope_low" && \
     mkdir -p "${dest_voice_dir}" && \
     rsync -av "voices/en_UK/apope_low/" "${dest_voice_dir}/" && \
     cd /package && \
