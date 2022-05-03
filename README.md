@@ -107,7 +107,7 @@ docker run \
        'mycroftai/mimic3'
 ```
 
-Voices will be automatically downloaded to `${HOME}/.local/share/mimic3/voices`
+Voices will be automatically downloaded to `${HOME}/.local/share/mycroft-mimic3-tts/voices`
 
 
 ### Debian Package

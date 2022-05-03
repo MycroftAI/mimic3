@@ -114,7 +114,7 @@ COPY pyinstaller/mimic3-server \
     dist/mimic3/
 
 # Create Debian package
-ENV package_dir=/package/mimic3-tts
+ENV package_dir=/package/mycroft-mimic3-tts
 
 COPY debian/ debian/
 COPY voices/ voices/
@@ -124,15 +124,15 @@ RUN mkdir -p "${package_dir}/DEBIAN" && \
     envsubst \
     < "debian/control.in.${TARGETARCH}${TARGETVARIANT}" \
     > "${package_dir}/DEBIAN/control" && \
-    mkdir -p "${package_dir}/usr/lib/mimic3-tts" && \
-    rsync -av "dist/mimic3/" "${package_dir}/usr/lib/mimic3-tts/" && \
+    mkdir -p "${package_dir}/usr/lib/mycroft-mimic3-tts" && \
+    rsync -av "dist/mimic3/" "${package_dir}/usr/lib/mycroft-mimic3-tts/" && \
     mkdir -p "${package_dir}/usr/bin/" && \
     rsync -av "debian/bin/" "${package_dir}/usr/bin/" && \
-    export dest_voice_dir="${package_dir}/usr/share/mimic3/voices/en_UK/apope_low" && \
+    export dest_voice_dir="${package_dir}/usr/share/mycroft-mimic3-tts/voices/en_UK/apope_low" && \
     mkdir -p "${dest_voice_dir}" && \
     rsync -av "voices/en_UK/apope_low/" "${dest_voice_dir}/" && \
     cd /package && \
-    dpkg --build 'mimic3-tts' && \
+    dpkg --build 'mycroft-mimic3-tts' && \
     dpkg-name ./*.deb
 
 # -----------------------------------------------------------------------------
@@ -163,7 +163,7 @@ RUN --mount=type=cache,id=apt-run,target=/var/cache/apt \
     dpkg-architecture | \
     grep 'DEB_HOST_ARCH=' | \
     sed -e 's/.\+=//' | \
-    xargs printf "./mimic3-tts_${mimic3_version}_%s.deb" | \
+    xargs printf "./mycroft-mimic3-tts_${mimic3_version}_%s.deb" | \
     xargs apt install --yes
 
 # Run test

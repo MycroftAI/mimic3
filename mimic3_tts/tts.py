@@ -160,11 +160,14 @@ class Mimic3TextToSpeechSystem(TextToSpeechSystem):
         """Get list of directories to search for voices by default.
 
         On Linux, this is typically:
-            - $HOME/.local/share/mimic3/voices
-            - /usr/local/share/mimic3/voices
-            - /usr/share/mimic3/voices
+            - $HOME/.local/share/mycroft-mimic3-tts/voices
+            - /usr/local/share/mycroft-mimic3-tts/voices
+            - /usr/share/mycroft-mimic3-tts/voices
         """
-        return [Path(d) / "mimic3" / "voices" for d in XDG().XDG_DATA_DIRS.split(":")]
+        return [
+            Path(d) / "mycroft-mimic3-tts" / "voices"
+            for d in XDG().XDG_DATA_DIRS.split(":")
+        ]
 
     def get_voices(self) -> typing.Iterable[Voice]:
         """Returns an iterable of all available voices"""

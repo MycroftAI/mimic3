@@ -1,4 +1,4 @@
-Package: mimic3-tts
+Package: mycroft-mimic3-tts
 Version: ${VERSION}
 Section: utils
 Priority: optional

@@ -55,7 +55,7 @@ RUN --mount=type=cache,id=pip-requirements,target=/root/.cache/pip \
     ./install.sh
 
 # Download default voice
-COPY voices/ /root/.local/share/mimic3/voices/
+COPY voices/ /root/.local/share/mycroft-mimic3-tts/voices/
 RUN .venv/bin/mimic3-download 'en_UK/apope_low'
 
 # Generate sample
