@@ -55,7 +55,6 @@ pipeline {
                     credentialsId: 'devops-mycroft',
                     url: 'https://github.com/mycroftAI/mimic3.git'
 
-                env.MIMIC3_TAG_NAME = sh(returnStdout:  true, script: "git tag --sort=-creatordate | head -n 1").trim()
 
                 // Mycroft TTS plugin
                 dir('plugin-tts-mimic3') {
@@ -64,7 +63,10 @@ pipeline {
                         url: 'https://github.com/mycroftAI/plugin-tts-mimic3'
                 }
 
-                env.PLUGIN_TAG_NAME = sh(returnStdout:  true, script: "cd plugin-tts-mimic3 && git tag --sort=-creatordate | head -n 1").trim()
+                script {
+                    env.MIMIC3_TAG_NAME = sh(returnStdout:  true, script: "git tag --sort=-creatordate | head -n 1").trim()
+                    env.PLUGIN_TAG_NAME = sh(returnStdout:  true, script: "cd plugin-tts-mimic3 && git tag --sort=-creatordate | head -n 1").trim()
+                }
             }
         }
 
