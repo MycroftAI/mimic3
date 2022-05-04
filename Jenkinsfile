@@ -44,6 +44,7 @@ pipeline {
         stage('Clean') {
             steps {
                 sh 'rm -rf dist/'
+                sh 'rm -rf voices/'
             }
         }
 
@@ -85,8 +86,15 @@ pipeline {
             }
         }
 
+        // Build and publish Debian packages to Github
+        stage('Debian') {
+            steps {
+                sh 'make debian'
+            }
+        }
+
         // Create a new tagged Github release with source distribution and Debian packages
-        stage('Publish dist') {
+        stage('Publish release') {
             // when {
             //     tag 'release/v*.*.0'
             // }
@@ -100,7 +108,9 @@ pipeline {
                 sh 'scripts/delete-tagged-release.sh ${GITHUB_OWNER} ${GITHUB_REPO} ${TAG_NAME} ${GITHUB_PSW}'
 
                 // Create new tagged release and upload assets
-                sh 'scripts/create-tagged-release.sh ${GITHUB_OWNER} ${GITHUB_REPO} ${TAG_NAME} ${GITHUB_PSW} dist/mycroft_mimic_tts-${MIMIC3_VERSION}.tar.gz application/gzip'
+                sh 'scripts/create-tagged-release.sh ${GITHUB_OWNER} ${GITHUB_REPO} ${TAG_NAME} ${GITHUB_PSW}' +
+                    ' dist/mycroft_mimic3_tts-${MIMIC3_VERSION}.tar.gz application/gzip' +
+                    ' dist/mycroft_mimic3-tts_${MIMIC3_VERSION}_amd64.deb application/vnd.debian.binary-package'
             }
 
             // Create a new release for tag
@@ -113,14 +123,6 @@ pipeline {
         //     steps {
         //         sh 'make docker'
         //       //sh 'make docker-gpu'
-        //     }
-        // }
-
-
-        // Build and publish Debian packages to Github
-        // stage('Debian') {
-        //     steps {
-        //         sh 'make debian'
         //     }
         // }
     }
