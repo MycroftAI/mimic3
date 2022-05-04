@@ -64,6 +64,10 @@ pipeline {
             }
         }
 
+        environment {
+            MIMIC3_VERSION = readFile(file: 'mimic3_tts/VERSION').trim()
+        }
+
         // Copy default voice
         stage('Copy voices') {
             steps {
@@ -73,6 +77,11 @@ pipeline {
         }
 
         // Build, test, and publish plugin distribution package to PyPI
+        environment {
+            GITHUB_REPO = 'plugin-tts-mimic3'
+            TAG_NAME = 'release/v0.2.0'
+        }
+
         stage('Plugin dist') {
             steps {
                 sh 'make plugin-dist'
@@ -81,12 +90,6 @@ pipeline {
 
         // Create a new tagged Github release with source distribution for Mycroft plugin
         stage('Publish plugin') {
-            environment {
-                MIMIC3_VERSION = readFile(file: 'mimic3_tts/VERSION').trim()
-                GITHUB_REPO = 'plugin-tts-mimic3'
-                TAG_NAME = 'release/v0.2.0'
-            }
-
             when {
                 tag 'release/v*.*.0'
             }
@@ -105,6 +108,10 @@ pipeline {
         }
 
         // Build, test, and publish source distribution packages to PyPI
+        // environment {
+        //     GITHUB_REPO = 'mimic3'
+        //     TAG_NAME = 'release/v0.2.0'
+        // }
         // stage('Dist') {
         //     steps {
         //         sh 'make dist'
@@ -120,11 +127,6 @@ pipeline {
 
         // Create a new tagged Github release with source distribution and Debian packages
         // stage('Publish mimic3') {
-        //     environment {
-        //         MIMIC3_VERSION = readFile(file: 'mimic3_tts/VERSION').trim()
-        //         GITHUB_REPO = 'mimic3'
-        //         TAG_NAME = 'release/v0.2.0'
-        //     }
 
         //     when {
         //         tag 'release/v*.*.0'
