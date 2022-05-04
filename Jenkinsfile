@@ -35,7 +35,7 @@ pipeline {
 
         DOCKER_BUILDKIT = '1'
         // DOCKER_PLATFORM = 'linux/amd64,linux/arm64,linux/arm/v7'
-        DOCKER_PLATFORM = 'linux/amd64'
+        DOCKER_PLATFORM = 'linux/arm64'
         DOCKER_TAG = 'mycroftai/mimic3'
         DOCKER_OUTPUT = '--load'
 
