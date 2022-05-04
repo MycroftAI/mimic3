@@ -128,6 +128,8 @@ pipeline {
                 // Create new tagged release and upload assets
                 sh 'scripts/create-tagged-release.sh ${GITHUB_OWNER} ${GITHUB_REPO} ${PLUGIN_TAG_NAME} ${GITHUB_PSW}' +
                     ' dist/mycroft_plugin_tts_mimic3-${PLUGIN_VERSION}.tar.gz application/gzip'
+
+                echo 'Published plugin PyPI and Github release'
             }
         }
 
@@ -169,6 +171,8 @@ pipeline {
                 sh 'scripts/create-tagged-release.sh ${GITHUB_OWNER} ${GITHUB_REPO} ${MIMIC3_TAG_NAME} ${GITHUB_PSW}' +
                     ' dist/mycroft_mimic3_tts-${MIMIC3_VERSION}.tar.gz application/gzip' +
                     ' dist/mycroft-mimic3-tts_${MIMIC3_VERSION}_amd64.deb application/vnd.debian.binary-package'
+
+                echo 'Published Mimic 3 PyPI and Github release'
             }
         }
 
@@ -176,7 +180,6 @@ pipeline {
         stage('Docker') {
             steps {
                 sh 'make docker'
-              //sh 'make docker-gpu'
             }
         }
 
@@ -186,11 +189,11 @@ pipeline {
                 MIMIC3_VERSION = readFile(file: 'mimic3_tts/VERSION').trim()
             }
 
-            // when {
-            //     expression {
-            //         return env.MIMIC3_TAG_NAME.startsWith('release/')
-            //     }
-            // }
+            when {
+                expression {
+                    return env.MIMIC3_TAG_NAME.startsWith('release/')
+                }
+            }
 
             steps {
                 // TODO: Publish to DockerHub
@@ -198,7 +201,7 @@ pipeline {
                 // sh 'docker login --username "${DOCKER_USR}" --password "${DOCKER_PSW}"'
                 // sh 'docker push ${DOCKER_TAG}:${MIMIC3_VERSION}'
                 // sh 'docker push ${DOCKER_TAG}:latest'
-                echo 'Test'
+                echo 'Published docker image'
             }
         }
 
