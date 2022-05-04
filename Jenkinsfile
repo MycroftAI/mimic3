@@ -75,6 +75,9 @@ pipeline {
                         script: "cd plugin-tts-mimic3 && git tag --contains --sort=-creatordate | head -n 1"
                     ).trim()
                 }
+
+                echo "Mimic 3 tag: ${env.MIMIC3_TAG_NAME}"
+                echo "Plugin tag: ${env.PLUGIN_TAG_NAME}"
             }
         }
 
@@ -97,7 +100,6 @@ pipeline {
         stage('Publish plugin') {
             environment {
                 GITHUB_REPO = 'plugin-tts-mimic3'
-                TAG_NAME = 'release/v0.2.0'
                 PLUGIN_VERSION = readFile(file: 'plugin-tts-mimic3/mycroft_plugin_tts_mimic3/VERSION').trim()
             }
 
@@ -125,7 +127,6 @@ pipeline {
             // environment {
             //     MIMIC3_VERSION = readFile(file: 'mimic3_tts/VERSION').trim()
             //     GITHUB_REPO = 'mimic3'
-            //     TAG_NAME = 'release/v0.2.0'
             // }
         //     steps {
         //         sh 'make dist'
