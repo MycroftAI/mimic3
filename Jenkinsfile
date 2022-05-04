@@ -35,6 +35,8 @@ pipeline {
 
         GITHUB_OWNER = 'mycroftAI'
         GITHUB_REPO = 'mimic3'
+
+        TAG_NAME = 'release/v0.2.0'
     }
 
     stages {
@@ -85,9 +87,9 @@ pipeline {
 
         // Create a new tagged Github release with source distribution and Debian packages
         stage('Publish dist') {
-            when {
-                tag 'release/v*.*.0'
-            }
+            // when {
+            //     tag 'release/v*.*.0'
+            // }
 
             environment {
                 MIMIC3_VERSION = readFile(file: 'mimic3_tts/VERSION').trim()
