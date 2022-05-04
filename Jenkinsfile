@@ -72,8 +72,8 @@ pipeline {
 
         stage('test') {
             steps {
-                echo '${MIMIC3_TAG_NAME}'
-                echo '${PLUGIN_TAG_NAME}'
+                echo "${env.MIMIC3_TAG_NAME}"
+                echo "${env.PLUGIN_TAG_NAME}"
             }
         }
 
