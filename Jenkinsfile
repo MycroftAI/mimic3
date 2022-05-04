@@ -84,7 +84,7 @@ pipeline {
             environment {
                 GITHUB_REPO = 'plugin-tts-mimic3'
                 TAG_NAME = 'release/v0.2.0'
-                PLUGIN_VERSION = readFile(file: 'plugin-tts-mimic/mycroft_plugin_tts_mimic3/VERSION').trim()
+                PLUGIN_VERSION = readFile(file: 'plugin-tts-mimic3/mycroft_plugin_tts_mimic3/VERSION').trim()
             }
 
             // when {
