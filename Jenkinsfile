@@ -84,6 +84,7 @@ pipeline {
             environment {
                 GITHUB_REPO = 'plugin-tts-mimic3'
                 TAG_NAME = 'release/v0.2.0'
+                PLUGIN_VERSION = readFile(file: 'plugin-tts-mimic/plugin_tts_mimic3/VERSION').trim()
             }
 
             // when {
@@ -99,7 +100,7 @@ pipeline {
 
                 // Create new tagged release and upload assets
                 sh 'scripts/create-tagged-release.sh ${GITHUB_OWNER} ${GITHUB_REPO} ${TAG_NAME} ${GITHUB_PSW}' +
-                    ' dist/mycroft_plugin_tts_mimic3-${MIMIC3_VERSION}.tar.gz application/gzip'
+                    ' dist/mycroft_plugin_tts_mimic3-${PLUGIN_VERSION}.tar.gz application/gzip'
             }
         }
 
