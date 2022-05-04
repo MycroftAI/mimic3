@@ -103,7 +103,7 @@ pipeline {
 
             when {
                 expression {
-                    return env.PLUGIN_TAG_NAME.startsWith('foo/')
+                    return env.PLUGIN_TAG_NAME.startsWith('release/')
                 }
             }
 
