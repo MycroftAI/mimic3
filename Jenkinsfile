@@ -24,25 +24,39 @@ pipeline {
     agent any
 
     environment {
+        // Adds GITHUB_USR and GITHUB_PSW environment variables
+        GITHUB = credentials('devops-mycroft')
+
         DOCKER_BUILDKIT = '1'
-        DOCKER_PLATFORM = 'linux/amd64,linux/arm64,linux/arm/v7'
+        // DOCKER_PLATFORM = 'linux/amd64,linux/arm64,linux/arm/v7'
+        DOCKER_PLATFORM = 'linux/amd64'
         DEFAULT_VOICE = 'en_UK/apope_low'
         DEFAULT_VOICE_PATH = '/home/jenkins/.local/share/mycroft/mimic3/voices'
+
+        GITHUB_OWNER = 'mycroftAI'
+        GITHUB_REPO = 'mimic3'
     }
 
     stages {
+        // Clean up
+        stage('Clean') {
+            steps {
+                sh 'rm -rf dist/'
+            }
+        }
+
         // Clone the source code from Github
         stage('Clone') {
             steps {
                 git branch: 'master',
                     credentialsId: 'devops-mycroft',
-                    url: 'https://github.com/MycroftAI/mimic3.git'
+                    url: 'https://github.com/${GITHUB_OWNER}/${GITHUB_REPO}.git'
 
                 // Mycroft TTS plugin
                 dir('plugin-tts-mimic3') {
                     git branch: 'master',
                         credentialsId: 'devops-mycroft',
-                        url: 'https://github.com/MycroftAI/plugin-tts-mimic3'
+                        url: 'https://github.com/${GITHUB_OWNER}/plugin-tts-mimic3'
                 }
             }
         }
@@ -54,12 +68,13 @@ pipeline {
                 sh 'rsync -r --link-dest="${DEFAULT_VOICE_PATH}/${DEFAULT_VOICE}/" "${DEFAULT_VOICE_PATH}/${DEFAULT_VOICE}/" voices/${DEFAULT_VOICE}/'
             }
         }
+
         // Build, test, and publish plugin distribution package to PyPI
-        stage('Plugin dist') {
-            steps {
-                sh 'make plugin-dist'
-            }
-        }
+        // stage('Plugin dist') {
+        //     steps {
+        //         sh 'make plugin-dist'
+        //     }
+        // }
 
         // Build, test, and publish source distribution packages to PyPI
         stage('Dist') {
@@ -68,20 +83,43 @@ pipeline {
             }
         }
 
-        // Build and publish multi-platform Docker image to Dockerhub
-        stage('Docker') {
-            steps {
-                sh 'make docker'
-              //sh 'make docker-gpu'
+        // Create a new tagged Github release with source distribution and Debian packages
+        stage('Publish dist') {
+            when {
+                tag 'release/v*.*.0'
             }
+
+            environment {
+                MIMIC3_VERSION = readFile(file: 'mimic3_tts/VERSION').trim()
+            }
+
+            steps {
+                // Delete release for tag, if it exists
+                sh 'scripts/delete-tagged-release.sh ${GITHUB_OWNER} ${GITHUB_REPO} ${TAG_NAME} ${GITHUB_PSW}'
+
+                // Create new tagged release and upload assets
+                sh 'scripts/create-tagged-release.sh ${GITHUB_OWNER} ${GITHUB_REPO} ${TAG_NAME} ${GITHUB_PSW} dist/mycroft_mimic_tts-${MIMIC3_VERSION}.tar.gz application/gzip'
+            }
+
+            // Create a new release for tag
+
+            // Upload release assets
         }
+
+        // Build and publish multi-platform Docker image to Dockerhub
+        // stage('Docker') {
+        //     steps {
+        //         sh 'make docker'
+        //       //sh 'make docker-gpu'
+        //     }
+        // }
 
 
         // Build and publish Debian packages to Github
-        stage('Debian') {
-            steps {
-                sh 'make debian'
-            }
-        }
+        // stage('Debian') {
+        //     steps {
+        //         sh 'make debian'
+        //     }
+        // }
     }
 }
