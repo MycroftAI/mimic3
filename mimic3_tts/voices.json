@@ -1285,6 +1285,93 @@
         "properties": {},
         "version": "0.1.0"
     },
+    "jv_ID/google-gmu_low": {
+        "files": {
+            "ALIASES": {
+                "size_bytes": 17,
+                "sha256_sum": "c681976df48b34fa44c2d4fa4e3703808595f195ff632942d4b0d9fd6688d982"
+            },
+            "LICENSE": {
+                "size_bytes": 20142,
+                "sha256_sum": "4533bcb40f5e7fad75239766ebd738c6f9c99e08dea2905748d703b7fb892511"
+            },
+            "README.md": {
+                "size_bytes": 187,
+                "sha256_sum": "fc78c74da4c66a8f5d3257208f1fb76427ad05b172c0a97019128a731e9b6962"
+            },
+            "SOURCE": {
+                "size_bytes": 27,
+                "sha256_sum": "5bc4c6e948f70eb3aed297f7c635753405f7ebfcd4ba9a5cb44d07abd49c53b4"
+            },
+            "VERSION": {
+                "size_bytes": 6,
+                "sha256_sum": "e9dd8507f4bf0c6f42458e41aea833ad0bd3f6127272335eee9bf4d58541ed67"
+            },
+            "config.json": {
+                "size_bytes": 3929,
+                "sha256_sum": "1d8b97bf1208019925f5fca828b84d000deec0357c0fc8554d9e3a7c64b67196"
+            },
+            "generator.onnx": {
+                "size_bytes": 76400481,
+                "sha256_sum": "6813fa08c56261b2092346788ac51e97635d4f9fe148b35308bb9abcbdb84f10"
+            },
+            "phonemes.txt": {
+                "size_bytes": 238,
+                "sha256_sum": "ad748978c0a515f0dd17edf0bfe03caf799ab0de4dfb56c535e719974450ab2e"
+            },
+            "speaker_map.csv": {
+                "size_bytes": 809,
+                "sha256_sum": "5778b43d62d71e2f4a7b94dbf24ff2307c13fd1b40033f205677db4beecdc39e"
+            },
+            "speakers.txt": {
+                "size_bytes": 234,
+                "sha256_sum": "b40baa29e2dc7f20dcecf97cdaf181e79fe881831abf9f72aae72bf1ff11becf"
+            }
+        },
+        "speakers": [
+            "07875",
+            "05522",
+            "03424",
+            "06510",
+            "03314",
+            "03187",
+            "07638",
+            "06207",
+            "08736",
+            "04679",
+            "01392",
+            "05540",
+            "05219",
+            "00027",
+            "00264",
+            "09724",
+            "04588",
+            "09039",
+            "04285",
+            "05970",
+            "08305",
+            "04982",
+            "08002",
+            "06080",
+            "07765",
+            "02326",
+            "03727",
+            "04175",
+            "06383",
+            "02884",
+            "06941",
+            "08178",
+            "00658",
+            "04715",
+            "05667",
+            "01519",
+            "07335",
+            "02059",
+            "01932"
+        ],
+        "properties": {},
+        "version": "0.1.0"
+    },
     "ko_KO/kss_low": {
         "files": {
             "ALIASES": {
