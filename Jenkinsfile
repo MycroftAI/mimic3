@@ -64,8 +64,8 @@ pipeline {
             }
         }
 
-        environment {
-            MIMIC3_VERSION = readFile(file: 'mimic3_tts/VERSION').trim()
+        script {
+            env.MIMIC3_VERSION = readFile(file: 'mimic3_tts/VERSION').trim()
         }
 
         // Copy default voice
@@ -77,9 +77,9 @@ pipeline {
         }
 
         // Build, test, and publish plugin distribution package to PyPI
-        environment {
-            GITHUB_REPO = 'plugin-tts-mimic3'
-            TAG_NAME = 'release/v0.2.0'
+        script {
+            env.GITHUB_REPO = 'plugin-tts-mimic3'
+            env.TAG_NAME = 'release/v0.2.0'
         }
 
         stage('Plugin dist') {
