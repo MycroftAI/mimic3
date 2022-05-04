@@ -109,6 +109,7 @@ pipeline {
             environment {
                 GITHUB_REPO = 'plugin-tts-mimic3'
                 PLUGIN_VERSION = readFile(file: 'plugin-tts-mimic3/mycroft_plugin_tts_mimic3/VERSION').trim()
+                PLUGIN_TAG_NAME = "${env.PLUGIN_TAG_NAME}"
             }
 
             when {
@@ -122,11 +123,11 @@ pipeline {
                 // sh 'twine upload --skip-existing --user ${PYPI_USR} ${PYPI_PSW} dist/mycroft_plugin_tts_mimic3-${PLUGIN_VERSION}.tar.gz'
 
                 // Delete release for tag, if it exists
-                sh "scripts/delete-tagged-release.sh ${env.GITHUB_OWNER} ${env.GITHUB_REPO} ${env.PLUGIN_TAG_NAME} ${env.GITHUB_PSW}"
+                sh 'scripts/delete-tagged-release.sh ${GITHUB_OWNER} ${GITHUB_REPO} ${PLUGIN_TAG_NAME} ${GITHUB_PSW}'
 
                 // Create new tagged release and upload assets
-                sh "scripts/create-tagged-release.sh ${env.GITHUB_OWNER} ${env.GITHUB_REPO} ${env.PLUGIN_TAG_NAME} ${env.GITHUB_PSW}" +
-                    " dist/mycroft_plugin_tts_mimic3-${env.PLUGIN_VERSION}.tar.gz application/gzip"
+                sh 'scripts/create-tagged-release.sh ${GITHUB_OWNER} ${GITHUB_REPO} ${PLUGIN_TAG_NAME} ${GITHUB_PSW}' +
+                    ' dist/mycroft_plugin_tts_mimic3-${PLUGIN_VERSION}.tar.gz application/gzip'
             }
         }
 
@@ -197,7 +198,7 @@ pipeline {
                 // sh 'docker login --username "${DOCKER_USR}" --password "${DOCKER_PSW}"'
                 // sh 'docker push ${DOCKER_TAG}:${MIMIC3_VERSION}'
                 // sh 'docker push ${DOCKER_TAG}:latest'
-
+                echo 'Test'
             }
         }
 
