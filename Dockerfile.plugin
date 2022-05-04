@@ -75,7 +75,7 @@ RUN --mount=type=cache,id=apt-run,target=/var/cache/apt \
     xargs apt-get install --yes --no-install-recommends \
         python3 python3-venv python3-pip \
         build-essential python3-dev \
-        git inotify-tools sox
+        git inotify-tools sox procps
 
 WORKDIR /test
 
