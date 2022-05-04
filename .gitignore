@@ -18,3 +18,4 @@ dist/
 /samples/
 /voices/
 /wheels/*.whl
+/plugin-tts-mimic3/

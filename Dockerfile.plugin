@@ -134,6 +134,10 @@ RUN mycroft-core/bin/mycroft-start bus && \
 RUN export expected_sample="tests/apope_sample_${TARGETARCH}${TARGETVARIANT}.wav" && \
     tests/samples_match.py tests/actual_sample.wav "${expected_sample}"
 
+# RUN --mount=type=cache,id=pip-requirements,target=/root/.cache/pip \
+#     mkdir -p pip && \
+#     cp -R /root/.cache/pip/* pip/
+
 # -----------------------------------------------------------------------------
 
 FROM scratch
@@ -145,3 +149,5 @@ COPY --from=test /test/tests/actual_sample.wav "/apope_sample_${TARGETARCH}${TAR
 COPY --from=test /var/log/mycroft/audio.log ./
 
 COPY --from=build /build/mimic3/plugin-tts-mimic3/dist/*.tar.gz ./
+
+# COPY --from=test /test/pip/ ./pip/
