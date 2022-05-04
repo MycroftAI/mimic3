@@ -30,9 +30,15 @@ pipeline {
         // Adds PYPI_USR and PYPI_PSW environment variables
         // PYPI = credentials('pypi-mycroft')
 
+        // Adds DOCKER_USR and DOCKER_PSW environment variables
+        // DOCKER = credentials('dockerhub-mycroft')
+
         DOCKER_BUILDKIT = '1'
         // DOCKER_PLATFORM = 'linux/amd64,linux/arm64,linux/arm/v7'
         DOCKER_PLATFORM = 'linux/amd64'
+        DOCKER_TAG = 'mycroftai/mimic3'
+        DOCKER_OUTPUT = '--load'
+
         DEFAULT_VOICE = 'en_UK/apope_low'
         DEFAULT_VOICE_PATH = '/home/jenkins/.local/share/mycroft/mimic3/voices'
 
@@ -116,59 +122,84 @@ pipeline {
                 // sh 'twine upload --skip-existing --user ${PYPI_USR} ${PYPI_PSW} dist/mycroft_plugin_tts_mimic3-${PLUGIN_VERSION}.tar.gz'
 
                 // Delete release for tag, if it exists
-                sh 'scripts/delete-tagged-release.sh ${GITHUB_OWNER} ${GITHUB_REPO} ${TAG_NAME} ${GITHUB_PSW}'
+                sh 'scripts/delete-tagged-release.sh ${GITHUB_OWNER} ${GITHUB_REPO} ${PLUGIN_TAG_NAME} ${GITHUB_PSW}'
 
                 // Create new tagged release and upload assets
-                sh 'scripts/create-tagged-release.sh ${GITHUB_OWNER} ${GITHUB_REPO} ${TAG_NAME} ${GITHUB_PSW}' +
+                sh 'scripts/create-tagged-release.sh ${GITHUB_OWNER} ${GITHUB_REPO} ${PLUGIN_TAG_NAME} ${GITHUB_PSW}' +
                     ' dist/mycroft_plugin_tts_mimic3-${PLUGIN_VERSION}.tar.gz application/gzip'
             }
         }
 
         // Build, test, and publish source distribution packages to PyPI
-        // stage('Dist') {
-            // environment {
-            //     MIMIC3_VERSION = readFile(file: 'mimic3_tts/VERSION').trim()
-            //     GITHUB_REPO = 'mimic3'
-            // }
-        //     steps {
-        //         sh 'make dist'
-        //     }
-        // }
+        stage('Dist') {
+            steps {
+                sh 'make dist'
+            }
+        }
 
         // Build and publish Debian packages to Github
-        // stage('Debian') {
-        //     steps {
-        //         sh 'make debian'
-        //     }
-        // }
+        stage('Debian') {
+            steps {
+                sh 'make debian'
+            }
+        }
 
         // Create a new tagged Github release with source distribution and Debian packages
-        // stage('Publish mimic3') {
+        stage('Publish mimic3') {
+            environment {
+                MIMIC3_VERSION = readFile(file: 'mimic3_tts/VERSION').trim()
+                GITHUB_REPO = 'mimic3'
+            }
 
-        //     when {
-        //         tag 'release/v*.*.0'
-        //     }
+            when {
+                expression {
+                    return env.MIMIC3_TAG_NAME.startsWith('release/')
+                }
+            }
 
-        //     steps {
-        //         // TODO: Publish to PyPI
-        //         // sh 'twine upload --skip-existing --user ${PYPI_USR} ${PYPI_PSW} dist/mycroft_mimic3_tts-${MIMIC3_VERSION}.tar.gz'
+            steps {
+                // TODO: Publish to PyPI
+                // sh 'twine upload --skip-existing --user ${PYPI_USR} ${PYPI_PSW} dist/mycroft_mimic3_tts-${MIMIC3_VERSION}.tar.gz'
 
-        //         // Delete release for tag, if it exists
-        //         sh 'scripts/delete-tagged-release.sh ${GITHUB_OWNER} ${GITHUB_REPO} ${TAG_NAME} ${GITHUB_PSW}'
+                // Delete release for tag, if it exists
+                sh 'scripts/delete-tagged-release.sh ${GITHUB_OWNER} ${GITHUB_REPO} ${MIMIC3_TAG_NAME} ${GITHUB_PSW}'
 
-        //         // Create new tagged release and upload assets
-        //         sh 'scripts/create-tagged-release.sh ${GITHUB_OWNER} ${GITHUB_REPO} ${TAG_NAME} ${GITHUB_PSW}' +
-        //             ' dist/mycroft_mimic3_tts-${MIMIC3_VERSION}.tar.gz application/gzip' +
-        //             ' dist/mycroft-mimic3-tts_${MIMIC3_VERSION}_amd64.deb application/vnd.debian.binary-package'
-        //     }
-        // }
+                // Create new tagged release and upload assets
+                sh 'scripts/create-tagged-release.sh ${GITHUB_OWNER} ${GITHUB_REPO} ${MIMIC3_TAG_NAME} ${GITHUB_PSW}' +
+                    ' dist/mycroft_mimic3_tts-${MIMIC3_VERSION}.tar.gz application/gzip' +
+                    ' dist/mycroft-mimic3-tts_${MIMIC3_VERSION}_amd64.deb application/vnd.debian.binary-package'
+            }
+        }
 
         // Build and publish multi-platform Docker image to Dockerhub
-        // stage('Docker') {
-        //     steps {
-        //         sh 'make docker'
-        //       //sh 'make docker-gpu'
-        //     }
-        // }
+        stage('Docker') {
+            steps {
+                sh 'make docker'
+              //sh 'make docker-gpu'
+            }
+        }
+
+        // Publish Docker image to DockerHub
+        stage('Publish docker') {
+            environment {
+                MIMIC3_VERSION = readFile(file: 'mimic3_tts/VERSION').trim()
+            }
+
+            // when {
+            //     expression {
+            //         return env.MIMIC3_TAG_NAME.startsWith('release/')
+            //     }
+            // }
+
+            steps {
+                // TODO: Publish to DockerHub
+                // sh 'docker tag ${DOCKER_TAG}:${MIMIC3_VERSION} ${DOCKER_TAG}:latest'
+                // sh 'docker login --username "${DOCKER_USR}" --password "${DOCKER_PSW}"'
+                // sh 'docker push ${DOCKER_TAG}:${MIMIC3_VERSION}'
+                // sh 'docker push ${DOCKER_TAG}:latest'
+
+            }
+        }
+
     }
 }
