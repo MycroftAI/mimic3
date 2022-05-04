@@ -154,7 +154,7 @@ For example:
 mimic3-download 'en_US/*'
 ```
 
-will download all U.S. English voices to `${HOME}/.local/share/mimic3` (technically `${XDG_DATA_HOME}/mimic3`).
+will download all U.S. English voices to `${HOME}/.local/share/mycroft/mimic3` (technically `${XDG_DATA_HOME}/mimic3`).
 
 See `mimic3-download --help` for more options.
 
