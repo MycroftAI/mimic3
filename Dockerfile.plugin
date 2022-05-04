@@ -142,5 +142,6 @@ ARG TARGETVARIANT
 
 # Ensure test runs
 COPY --from=test /test/tests/actual_sample.wav "/apope_sample_${TARGETARCH}${TARGETVARIANT}.wav"
-
 COPY --from=test /var/log/mycroft/audio.log ./
+
+COPY --from=build /build/mimic3/plugin-tts-mimic3/dist/*.tar.gz ./
