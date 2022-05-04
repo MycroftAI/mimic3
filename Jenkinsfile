@@ -55,56 +55,67 @@ pipeline {
                     credentialsId: 'devops-mycroft',
                     url: 'https://github.com/mycroftAI/mimic3.git'
 
+                env.MIMIC3_TAG_NAME = sh(returnStdout:  true, script: "git tag --sort=-creatordate | head -n 1").trim()
+
                 // Mycroft TTS plugin
                 dir('plugin-tts-mimic3') {
                     git branch: 'master',
                         credentialsId: 'devops-mycroft',
                         url: 'https://github.com/mycroftAI/plugin-tts-mimic3'
+
+                    env.PLUGIN_TAG_NAME = sh(returnStdout:  true, script: "git tag --sort=-creatordate | head -n 1").trim()
                 }
+            }
+        }
+
+        stage('test') {
+            steps {
+                echo '${MIMIC3_TAG_NAME}'
+                echo '${PLUGIN_TAG_NAME}'
             }
         }
 
         // Copy default voice
-        stage('Copy voices') {
-            steps {
-                sh 'mkdir -p voices/${DEFAULT_VOICE}'
-                sh 'rsync -r --link-dest="${DEFAULT_VOICE_PATH}/${DEFAULT_VOICE}/" "${DEFAULT_VOICE_PATH}/${DEFAULT_VOICE}/" voices/${DEFAULT_VOICE}/'
-            }
-        }
+        // stage('Copy voices') {
+        //     steps {
+        //         sh 'mkdir -p voices/${DEFAULT_VOICE}'
+        //         sh 'rsync -r --link-dest="${DEFAULT_VOICE_PATH}/${DEFAULT_VOICE}/" "${DEFAULT_VOICE_PATH}/${DEFAULT_VOICE}/" voices/${DEFAULT_VOICE}/'
+        //     }
+        // }
 
         // Build, test, and publish plugin distribution package to PyPI
-        stage('Plugin dist') {
-            steps {
-                sh 'make plugin-dist'
-            }
-        }
+        // stage('Plugin dist') {
+        //     steps {
+        //         sh 'make plugin-dist'
+        //     }
+        // }
 
         // Create a new tagged Github release with source distribution for Mycroft plugin
-        stage('Publish plugin') {
-            environment {
-                GITHUB_REPO = 'plugin-tts-mimic3'
-                TAG_NAME = 'release/v0.2.0'
-                PLUGIN_VERSION = readFile(file: 'plugin-tts-mimic3/mycroft_plugin_tts_mimic3/VERSION').trim()
-            }
+        // stage('Publish plugin') {
+        //     environment {
+        //         GITHUB_REPO = 'plugin-tts-mimic3'
+        //         TAG_NAME = 'release/v0.2.0'
+        //         PLUGIN_VERSION = readFile(file: 'plugin-tts-mimic3/mycroft_plugin_tts_mimic3/VERSION').trim()
+        //     }
 
-            when {
-                expression {
-                    env.TAG_NAME.startsWith('release/')
-                }
-            }
+        //     when {
+        //         expression {
+        //             env.TAG_NAME.startsWith('release/')
+        //         }
+        //     }
 
-            steps {
-                // TODO: Publish to PyPI
-                // sh 'twine upload --skip-existing --user ${PYPI_USR} ${PYPI_PSW} dist/mycroft_plugin_tts_mimic3-${PLUGIN_VERSION}.tar.gz'
+        //     steps {
+        //         // TODO: Publish to PyPI
+        //         // sh 'twine upload --skip-existing --user ${PYPI_USR} ${PYPI_PSW} dist/mycroft_plugin_tts_mimic3-${PLUGIN_VERSION}.tar.gz'
 
-                // Delete release for tag, if it exists
-                sh 'scripts/delete-tagged-release.sh ${GITHUB_OWNER} ${GITHUB_REPO} ${TAG_NAME} ${GITHUB_PSW}'
+        //         // Delete release for tag, if it exists
+        //         sh 'scripts/delete-tagged-release.sh ${GITHUB_OWNER} ${GITHUB_REPO} ${TAG_NAME} ${GITHUB_PSW}'
 
-                // Create new tagged release and upload assets
-                sh 'scripts/create-tagged-release.sh ${GITHUB_OWNER} ${GITHUB_REPO} ${TAG_NAME} ${GITHUB_PSW}' +
-                    ' dist/mycroft_plugin_tts_mimic3-${PLUGIN_VERSION}.tar.gz application/gzip'
-            }
-        }
+        //         // Create new tagged release and upload assets
+        //         sh 'scripts/create-tagged-release.sh ${GITHUB_OWNER} ${GITHUB_REPO} ${TAG_NAME} ${GITHUB_PSW}' +
+        //             ' dist/mycroft_plugin_tts_mimic3-${PLUGIN_VERSION}.tar.gz application/gzip'
+        //     }
+        // }
 
         // Build, test, and publish source distribution packages to PyPI
         // stage('Dist') {
