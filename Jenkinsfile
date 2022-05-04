@@ -50,13 +50,13 @@ pipeline {
             steps {
                 git branch: 'master',
                     credentialsId: 'devops-mycroft',
-                    url: 'https://github.com/${GITHUB_OWNER}/${GITHUB_REPO}.git'
+                    url: 'https://github.com/mycroftAI/mimic3.git'
 
                 // Mycroft TTS plugin
                 dir('plugin-tts-mimic3') {
                     git branch: 'master',
                         credentialsId: 'devops-mycroft',
-                        url: 'https://github.com/${GITHUB_OWNER}/plugin-tts-mimic3'
+                        url: 'https://github.com/mycroftAI/plugin-tts-mimic3'
                 }
             }
         }
