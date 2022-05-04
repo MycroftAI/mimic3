@@ -87,13 +87,15 @@ pipeline {
                 PLUGIN_VERSION = readFile(file: 'plugin-tts-mimic3/mycroft_plugin_tts_mimic3/VERSION').trim()
             }
 
-            // when {
-            //     tag 'release/v*.*.0'
-            // }
+            when {
+                expression {
+                    env.TAG_NAME.startsWith('release/')
+                }
+            }
 
             steps {
                 // TODO: Publish to PyPI
-                // sh 'twine upload --skip-existing --user ${PYPI_USR} ${PYPI_PSW} dist/mycroft_plugin_tts_mimic3-${MIMIC3_VERSION}.tar.gz'
+                // sh 'twine upload --skip-existing --user ${PYPI_USR} ${PYPI_PSW} dist/mycroft_plugin_tts_mimic3-${PLUGIN_VERSION}.tar.gz'
 
                 // Delete release for tag, if it exists
                 sh 'scripts/delete-tagged-release.sh ${GITHUB_OWNER} ${GITHUB_REPO} ${TAG_NAME} ${GITHUB_PSW}'
