@@ -59,7 +59,7 @@ RUN --mount=type=cache,id=pip-requirements,target=/root/.cache/pip \
 
 # Download default voice
 COPY voices/ /root/.local/share/mycroft/mimic3/voices/
-RUN .venv/bin/mimic3-download 'en_UK/apope_low'
+RUN .venv/bin/mimic3-download --debug 'en_UK/apope_low'
 
 # -----------------------------------------------------------------------------
 
