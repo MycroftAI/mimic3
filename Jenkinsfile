@@ -67,13 +67,13 @@ pipeline {
                     // Get individual tags
                     env.MIMIC3_TAG_NAME = sh(
                         returnStdout:  true,
-                        script: "git tag --contains --sort=-creatordate | head -n 1"
+                        script: "git tag --contains | head -n 1"
                     ).trim()
 
                     dir('plugin-tts-mimic3') {
                         env.PLUGIN_TAG_NAME = sh(
                             returnStdout:  true,
-                            script: "git tag --contains --sort=-creatordate | head -n 1"
+                            script: "git tag --contains | head -n 1"
                         ).trim()
                     }
                 }
