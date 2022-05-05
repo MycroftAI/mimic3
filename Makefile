@@ -27,7 +27,7 @@ DOCKER_TAG ?= mycroftai/mimic3
 dist:
 	echo "$(DOCKER_PLATFORM)" | sed -e 's/,/\n/g' | \
         while read -r platform; do \
-            docker buildx build . -f Dockerfile.dist --platform $(DOCKER_PLATFORM) --output "type=local,dest=dist/"; \
+            docker buildx build . -f Dockerfile.dist --platform "$${platform}" --output "type=local,dest=dist/"; \
         done
 
 # Create virtual environment and install in editable mode locally.
@@ -37,10 +37,7 @@ install:
 # Create self-contained Docker image.
 # Also tests functionality.
 docker:
-	echo "$(DOCKER_PLATFORM)" | sed -e 's/,/\n/g' | \
-        while read -r platform; do \
-            docker buildx build . -f Dockerfile --platform $(DOCKER_PLATFORM) --tag "$(DOCKER_TAG)" $(DOCKER_OUTPUT); \
-        done
+	docker buildx build . -f Dockerfile --platform $(DOCKER_PLATFORM) --tag "$(DOCKER_TAG)" $(DOCKER_OUTPUT)
 
 # Create self-container Docker image with GPU support.
 # Requires nvidia-docker.
@@ -53,7 +50,7 @@ docker-gpu:
 sample:
 	echo "$(DOCKER_PLATFORM)" | sed -e 's/,/\n/g' | \
         while read -r platform; do \
-            docker buildx build . -f Dockerfile.sample --platform $(DOCKER_PLATFORM) --output "type=local,dest=tests/"; \
+            docker buildx build . -f Dockerfile.sample --platform "$${platform}" --output "type=local,dest=tests/"; \
         done
 
 # Create Debian packages (packaged with apope voice).
@@ -61,7 +58,7 @@ sample:
 debian:
 	echo "$(DOCKER_PLATFORM)" | sed -e 's/,/\n/g' | \
         while read -r platform; do \
-            docker buildx build . -f Dockerfile.debian --platform $(DOCKER_PLATFORM) --output "type=local,dest=dist/"; \
+            docker buildx build . -f Dockerfile.debian --platform "$${platform}" --output "type=local,dest=dist/"; \
         done
 
 # Build TTS plugin distribution package.
@@ -70,5 +67,5 @@ debian:
 plugin-dist:
 	echo "$(DOCKER_PLATFORM)" | sed -e 's/,/\n/g' | \
         while read -r platform; do \
-            docker buildx build . -f Dockerfile.plugin --platform $(DOCKER_PLATFORM) --output "type=local,dest=dist/"; \
+            docker buildx build . -f Dockerfile.plugin --platform "$${platform}" --output "type=local,dest=dist/"; \
         done

@@ -116,16 +116,19 @@ ENV USER root
 ENV MIMIC_DIR /tmp/mycroft/cache/tts/Mimic3TTSPlugin
 
 # Start relevant services:
-# 1. Start message bus, wait for ready message in log (1 min timeout)
-# 2. Start audio service, wait for ready message in log (1 min timeout)
+# 1. Start message bus, wait for ready message in log (5 min timeout)
+# 2. Start audio service, wait for ready message in log (5 min timeout)
 # 3. Run mycroft-speak with sample text
 # 4. Watch cache directory for a file creation (5 min timeout)
 # 5. Copy first WAV file to known location
 RUN mycroft-core/bin/mycroft-start bus && \
-    timeout 60 tail -f /var/log/mycroft/bus.log | grep -iq 'message bus service started' && \
+    timeout 300 tail -n+0 -f /var/log/mycroft/bus.log | grep -iq 'message bus service started' && \
+    echo 'Message bus started' && \
     mycroft-core/bin/mycroft-start audio && \
-    timeout 60 tail -f /var/log/mycroft/audio.log | grep -iq 'audio service is ready' && \
+    timeout 300 tail -n+0 -f /var/log/mycroft/audio.log | grep -iq 'audio service is ready' && \
+    echo 'Audio service started' && \
     xargs -a tests/apope_sample.txt mycroft-core/bin/mycroft-speak && \
+    echo 'Speak request sent' && \
     mkdir -p "${MIMIC_DIR}" && \
     for i in $(seq 1 300); do \
         wav_path="$(find "${MIMIC_DIR}" -name '*.wav' | head -n1)"; \
