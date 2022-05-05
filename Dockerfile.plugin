@@ -49,7 +49,7 @@ COPY build-dist.sh ./
 RUN ./build-dist.sh
 
 # Build plugin sdist
-COPY plugin-tts-mimic3 ./plugin-tts-mimic3/
+COPY plugin-tts-mimic3/ ./plugin-tts-mimic3/
 RUN cd plugin-tts-mimic3 && \
     python3 setup.py sdist && \
     cp dist/*.tar.gz ../dist/

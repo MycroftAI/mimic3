@@ -47,8 +47,7 @@ pipeline {
         // Clean up
         stage('Clean') {
             steps {
-                sh 'rm -rf dist/'
-                sh 'rm -rf voices/'
+                sh 'rm -rf dist/ voices/ plugin-tts-mimic3/dist/'
             }
         }
 
