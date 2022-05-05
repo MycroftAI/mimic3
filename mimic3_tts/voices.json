@@ -1,6 +1,10 @@
 {
     "af_ZA/google-nwu_low": {
         "files": {
+            "ALIASES": {
+                "size_bytes": 26,
+                "sha256_sum": "487201d356bdec73516701465d41e6d7a18f4f3aca2ad2d6eeb53c1afe8f1a69"
+            },
             "LICENSE": {
                 "size_bytes": 56,
                 "sha256_sum": "9de32c12fbae55d90964a887d50116a3369962799532fcd7663d32f55c1945fe"
@@ -50,13 +54,18 @@
             "0184"
         ],
         "properties": {},
-        "version": "0.1.0"
+        "version": "0.1.0",
+        "aliases": [
+            "af",
+            "af_ZA",
+            "af_ZA/google-nwu"
+        ]
     },
     "bn/multi_low": {
         "files": {
             "ALIASES": {
-                "size_bytes": 9,
-                "sha256_sum": "4abbddc008fc3256d7e0e84ff4d59fb3dcc0ffc58d152a47ebb230cbd336d27d"
+                "size_bytes": 12,
+                "sha256_sum": "e581ac29b33ba7f1fe6c2081dbf9b21c9aa5eb39eab90f02b5faa35bc0995ec3"
             },
             "README.md": {
                 "size_bytes": 193,
@@ -130,7 +139,11 @@
             "3958"
         ],
         "properties": {},
-        "version": "0.1.0"
+        "version": "0.1.0",
+        "aliases": [
+            "bn",
+            "bn/multi"
+        ]
     },
     "de_DE/m-ailabs_low": {
         "files": {
@@ -187,7 +200,10 @@
             "angela_merkel"
         ],
         "properties": {},
-        "version": "0.1.0"
+        "version": "0.1.0",
+        "aliases": [
+            "de_DE/m-ailabs"
+        ]
     },
     "de_DE/thorsten-emotion_low": {
         "files": {
@@ -239,7 +255,8 @@
             "whisper"
         ],
         "properties": {},
-        "version": "0.1.0"
+        "version": "0.1.0",
+        "aliases": []
     },
     "de_DE/thorsten_low": {
         "files": {
@@ -282,7 +299,13 @@
         },
         "speakers": [],
         "properties": {},
-        "version": "0.1.0"
+        "version": "0.1.0",
+        "aliases": [
+            "de",
+            "de_DE",
+            "thorsten",
+            "de_DE/thorsten"
+        ]
     },
     "el_GR/rapunzelina_low": {
         "files": {
@@ -321,7 +344,12 @@
         },
         "speakers": [],
         "properties": {},
-        "version": "0.1.0"
+        "version": "0.1.0",
+        "aliases": [
+            "el",
+            "el_GR",
+            "el_GR/rapunzelina"
+        ]
     },
     "en_UK/apope_low": {
         "files": {
@@ -364,7 +392,13 @@
         },
         "speakers": [],
         "properties": {},
-        "version": "1.0.0"
+        "version": "1.0.0",
+        "aliases": [
+            "en",
+            "en_UK",
+            "apope",
+            "en_UK/apope"
+        ]
     },
     "en_US/cmu-arctic_low": {
         "files": {
@@ -434,7 +468,11 @@
             "gka"
         ],
         "properties": {},
-        "version": "0.1.0"
+        "version": "0.1.0",
+        "aliases": [
+            "cmu-arctic",
+            "en_US/cmu-arctic"
+        ]
     },
     "en_US/hifi-tts_low": {
         "files": {
@@ -489,7 +527,10 @@
             "92"
         ],
         "properties": {},
-        "version": "0.1.0"
+        "version": "0.1.0",
+        "aliases": [
+            "en_US/hifi-tts"
+        ]
     },
     "en_US/ljspeech_low": {
         "files": {
@@ -532,7 +573,11 @@
         },
         "speakers": [],
         "properties": {},
-        "version": "0.1.0"
+        "version": "0.1.0",
+        "aliases": [
+            "ljspeech",
+            "en_US/ljspeech"
+        ]
     },
     "en_US/m-ailabs_low": {
         "files": {
@@ -587,7 +632,10 @@
             "mary_ann"
         ],
         "properties": {},
-        "version": "0.1.0"
+        "version": "0.1.0",
+        "aliases": [
+            "en_US/m-ailabs"
+        ]
     },
     "en_US/vctk_low": {
         "files": {
@@ -748,7 +796,12 @@
             "p362"
         ],
         "properties": {},
-        "version": "0.1.0"
+        "version": "0.1.0",
+        "aliases": [
+            "vctk",
+            "en_US",
+            "en_US/vctk"
+        ]
     },
     "es_ES/carlfm_low": {
         "files": {
@@ -791,7 +844,13 @@
         },
         "speakers": [],
         "properties": {},
-        "version": "0.1.0"
+        "version": "0.1.0",
+        "aliases": [
+            "es",
+            "es_ES",
+            "es_ES/carlfm",
+            "carlfm"
+        ]
     },
     "es_ES/m-ailabs_low": {
         "files": {
@@ -842,13 +901,16 @@
             "karen_savage"
         ],
         "properties": {},
-        "version": "0.1.0"
+        "version": "0.1.0",
+        "aliases": [
+            "es_ES/m-ailabs"
+        ]
     },
     "fa/haaniye_low": {
         "files": {
             "ALIASES": {
-                "size_bytes": 11,
-                "sha256_sum": "9d5c7cf903a22b8d0d3f4768583664b2533ba4252367d8d6892ca4e398a811bc"
+                "size_bytes": 14,
+                "sha256_sum": "06465a959bf9b079ab20b21d7c0a50e366aeb955c68e59eea3e0d2b81f9c259e"
             },
             "LICENSE": {
                 "size_bytes": 5,
@@ -881,7 +943,11 @@
         },
         "speakers": [],
         "properties": {},
-        "version": "0.1.0"
+        "version": "0.1.0",
+        "aliases": [
+            "fa",
+            "fa/haaniye"
+        ]
     },
     "fi_FI/harri-tapani-ylilammi_low": {
         "files": {
@@ -920,7 +986,13 @@
         },
         "speakers": [],
         "properties": {},
-        "version": "0.1.0"
+        "version": "0.1.0",
+        "aliases": [
+            "fi",
+            "fi_FI",
+            "fi_FI/harri-tapani-ylilammi",
+            "harri-tapani-ylilammi"
+        ]
     },
     "fr_FR/m-ailabs_low": {
         "files": {
@@ -977,7 +1049,10 @@
             "gilles_g_le_blanc"
         ],
         "properties": {},
-        "version": "0.1.0"
+        "version": "0.1.0",
+        "aliases": [
+            "fr_FR/m-ailabs"
+        ]
     },
     "fr_FR/siwis_low": {
         "files": {
@@ -1020,7 +1095,13 @@
         },
         "speakers": [],
         "properties": {},
-        "version": "0.1.0"
+        "version": "0.1.0",
+        "aliases": [
+            "fr",
+            "fr_FR",
+            "fr_FR/siwis",
+            "siwis"
+        ]
     },
     "fr_FR/tom_low": {
         "files": {
@@ -1063,13 +1144,17 @@
         },
         "speakers": [],
         "properties": {},
-        "version": "0.1.0"
+        "version": "0.1.0",
+        "aliases": [
+            "fr_FR/tom",
+            "tom"
+        ]
     },
     "gu_IN/cmu-indic_low": {
         "files": {
             "ALIASES": {
-                "size_bytes": 16,
-                "sha256_sum": "93a432eec0dd88b792da5bbd9e269e68ef27c760021f9927e2bc5d79e016a10b"
+                "size_bytes": 25,
+                "sha256_sum": "e44dde6e7b2e5a65f9944eefc89312a494155e962ab6105f84cc23ca18bf08c5"
             },
             "LICENSE": {
                 "size_bytes": 960,
@@ -1114,7 +1199,12 @@
             "cmu_indic_guj_kt"
         ],
         "properties": {},
-        "version": "0.1.0"
+        "version": "0.1.0",
+        "aliases": [
+            "gu",
+            "gu_IN",
+            "gu_IN/cmu-indic"
+        ]
     },
     "hu_HU/diana-majlinger_low": {
         "files": {
@@ -1153,7 +1243,13 @@
         },
         "speakers": [],
         "properties": {},
-        "version": "0.1.0"
+        "version": "0.1.0",
+        "aliases": [
+            "hu",
+            "hu_HU",
+            "hu_HU/diana-majlinger",
+            "diana-majlinger"
+        ]
     },
     "it_IT/mls_low": {
         "files": {
@@ -1240,7 +1336,10 @@
             "5010"
         ],
         "properties": {},
-        "version": "0.1.0"
+        "version": "0.1.0",
+        "aliases": [
+            "it_IT/mls"
+        ]
     },
     "it_IT/riccardo-fasol_low": {
         "files": {
@@ -1283,13 +1382,19 @@
         },
         "speakers": [],
         "properties": {},
-        "version": "0.1.0"
+        "version": "0.1.0",
+        "aliases": [
+            "it",
+            "it_IT",
+            "it_IT/riccardo_fasol",
+            "riccardo_fasol"
+        ]
     },
     "jv_ID/google-gmu_low": {
         "files": {
             "ALIASES": {
-                "size_bytes": 17,
-                "sha256_sum": "c681976df48b34fa44c2d4fa4e3703808595f195ff632942d4b0d9fd6688d982"
+                "size_bytes": 26,
+                "sha256_sum": "7fad3d2ff518d38f71d78b2dfd3893a14286902e944663c08647a31fa1306ca8"
             },
             "LICENSE": {
                 "size_bytes": 20142,
@@ -1370,7 +1475,12 @@
             "01932"
         ],
         "properties": {},
-        "version": "0.1.0"
+        "version": "0.1.0",
+        "aliases": [
+            "jv",
+            "jv_ID",
+            "jv_ID/google-gmu"
+        ]
     },
     "ko_KO/kss_low": {
         "files": {
@@ -1409,7 +1519,84 @@
         },
         "speakers": [],
         "properties": {},
-        "version": "0.1.0"
+        "version": "0.1.0",
+        "aliases": [
+            "ko",
+            "ko_KO",
+            "ko_KO/kss",
+            "kss"
+        ]
+    },
+    "ne_NP/ne-google_low": {
+        "files": {
+            "ALIASES": {
+                "size_bytes": 22,
+                "sha256_sum": "896deb39d6fc016f4422f29e74f4cbde76cf507ae77cbbfbd048168c7f1e7d42"
+            },
+            "LICENSE": {
+                "size_bytes": 20142,
+                "sha256_sum": "4533bcb40f5e7fad75239766ebd738c6f9c99e08dea2905748d703b7fb892511"
+            },
+            "README.md": {
+                "size_bytes": 156,
+                "sha256_sum": "f018d28bc71d61d1dfc43824097351e5e3d5c5d78b468badaf6bc0d1f52bdddd"
+            },
+            "SOURCE": {
+                "size_bytes": 27,
+                "sha256_sum": "d5f9adbe3343e046d88deacbff0098adefb784a14d560d285b2d98fcdee91ae7"
+            },
+            "VERSION": {
+                "size_bytes": 6,
+                "sha256_sum": "e9dd8507f4bf0c6f42458e41aea833ad0bd3f6127272335eee9bf4d58541ed67"
+            },
+            "config.json": {
+                "size_bytes": 3845,
+                "sha256_sum": "566382a8247e9f455f47b7b8181dbe26c601de967576f02fa167f49190309d35"
+            },
+            "generator.onnx": {
+                "size_bytes": 76365921,
+                "sha256_sum": "9f546c209a4322a1fbcb9dbd4f66e1cd60abd1ecc541ded55a70040eeb41f63c"
+            },
+            "phonemes.txt": {
+                "size_bytes": 302,
+                "sha256_sum": "8491a7e64ca6315b5e3b99a5082533efd3f488c4387dd2c30dba8d24b5400c14"
+            },
+            "speaker_map.csv": {
+                "size_bytes": 278,
+                "sha256_sum": "eece0b27d9025ec79cd45bd33ff9615bb12b75e2eeb911b06116f82af59601be"
+            },
+            "speakers.txt": {
+                "size_bytes": 90,
+                "sha256_sum": "2ff626ca301b6aa0658c3129380b2718027d5ed161a34d589ff6b67661abf40a"
+            }
+        },
+        "speakers": [
+            "0546",
+            "3614",
+            "2099",
+            "3960",
+            "6834",
+            "7957",
+            "6329",
+            "9407",
+            "6587",
+            "0258",
+            "2139",
+            "5687",
+            "0283",
+            "3997",
+            "3154",
+            "0883",
+            "2027",
+            "0649"
+        ],
+        "properties": {},
+        "version": "0.1.0",
+        "aliases": [
+            "ne",
+            "ne_NP",
+            "ne_NP/google"
+        ]
     },
     "nl/bart-de-leeuw_low": {
         "files": {
@@ -1452,7 +1639,11 @@
         },
         "speakers": [],
         "properties": {},
-        "version": "0.1.0"
+        "version": "0.1.0",
+        "aliases": [
+            "bart-de-leeuw",
+            "nl/bart-de-leeuw"
+        ]
     },
     "nl/flemishguy_low": {
         "files": {
@@ -1495,7 +1686,11 @@
         },
         "speakers": [],
         "properties": {},
-        "version": "0.1.0"
+        "version": "0.1.0",
+        "aliases": [
+            "flemishguy",
+            "nl/flemishguy"
+        ]
     },
     "nl/nathalie_low": {
         "files": {
@@ -1538,7 +1733,11 @@
         },
         "speakers": [],
         "properties": {},
-        "version": "0.1.0"
+        "version": "0.1.0",
+        "aliases": [
+            "nl/nathalie",
+            "nathalie"
+        ]
     },
     "nl/pmk_low": {
         "files": {
@@ -1581,7 +1780,10 @@
         },
         "speakers": [],
         "properties": {},
-        "version": "0.1.0"
+        "version": "0.1.0",
+        "aliases": [
+            "nl/pmk"
+        ]
     },
     "nl/rdh_low": {
         "files": {
@@ -1624,13 +1826,18 @@
         },
         "speakers": [],
         "properties": {},
-        "version": "0.1.0"
+        "version": "0.1.0",
+        "aliases": [
+            "nl",
+            "nl/rdh",
+            "rdh"
+        ]
     },
     "pl_PL/m-ailabs_low": {
         "files": {
             "ALIASES": {
-                "size_bytes": 15,
-                "sha256_sum": "87d98f3b3b5eaae7d5acb11d3781eabe06a8ef4ef0c446a1499d4f9ad9230c84"
+                "size_bytes": 24,
+                "sha256_sum": "c46802e1b6364b7bf871895d4df185dfc4380b0cc59a5f627bd32a779abd4f56"
             },
             "LICENSE": {
                 "size_bytes": 1372,
@@ -1674,7 +1881,12 @@
             "nina_brown"
         ],
         "properties": {},
-        "version": "0.1.0"
+        "version": "0.1.0",
+        "aliases": [
+            "pl",
+            "pl_PL",
+            "pl_PL/m-ailabs"
+        ]
     },
     "ru_RU/multi_low": {
         "files": {
@@ -1741,7 +1953,12 @@
             "nikolaev"
         ],
         "properties": {},
-        "version": "0.1.0"
+        "version": "0.1.0",
+        "aliases": [
+            "ru",
+            "ru_RU",
+            "ru_RU/multi"
+        ]
     },
     "sw/lanfrica_low": {
         "files": {
@@ -1776,7 +1993,11 @@
         },
         "speakers": [],
         "properties": {},
-        "version": "0.1.0"
+        "version": "0.1.0",
+        "aliases": [
+            "sw",
+            "sw/lanfrica"
+        ]
     },
     "te_IN/cmu-indic_low": {
         "files": {
@@ -1827,10 +2048,19 @@
             "kpn"
         ],
         "properties": {},
-        "version": "0.1.0"
+        "version": "0.1.0",
+        "aliases": [
+            "te",
+            "te_IN",
+            "te_IN/cmu-indic"
+        ]
     },
     "tn_ZA/google-nwu_low": {
         "files": {
+            "ALIASES": {
+                "size_bytes": 26,
+                "sha256_sum": "b080ae349282eca908d09c87c53d13e3c85679a41eb41767edf63d2c459fbb17"
+            },
             "LICENSE": {
                 "size_bytes": 56,
                 "sha256_sum": "9de32c12fbae55d90964a887d50116a3369962799532fcd7663d32f55c1945fe"
@@ -1897,7 +2127,12 @@
             "7693"
         ],
         "properties": {},
-        "version": "0.1.0"
+        "version": "0.1.0",
+        "aliases": [
+            "tn",
+            "tn_ZA",
+            "tn_ZA/google-nwu"
+        ]
     },
     "uk_UK/m-ailabs_low": {
         "files": {
@@ -1951,7 +2186,12 @@
             "pysariev"
         ],
         "properties": {},
-        "version": "0.1.0"
+        "version": "0.1.0",
+        "aliases": [
+            "uk",
+            "uk_UK",
+            "uk_UK/m-ailabs"
+        ]
     },
     "vi_VN/vais1000_low": {
         "files": {
@@ -1990,10 +2230,19 @@
         },
         "speakers": [],
         "properties": {},
-        "version": "0.1.0"
+        "version": "0.1.0",
+        "aliases": [
+            "vi",
+            "vi_VN",
+            "vi_VN/vais1000"
+        ]
     },
     "yo/crowdsourced_low": {
         "files": {
+            "ALIASES": {
+                "size_bytes": 19,
+                "sha256_sum": "e24be3f6241b7debefab846ee90145c04f1868f38df4e03fa9dad677d9e1e367"
+            },
             "LICENSE": {
                 "size_bytes": 20141,
                 "sha256_sum": "884c02e0d3e811e912507288e4d77a441e9b4e16b39b12963c8dc7de4e2e1fbe"
@@ -2054,6 +2303,10 @@
             "03349"
         ],
         "properties": {},
-        "version": "0.1.0"
+        "version": "0.1.0",
+        "aliases": [
+            "yo",
+            "yo/crowdsourced"
+        ]
     }
 }

@@ -209,7 +209,15 @@ def main(argv=None):
 
             _LOGGER.debug("%s matched %s", key_or_pattern, voice_keys)
         else:
-            # No wildcards
+            # No wildcards.
+            # Resolve aliases.
+            for maybe_key, maybe_info in _VOICES.items():
+                for alias in maybe_info.get("aliases", []):
+                    if key_or_pattern == alias:
+                        # Alias match
+                        key_or_pattern = maybe_key
+                        break
+
             voice_keys = [key_or_pattern]
 
         for voice_key in voice_keys:
