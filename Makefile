@@ -25,10 +25,7 @@ DOCKER_TAG ?= mycroftai/mimic3
 # Build source distributions for PyPI.
 # Also tests installation.
 dist:
-	echo "$(DOCKER_PLATFORM)" | sed -e 's/,/\n/g' | \
-        while read -r platform; do \
-            docker buildx build . -f Dockerfile.dist --platform "$${platform}" --output "type=local,dest=dist/"; \
-        done
+	docker buildx build . -f Dockerfile.dist --platform "$(DOCKER_PLATFORM)" --output 'type=local,dest=dist/'; \
 
 # Create virtual environment and install in editable mode locally.
 install:
@@ -37,7 +34,7 @@ install:
 # Create self-contained Docker image.
 # Also tests functionality.
 docker:
-	docker buildx build . -f Dockerfile --platform $(DOCKER_PLATFORM) --tag "$(DOCKER_TAG)" $(DOCKER_OUTPUT)
+	docker buildx build . -f Dockerfile --platform "$(DOCKER_PLATFORM)" --tag "$(DOCKER_TAG)" $(DOCKER_OUTPUT)
 
 # Create self-container Docker image with GPU support.
 # Requires nvidia-docker.
@@ -48,24 +45,20 @@ docker-gpu:
 # These are different per platform (amd64, etc.).
 # It's critical that deterministic mode is used to generate and test.
 sample:
-	echo "$(DOCKER_PLATFORM)" | sed -e 's/,/\n/g' | \
-        while read -r platform; do \
-            docker buildx build . -f Dockerfile.sample --platform "$${platform}" --output "type=local,dest=tests/"; \
-        done
+	docker buildx build . -f Dockerfile.sample --platform "$(DOCKER_PLATFORM)" --output 'type=local,dest=tests/'; \
 
 # Create Debian packages (packaged with apope voice).
 # Also tests installation.
 debian:
-	echo "$(DOCKER_PLATFORM)" | sed -e 's/,/\n/g' | \
-        while read -r platform; do \
-            docker buildx build . -f Dockerfile.debian --platform "$${platform}" --output "type=local,dest=dist/"; \
-        done
+	docker buildx build . -f Dockerfile.debian --platform "$(DOCKER_PLATFORM)" --output 'type=local,dest=dist/'; \
 
 # Build TTS plugin distribution package.
 # https://github.com/MycroftAI/plugin-tts-mimic3
+#
 # Also tests with latest Mycroft.
+# Cannot run tests in parallel because of message bus port conflicts.
 plugin-dist:
 	echo "$(DOCKER_PLATFORM)" | sed -e 's/,/\n/g' | \
         while read -r platform; do \
-            docker buildx build . -f Dockerfile.plugin --platform "$${platform}" --output "type=local,dest=dist/"; \
+            docker buildx build . -f Dockerfile.plugin --platform "$${platform}" --output 'type=local,dest=dist/'; \
         done
