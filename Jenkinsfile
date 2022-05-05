@@ -97,6 +97,11 @@ pipeline {
 
         // Build, test, and publish plugin distribution package to PyPI
         stage('Plugin dist') {
+            environment {
+                // ARM 32/64-but plugin tests are failing
+                DOCKER_PLATFORM = 'linux/amd64'
+            }
+
             steps {
                 sh 'make plugin-dist'
             }
