@@ -127,8 +127,15 @@ RUN mycroft-core/bin/mycroft-start bus && \
     tail -f /var/log/mycroft/audio.log | grep -iq 'audio service is ready' && \
     xargs -a tests/apope_sample.txt mycroft-core/bin/mycroft-speak && \
     mkdir -p "${MIMIC_DIR}" && \
-    timeout 300 inotifywait -e create "${MIMIC_DIR}" && \
-    find "${MIMIC_DIR}" -name '*.wav' | head -n1 | xargs -I{} mv {} tests/actual_sample.wav
+    for i in $(seq 1 300); do \
+        wav_path="$(find "${MIMIC_DIR}" -name '*.wav' | head -n1)"; \
+        if [ -n "${wav_path}" ]; then \
+            mv "${wav_path}" tests/actual_sample.wav; \
+            break; \
+        fi; \
+        sleep 1; \
+        echo "Looking for WAV file in ${MIMIC_DIR}"; \
+    done
 
 # Check sample
 RUN export expected_sample="tests/apope_sample_${TARGETARCH}${TARGETVARIANT}.wav" && \
