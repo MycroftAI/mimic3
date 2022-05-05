@@ -34,10 +34,8 @@ pipeline {
         // DOCKER = credentials('dockerhub-mycroft')
 
         DOCKER_BUILDKIT = '1'
-        // DOCKER_PLATFORM = 'linux/amd64,linux/arm64,linux/arm/v7'
-        DOCKER_PLATFORM = 'linux/arm64'
+        DOCKER_PLATFORM = 'linux/amd64,linux/arm64,linux/arm/v7'
         DOCKER_TAG = 'mycroftai/mimic3'
-        DOCKER_OUTPUT = '--load'
 
         DEFAULT_VOICE = 'en_UK/apope_low'
         DEFAULT_VOICE_PATH = '/home/jenkins/.local/share/mycroft/mimic3/voices'
@@ -187,6 +185,8 @@ pipeline {
         stage('Publish docker') {
             environment {
                 MIMIC3_VERSION = readFile(file: 'mimic3_tts/VERSION').trim()
+                DOCKER_TAG = "mycroftai/mimic3:latest,mycroftai/mimic3:${env.MIMIC3_VERSION}"
+                DOCKER_OUTPUT = '--push'
             }
 
             when {
@@ -197,10 +197,8 @@ pipeline {
 
             steps {
                 // TODO: Publish to DockerHub
-                // sh 'docker tag ${DOCKER_TAG}:${MIMIC3_VERSION} ${DOCKER_TAG}:latest'
                 // sh 'docker login --username "${DOCKER_USR}" --password "${DOCKER_PSW}"'
-                // sh 'docker push ${DOCKER_TAG}:${MIMIC3_VERSION}'
-                // sh 'docker push ${DOCKER_TAG}:latest'
+                // sh 'make docker'
                 echo 'Published docker image'
             }
         }
