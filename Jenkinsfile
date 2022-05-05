@@ -167,10 +167,10 @@ pipeline {
 
                 // Create new tagged release and upload assets
                 sh 'scripts/create-tagged-release.sh ${GITHUB_OWNER} ${GITHUB_REPO} ${MIMIC3_TAG_NAME} ${GITHUB_PSW}' +
-                    ' dist/linux/amd64/mycroft_mimic3_tts-${MIMIC3_VERSION}.tar.gz application/gzip' +
-                    ' dist/linux/amd64/mycroft-mimic3-tts_${MIMIC3_VERSION}_amd64.deb application/vnd.debian.binary-package' +
-                    ' dist/linux/arm64/mycroft-mimic3-tts_${MIMIC3_VERSION}_arm64.deb application/vnd.debian.binary-package' +
-                    ' dist/linux/arm/v7/mycroft-mimic3-tts_${MIMIC3_VERSION}_armhf.deb application/vnd.debian.binary-package'
+                    ' dist/linux_amd64/mycroft_mimic3_tts-${MIMIC3_VERSION}.tar.gz application/gzip' +
+                    ' dist/linux_amd64/mycroft-mimic3-tts_${MIMIC3_VERSION}_amd64.deb application/vnd.debian.binary-package' +
+                    ' dist/linux_arm64/mycroft-mimic3-tts_${MIMIC3_VERSION}_arm64.deb application/vnd.debian.binary-package' +
+                    ' dist/linux_arm_v7/mycroft-mimic3-tts_${MIMIC3_VERSION}_armhf.deb application/vnd.debian.binary-package'
 
                 echo 'Published Mimic 3 PyPI and Github release'
             }
