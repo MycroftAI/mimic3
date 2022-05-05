@@ -91,6 +91,11 @@ upload_url="$(jq --raw-output '.upload_url' < "${response_json}" | sed -e 's/{[^
 # Upload assets
 while [ -n "$2" ]; do
     asset_path="$1"
+    if [ ! -f "${asset_path}" ]; then
+        echo "Missing asset: ${asset_path}"
+        exit 1;
+    fi
+
     asset_content_type="$2"
     upload_asset "${upload_url}" "${asset_path}" "${asset_content_type}"
 
