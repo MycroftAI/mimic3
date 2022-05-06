@@ -221,6 +221,12 @@ def main(argv=None):
             voice_keys = [key_or_pattern]
 
         for voice_key in voice_keys:
+            if "/" not in voice_key:
+                _LOGGER.error(
+                    "Voice not recognized or not in <lang>/<name> format: %s", voice_key
+                )
+                continue
+
             voice_lang, voice_name = voice_key.split("/", maxsplit=1)
             voice_info = _VOICES[voice_key]
             voice_url = str.format(
