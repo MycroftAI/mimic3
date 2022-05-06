@@ -238,6 +238,8 @@ See `mimic3-download --help` for more options.
 
 Start a web server with `mimic3-server` and visit `http://localhost:59125` to view the web UI.
 
+To access the server from outside your device, run `mimic3-server --host 0.0.0.0` (see also `--port <PORT>`).
+
 ![screenshot of web interface](img/server_screenshot.jpg)
 
 The following endpoints are available:
@@ -280,7 +282,7 @@ Using [nvidia-docker](https://github.com/NVIDIA/nvidia-docker) is highly recomme
 
 Use the Mimic 3 web server as a drop-in replacement for [MaryTTS](http://mary.dfki.de/), for example with [Home Assistant](https://www.home-assistant.io/integrations/marytts/).
 
-Make sure to use a compatible [voice key](#voice-keys) like `en_UK/apope_low`.
+Make sure to use a Mimic 3 [voice key](#voice-keys) like `en_UK/apope_low` instead of a MaryTTS voice name.
 
 For Mycroft, you can use this instead of [the plugin](https://github.com/MycroftAI/plugin-tts-mimic3) by running:
 
@@ -337,4 +339,4 @@ SSML `<say-as>` support varies between voice types:
 
 ## License
 
-See [license file](LICENSE)
+Mimic 3 is available under the [AGPL v3 license](LICENSE)
