@@ -1,6 +1,6 @@
 # Mimic 3
 
-![mimic 3 mark 2](img/mimic3-mark-ii.png)
+![mimic 3 mark 2](img/mimic3-hero.jpg)
 
 A fast and local neural text to speech system developed by [Mycroft](https://mycroft.ai/) for the [Mark II](https://mycroft.ai/product/mark-ii/).
 
