@@ -10,6 +10,10 @@
                 "sha256_sum": "9de32c12fbae55d90964a887d50116a3369962799532fcd7663d32f55c1945fe"
             },
             "README.md": {
+                "size_bytes": 11731,
+                "sha256_sum": "55d0837ef2089b5874eae19eec3161c28195067460305b209772a38c1d416b07"
+            },
+            "README.md.in": {
                 "size_bytes": 186,
                 "sha256_sum": "14ef9a5565a8b73cf7460098b181268ce1e638c6feb7065dc3544f038f1d20ab"
             },
@@ -68,6 +72,10 @@
                 "sha256_sum": "e581ac29b33ba7f1fe6c2081dbf9b21c9aa5eb39eab90f02b5faa35bc0995ec3"
             },
             "README.md": {
+                "size_bytes": 11106,
+                "sha256_sum": "2cc8a5a2896fee6697cb7950b68205318825eee1893574c4fe80d46b5e880390"
+            },
+            "README.md.in": {
                 "size_bytes": 193,
                 "sha256_sum": "d1620c87fbc6164451ce4e7e3ec3754edfb0d87cd10b62a7fdaac5469b574ecc"
             },
@@ -156,6 +164,10 @@
                 "sha256_sum": "fdd78a909fb9384d869363522b967557bc9e28e5b65874921f24e48cbb82f38c"
             },
             "README.md": {
+                "size_bytes": 11222,
+                "sha256_sum": "3b09ca37cf4b5dfb38493ce2e4b97dbda776f385cbb071677ba3ef80f4eaa144"
+            },
+            "README.md.in": {
                 "size_bytes": 192,
                 "sha256_sum": "b54bbfe56a8ab4089414b3b00da581658b32839a2dbc758eb862cd4fa46f82a1"
             },
@@ -212,6 +224,10 @@
                 "sha256_sum": "19b4afb2e1c2c9f2cb07da14acd2d34098a4e11c13fccb09356845c4748fb50c"
             },
             "README.md": {
+                "size_bytes": 10980,
+                "sha256_sum": "73f1095131590fafb212ddd0c2509b0a0f545a375d604610cd689b9b38de069b"
+            },
+            "README.md.in": {
                 "size_bytes": 178,
                 "sha256_sum": "f8e51cdf7e7907ae3ac8ed45c017fb64aea318ae3e2eeb2d4259ed7e333f9c1f"
             },
@@ -269,6 +285,10 @@
                 "sha256_sum": "36ffd9dc085d529a7e60e1276d73ae5a030b020313e6c5408593a6ae2af39673"
             },
             "README.md": {
+                "size_bytes": 10978,
+                "sha256_sum": "8a3bee996a93e29e9cfb52a5b0942bab457c297c02a89d16c5d0302a1700dcec"
+            },
+            "README.md.in": {
                 "size_bytes": 193,
                 "sha256_sum": "e341ebb38ee231c19fc6b132058398725060bc62871a3de39552dea92e2282b2"
             },
@@ -318,6 +338,10 @@
                 "sha256_sum": "e052310c1e6d75057abe231ba94b7f2eedee1aec4a0c5c658c8151f6f8c05fd8"
             },
             "README.md": {
+                "size_bytes": 8252,
+                "sha256_sum": "1f933dc0567ebe930f57c6b04ba5822883ebfde6f096a8b8dabc6bc0f555ed73"
+            },
+            "README.md.in": {
                 "size_bytes": 199,
                 "sha256_sum": "9a7979350469d0819cb7cdd293f63a99ed29643782c5e435e70f8599c02a565a"
             },
@@ -362,6 +386,10 @@
                 "sha256_sum": "2fb2b744e6d96a2e3137d58121670b005718c736d5dde1832c99ff9073f64c00"
             },
             "README.md": {
+                "size_bytes": 8722,
+                "sha256_sum": "4dc0becfa9c1cabde18e9a7ec92251eba03deb9e6cbfcf03f8aca6afb4b7b2f0"
+            },
+            "README.md.in": {
                 "size_bytes": 155,
                 "sha256_sum": "2e6c39454c35910c6b48518523429ec2e4f27ae8eb763e311877a017db23d4da"
             },
@@ -411,6 +439,10 @@
                 "sha256_sum": "244ff21a910baf28bcb27b1975620a79d2be8611815ecc599f08eb06dd6f000e"
             },
             "README.md": {
+                "size_bytes": 8748,
+                "sha256_sum": "bb30e76f73c893c2595c866307c6f2e89eae7af0953ca6ee1f891ca8b46a9824"
+            },
+            "README.md.in": {
                 "size_bytes": 181,
                 "sha256_sum": "3d5ad2368b2e61a31679400322924eeb312c7b97e68a4fc127461bb6ef18bae5"
             },
@@ -485,6 +517,10 @@
                 "sha256_sum": "27a903cab1081b055dba1bcef7b543572318eb2f255ec8999103f368f845df24"
             },
             "README.md": {
+                "size_bytes": 8740,
+                "sha256_sum": "e24bd3a9f5d85d76f853b0708883c1317505569aa68b5d10c8eff7dd6ced598d"
+            },
+            "README.md.in": {
                 "size_bytes": 173,
                 "sha256_sum": "1240c01f4690ae5c9a758562cf61bcc63e83f38c9a553b6f12b7ac450df35d00"
             },
@@ -543,6 +579,10 @@
                 "sha256_sum": "2a380bafa00cc11ecae80f4a1c21f3873361bc9af1f23c8eecc255b143cdaf68"
             },
             "README.md": {
+                "size_bytes": 8750,
+                "sha256_sum": "2b8e4381c5b02d6b43a410ca92e5082436fa173faa3542a1c094968a0c03e384"
+            },
+            "README.md.in": {
                 "size_bytes": 183,
                 "sha256_sum": "43e5814f58fb743862bc7381d3a233b9060d766f8e5ef8336b3f5c4afc38e12e"
             },
@@ -590,6 +630,10 @@
                 "sha256_sum": "fdd78a909fb9384d869363522b967557bc9e28e5b65874921f24e48cbb82f38c"
             },
             "README.md": {
+                "size_bytes": 8771,
+                "sha256_sum": "0aa08f87b51949e126e10add95c155c510f0dca0901c14b4ae061129804d20c5"
+            },
+            "README.md.in": {
                 "size_bytes": 204,
                 "sha256_sum": "bbfa383da209e57d7432ff5a3f6fc2eb4f751f469fda7fa556fef361646ee814"
             },
@@ -648,6 +692,10 @@
                 "sha256_sum": "b351fdf5bbec1e011fd4c09ed1af05df6fd7de2e679fd7a92e6ec4398c38e3ff"
             },
             "README.md": {
+                "size_bytes": 8746,
+                "sha256_sum": "dc83138aadb92d5bd8ea685d9eead1517826973b5a6c4183222cbfa935a35eaa"
+            },
+            "README.md.in": {
                 "size_bytes": 179,
                 "sha256_sum": "7e482c32766c0f0612ade79a7255b39da2852cba14d8ad170458fe8b0816e449"
             },
@@ -814,6 +862,10 @@
                 "sha256_sum": "f5b244982699ca9fe5cc8fa8a7c08cf5dee5d3a0c8896892899e5df13316e1b7"
             },
             "README.md": {
+                "size_bytes": 6496,
+                "sha256_sum": "f57c00eaa945a8717e0244670b9ff8c3d4a6e57803e212d42f9621dd8452c5ab"
+            },
+            "README.md.in": {
                 "size_bytes": 192,
                 "sha256_sum": "2140442eaefadcc0162caae3db531fcd6a8070068087499101ec7f7d49f236bb"
             },
@@ -863,6 +915,10 @@
                 "sha256_sum": "fdd78a909fb9384d869363522b967557bc9e28e5b65874921f24e48cbb82f38c"
             },
             "README.md": {
+                "size_bytes": 8696,
+                "sha256_sum": "b5ffa9a3c40c2038c2612056d57894542f18c90cb7295dce7df681e563337073"
+            },
+            "README.md.in": {
                 "size_bytes": 194,
                 "sha256_sum": "3c145192b7b2705be8c92424db01286a2ba003fac65448fc495e4fff7b121376"
             },
@@ -917,6 +973,10 @@
                 "sha256_sum": "958246282e394a96727515ee6d834073ea09314be61a5730d03bf6d540ae0c26"
             },
             "README.md": {
+                "size_bytes": 6902,
+                "sha256_sum": "bf8329b788df6cb2ad25204e583c890117d74abb17d799450d568ee2ddb01727"
+            },
+            "README.md.in": {
                 "size_bytes": 145,
                 "sha256_sum": "b7a0d433277c03526bfd3d116f0b8ba25b8f41baa8abf744291c8847f89d1fdd"
             },
@@ -960,6 +1020,10 @@
                 "sha256_sum": "e052310c1e6d75057abe231ba94b7f2eedee1aec4a0c5c658c8151f6f8c05fd8"
             },
             "README.md": {
+                "size_bytes": 6912,
+                "sha256_sum": "e7499effb83766a5d1df28ceb07e78a80fc570c8d93bcfd7cba108686e6403fb"
+            },
+            "README.md.in": {
                 "size_bytes": 215,
                 "sha256_sum": "061335c2aa8f9f2126a80ecd8f6635e85e8ace7a9a37950f9b808420f8233345"
             },
@@ -1005,6 +1069,10 @@
                 "sha256_sum": "fdd78a909fb9384d869363522b967557bc9e28e5b65874921f24e48cbb82f38c"
             },
             "README.md": {
+                "size_bytes": 8378,
+                "sha256_sum": "a55bc9a98bb48ee574662e60a7837ba3d2efbb72e30de1d90b59a3f217745788"
+            },
+            "README.md.in": {
                 "size_bytes": 192,
                 "sha256_sum": "cea70c7d84bd5f85607efd4545825a36f6117106e2deb8b00cdb923f550670e8"
             },
@@ -1065,6 +1133,10 @@
                 "sha256_sum": "b34e17103bfb246f2549fc82a279e6ba28834e0cb42f76a92efc14b72e3a3723"
             },
             "README.md": {
+                "size_bytes": 8360,
+                "sha256_sum": "005c4090d7eea4730d4f1706d67a8780b59ac31653046a87469d33c0be39ff6e"
+            },
+            "README.md.in": {
                 "size_bytes": 174,
                 "sha256_sum": "00ea65658e20fd3301f95f0909eb46c8c54ba377bb6b00032e318ede7c543dca"
             },
@@ -1114,6 +1186,10 @@
                 "sha256_sum": "635554793cdae1fbc549793a1565772c763e64a686dc674edeaa492c5b88e493"
             },
             "README.md": {
+                "size_bytes": 8372,
+                "sha256_sum": "706de33a9ed3088c33b14724b76196a1cafbe774f82d88afcfc4ac5909489e54"
+            },
+            "README.md.in": {
                 "size_bytes": 186,
                 "sha256_sum": "5722e7135a6487a7e88158aac85a490e155742e85fa4953d426d2f7884359475"
             },
@@ -1161,6 +1237,10 @@
                 "sha256_sum": "244ff21a910baf28bcb27b1975620a79d2be8611815ecc599f08eb06dd6f000e"
             },
             "README.md": {
+                "size_bytes": 10416,
+                "sha256_sum": "d470d8a3f5ba47e2d6a15dd527a52478c74381e30c512dc87ed8559ebb209aa3"
+            },
+            "README.md.in": {
                 "size_bytes": 171,
                 "sha256_sum": "20c513163ecf0efe6f9c6b9c0eb755dee7ac5cc568030186365378828aa641ac"
             },
@@ -1206,6 +1286,58 @@
             "gu_IN/cmu-indic"
         ]
     },
+    "ha_NE/openbible_low": {
+        "files": {
+            "ALIASES": {
+                "size_bytes": 25,
+                "sha256_sum": "128b9ee3fa7be867fb9510a8aa4f65c6dd383e71f284234ae07cbdb9655b570c"
+            },
+            "LICENSE": {
+                "size_bytes": 47,
+                "sha256_sum": "66c7d5ffb877d922bbb9a0757271912d6d826dd9a71d3118c6ebfc86ea8057a7"
+            },
+            "README.md": {
+                "size_bytes": 6216,
+                "sha256_sum": "c64d626700c567a888fb67fc0bf9a739d6fd837fd7be69f0c0b5ad4bd5809736"
+            },
+            "README.md.in": {
+                "size_bytes": 154,
+                "sha256_sum": "a6a406bf69d63ac540f18d8ae26f7ec6bfafcc959b69e5ad7a3e6e3087f44f7b"
+            },
+            "SOURCE": {
+                "size_bytes": 20,
+                "sha256_sum": "2503f1c33c0de5406475f086e362e7329d743b1875bb9dffcd2593a2aebecf9d"
+            },
+            "VERSION": {
+                "size_bytes": 6,
+                "sha256_sum": "e9dd8507f4bf0c6f42458e41aea833ad0bd3f6127272335eee9bf4d58541ed67"
+            },
+            "config.json": {
+                "size_bytes": 3783,
+                "sha256_sum": "3523683c9e7b2e8ab9ac59df03c3056badec19c2486777542d8770e25e934649"
+            },
+            "generator.onnx": {
+                "size_bytes": 62784535,
+                "sha256_sum": "3ff621f9ca365392bb364326ac8627e68b5074fc762ce7439299764691c107af"
+            },
+            "phoneme_map.txt": {
+                "size_bytes": 13,
+                "sha256_sum": "60a39567a73406073280afb35cb299d533d46db5ebea63e56014c1644d024cc7"
+            },
+            "phonemes.txt": {
+                "size_bytes": 198,
+                "sha256_sum": "52d13554c0334dd41057ecfd136c798ffc736851e2bbeb51aca48b9bb2932224"
+            }
+        },
+        "speakers": [],
+        "properties": {},
+        "version": "0.1.0",
+        "aliases": [
+            "ha",
+            "ha_NE",
+            "ha_NE/openbible"
+        ]
+    },
     "hu_HU/diana-majlinger_low": {
         "files": {
             "ALIASES": {
@@ -1217,6 +1349,10 @@
                 "sha256_sum": "e052310c1e6d75057abe231ba94b7f2eedee1aec4a0c5c658c8151f6f8c05fd8"
             },
             "README.md": {
+                "size_bytes": 7807,
+                "sha256_sum": "fb6a97fdf7619e994b2273780483f4aa886800b03a4e842debae57a9c3fa6d58"
+            },
+            "README.md.in": {
                 "size_bytes": 215,
                 "sha256_sum": "766b65cc2fd22f02cf3e220876b25dfc7354a25a055f43ec1b9efb4f6eab8726"
             },
@@ -1262,6 +1398,10 @@
                 "sha256_sum": "e133cf7dafe75a1763bd79fd3dc16859d9bfef17b5687c37eab1c88b7f5d12ca"
             },
             "README.md": {
+                "size_bytes": 7869,
+                "sha256_sum": "47ce54dee7411c2911b0cbb91dd495ef7e052c01d53eca323819d2dcc378a95d"
+            },
+            "README.md.in": {
                 "size_bytes": 150,
                 "sha256_sum": "7a8f7a21659afc8efbca65dee85bbfc29318b7b787c9ff6194b0d262f8a56214"
             },
@@ -1352,6 +1492,10 @@
                 "sha256_sum": "fdd78a909fb9384d869363522b967557bc9e28e5b65874921f24e48cbb82f38c"
             },
             "README.md": {
+                "size_bytes": 7920,
+                "sha256_sum": "eb2620eae22bb5a5d4163eedbaa724d904c59863a08e51cdf525b1fbec3b5f18"
+            },
+            "README.md.in": {
                 "size_bytes": 201,
                 "sha256_sum": "9b7125e8de3ad26f4f81acf4cbfa8f27b7f991a91d6750a6653d117c9e25775b"
             },
@@ -1401,6 +1545,10 @@
                 "sha256_sum": "4533bcb40f5e7fad75239766ebd738c6f9c99e08dea2905748d703b7fb892511"
             },
             "README.md": {
+                "size_bytes": 6945,
+                "sha256_sum": "1b2a0a928d4b146004feb52f63070a2b370fe8ec855e57549812f224d070120a"
+            },
+            "README.md.in": {
                 "size_bytes": 187,
                 "sha256_sum": "fc78c74da4c66a8f5d3257208f1fb76427ad05b172c0a97019128a731e9b6962"
             },
@@ -1493,6 +1641,10 @@
                 "sha256_sum": "e052310c1e6d75057abe231ba94b7f2eedee1aec4a0c5c658c8151f6f8c05fd8"
             },
             "README.md": {
+                "size_bytes": 8584,
+                "sha256_sum": "a9f4f5112267619fb4f20c004c0645ec3bb6a902317379246fe5cda98a3bc1ac"
+            },
+            "README.md.in": {
                 "size_bytes": 191,
                 "sha256_sum": "91fe70211181048b0afba60aae1e7fd90661e90176590ffbcf4f868f3d6608d3"
             },
@@ -1538,6 +1690,10 @@
                 "sha256_sum": "4533bcb40f5e7fad75239766ebd738c6f9c99e08dea2905748d703b7fb892511"
             },
             "README.md": {
+                "size_bytes": 10402,
+                "sha256_sum": "87e2e38e0abde54baad99be22d9f0eb415c9a967312b78a2b45ccf9f990485ca"
+            },
+            "README.md.in": {
                 "size_bytes": 156,
                 "sha256_sum": "f018d28bc71d61d1dfc43824097351e5e3d5c5d78b468badaf6bc0d1f52bdddd"
             },
@@ -1609,6 +1765,10 @@
                 "sha256_sum": "e052310c1e6d75057abe231ba94b7f2eedee1aec4a0c5c658c8151f6f8c05fd8"
             },
             "README.md": {
+                "size_bytes": 11651,
+                "sha256_sum": "b3fe43498ec9178cc5c3166ae83eef5a6caf40a3601cc7a267b97fcfa2330044"
+            },
+            "README.md.in": {
                 "size_bytes": 201,
                 "sha256_sum": "028b261e4147010ecea7cc4b732c3c6624843b7df5411d67b25a26e8fae64dfb"
             },
@@ -1656,6 +1816,10 @@
                 "sha256_sum": "7179683e8000e6bdc9bbc60d85edf0a4ac8e76f951857f54fcb775d5886f1309"
             },
             "README.md": {
+                "size_bytes": 11418,
+                "sha256_sum": "5c4665960791f470169e89ea87b7d042f22b264a1f8632764c1a4e2c2f30da7f"
+            },
+            "README.md.in": {
                 "size_bytes": 186,
                 "sha256_sum": "c8e38927cdae75058269215c1298980f17ab5128a51f163c72349f09e440c442"
             },
@@ -1703,6 +1867,10 @@
                 "sha256_sum": "7179683e8000e6bdc9bbc60d85edf0a4ac8e76f951857f54fcb775d5886f1309"
             },
             "README.md": {
+                "size_bytes": 11630,
+                "sha256_sum": "be912f1a9ed0a250c5b6144016e789da3333e68fb3bd97eafca8fd9d4b6c2f35"
+            },
+            "README.md.in": {
                 "size_bytes": 180,
                 "sha256_sum": "15e74dbbdadc8bf7c3a84b1b130f6e5df5f37ffe82880703b27d92e11cff1af8"
             },
@@ -1750,6 +1918,10 @@
                 "sha256_sum": "958246282e394a96727515ee6d834073ea09314be61a5730d03bf6d540ae0c26"
             },
             "README.md": {
+                "size_bytes": 11575,
+                "sha256_sum": "05349cb4b711b0258cc82f7662ac628213ec486b9f2d387961dce809fb78d28e"
+            },
+            "README.md.in": {
                 "size_bytes": 125,
                 "sha256_sum": "446fd89e442b615b351f105b9f75745608c327e9e13a67bed0eca9a4785b932e"
             },
@@ -1796,6 +1968,10 @@
                 "sha256_sum": "7179683e8000e6bdc9bbc60d85edf0a4ac8e76f951857f54fcb775d5886f1309"
             },
             "README.md": {
+                "size_bytes": 11617,
+                "sha256_sum": "5cbf4c7abeedce0bf6df8449b849c1f168d0262ce7685b8349c1e6490ff3bac1"
+            },
+            "README.md.in": {
                 "size_bytes": 167,
                 "sha256_sum": "4260521a828b09a25a29fb3ffa3ff57b816452e925b9feae528796ffb5d1f0f8"
             },
@@ -1844,6 +2020,10 @@
                 "sha256_sum": "fdd78a909fb9384d869363522b967557bc9e28e5b65874921f24e48cbb82f38c"
             },
             "README.md": {
+                "size_bytes": 8624,
+                "sha256_sum": "96789ebcd62d001bc91c6b63914e720400b153d0e93479284da531f741d92fb9"
+            },
+            "README.md.in": {
                 "size_bytes": 192,
                 "sha256_sum": "b78139a85d9fb800852437309e81bc214287365a5adc388a9200f6520c7a249b"
             },
@@ -1895,6 +2075,10 @@
                 "sha256_sum": "3a821bb9177dbc8920ca2667a8d053db86d8df26eeba2b675800e77a36a3c41e"
             },
             "README.md": {
+                "size_bytes": 8597,
+                "sha256_sum": "5b47c5ab79710ea9ec2e9f046d198bebe7004dbc72dbb2f5678c0c40389ed1db"
+            },
+            "README.md.in": {
                 "size_bytes": 266,
                 "sha256_sum": "f2a1a1aecc439fefb59879481dc659eb532d7cbf4e417829f68543e5379cabdc"
             },
@@ -1970,6 +2154,14 @@
                 "size_bytes": 0,
                 "sha256_sum": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
             },
+            "README.md": {
+                "size_bytes": 6620,
+                "sha256_sum": "5d77e40f4d71568e2c78afda77fb76370b02d20c639bbaf380b622d1c9ec9251"
+            },
+            "README.md.in": {
+                "size_bytes": 189,
+                "sha256_sum": "e6a59678860f2964278ee26cf4a348330c57506e3e1326e86a1626a4ded61a98"
+            },
             "SOURCE": {
                 "size_bytes": 48,
                 "sha256_sum": "1553a74483d9094830d5d249ed6db286eb52f0e7057f0b903efd8c45656bcfeb"
@@ -2010,6 +2202,10 @@
                 "sha256_sum": "244ff21a910baf28bcb27b1975620a79d2be8611815ecc599f08eb06dd6f000e"
             },
             "README.md": {
+                "size_bytes": 8002,
+                "sha256_sum": "442c897f03c5ee68ff0069fca949c1b55d5450fd9f8fcb9ac44fd2e48411a6b7"
+            },
+            "README.md.in": {
                 "size_bytes": 162,
                 "sha256_sum": "19ee27d0ac6dbcc337a39ff442a13cd04302594e648877c82ed6a01f43400f3f"
             },
@@ -2066,6 +2262,10 @@
                 "sha256_sum": "9de32c12fbae55d90964a887d50116a3369962799532fcd7663d32f55c1945fe"
             },
             "README.md": {
+                "size_bytes": 8996,
+                "sha256_sum": "5ec6d473e917972dcfa760394d53118f7b07ef9df8fe9bd8199aaedaf804542f"
+            },
+            "README.md.in": {
                 "size_bytes": 184,
                 "sha256_sum": "8f55845c87eb5f01af3cf686247ca3807c94e27cb3a021c8f5a61eb40bfb4ecc"
             },
@@ -2145,6 +2345,10 @@
                 "sha256_sum": "fdd78a909fb9384d869363522b967557bc9e28e5b65874921f24e48cbb82f38c"
             },
             "README.md": {
+                "size_bytes": 4280,
+                "sha256_sum": "54080057a6aeb0fd6132ecbc5a0a0cbe1820df142d083e191a47b304fb732ea5"
+            },
+            "README.md.in": {
                 "size_bytes": 198,
                 "sha256_sum": "d399789ee16b4610af50b3316cb1a9281f37002728fc1185e0690840be2bd58b"
             },
@@ -2204,6 +2408,10 @@
                 "sha256_sum": "0792914b42cbac29cb2ca5e729be0e7f959786ead4c1c31c027aca9a0a108c02"
             },
             "README.md": {
+                "size_bytes": 9270,
+                "sha256_sum": "e9f3197135293d6da82870c612736ba4ec9ec5acdad277e713ce6e092608fb2c"
+            },
+            "README.md.in": {
                 "size_bytes": 222,
                 "sha256_sum": "9dea8ff0cccc3d16343badf88c7b9a3383f78320fda0fdbf6ab23128a8dee81e"
             },
@@ -2237,76 +2445,55 @@
             "vi_VN/vais1000"
         ]
     },
-    "yo/crowdsourced_low": {
+    "yo/openbible_low": {
         "files": {
             "ALIASES": {
-                "size_bytes": 19,
-                "sha256_sum": "e24be3f6241b7debefab846ee90145c04f1868f38df4e03fa9dad677d9e1e367"
+                "size_bytes": 16,
+                "sha256_sum": "a222bbf030390a8a3b7da14fe96910936757b0cc9c0ad4dd6d4049c9c2e1a1f4"
             },
             "LICENSE": {
-                "size_bytes": 20141,
-                "sha256_sum": "884c02e0d3e811e912507288e4d77a441e9b4e16b39b12963c8dc7de4e2e1fbe"
+                "size_bytes": 47,
+                "sha256_sum": "66c7d5ffb877d922bbb9a0757271912d6d826dd9a71d3118c6ebfc86ea8057a7"
             },
             "README.md": {
-                "size_bytes": 166,
-                "sha256_sum": "ec78bc0786a17727183db9542b2cc116dfbf25ea17c5e269d0eba614192e26ae"
+                "size_bytes": 6892,
+                "sha256_sum": "50d77d5bcbda8bd343ea40e01985075cc07ede7264749eb5b5070972fec67d1f"
+            },
+            "README.md.in": {
+                "size_bytes": 156,
+                "sha256_sum": "0f4177ce07c49ae2f881174b05600c01c508bde7d69b713952db2493bf00df40"
             },
             "SOURCE": {
-                "size_bytes": 27,
-                "sha256_sum": "1506dd4714f1c2c4bf89462047b7e18ff8d9827139b8579b97daa2049ca0be6f"
+                "size_bytes": 20,
+                "sha256_sum": "2503f1c33c0de5406475f086e362e7329d743b1875bb9dffcd2593a2aebecf9d"
             },
             "VERSION": {
                 "size_bytes": 6,
                 "sha256_sum": "e9dd8507f4bf0c6f42458e41aea833ad0bd3f6127272335eee9bf4d58541ed67"
             },
             "config.json": {
-                "size_bytes": 4459,
-                "sha256_sum": "7ac9855af01f14c3cd39f6900c02c9c3400024115ae122806fdcaa76d009e2bc"
+                "size_bytes": 4498,
+                "sha256_sum": "197df1b90092e160ed6ff827059e89380a2ab3dc2e3fc3e141634850a523b6d2"
             },
             "generator.onnx": {
-                "size_bytes": 76366177,
-                "sha256_sum": "4131039fffce758b324f470b945ae2340adf96cfcdb84e63432cc530d2347b29"
+                "size_bytes": 62789911,
+                "sha256_sum": "08ef1a066409d74d8c5b5d02e6d0aa62d1d039a4cabcfafa85759560ecc53876"
+            },
+            "phoneme_map.txt": {
+                "size_bytes": 13,
+                "sha256_sum": "60a39567a73406073280afb35cb299d533d46db5ebea63e56014c1644d024cc7"
             },
             "phonemes.txt": {
-                "size_bytes": 264,
-                "sha256_sum": "b3e736f3bc709f656acf455e44e71cf2f5928f561824a767befac6ee03e70efc"
-            },
-            "speaker_map.csv": {
-                "size_bytes": 450,
-                "sha256_sum": "3681f4e57befc5f7f8fa6b43ae934eba7023a685e28543cc65faeac4416fe9a2"
-            },
-            "speakers.txt": {
-                "size_bytes": 140,
-                "sha256_sum": "11fbe32b51d47788be3d55da548efa3b38d03a4d22e2ad7287833cfbef33f294"
+                "size_bytes": 237,
+                "sha256_sum": "22c59f66d54959358ca82e3449402d7fa65fd0d09d46534be00631a72ec35c87"
             }
         },
-        "speakers": [
-            "00295",
-            "02484",
-            "01208",
-            "03034",
-            "08784",
-            "02121",
-            "06136",
-            "04310",
-            "03397",
-            "07508",
-            "09334",
-            "08421",
-            "02436",
-            "07049",
-            "07505",
-            "00610",
-            "09697",
-            "05223",
-            "01523",
-            "03349"
-        ],
+        "speakers": [],
         "properties": {},
         "version": "0.1.0",
         "aliases": [
             "yo",
-            "yo/crowdsourced"
+            "yo/openbible"
         ]
     }
 }

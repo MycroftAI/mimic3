@@ -173,6 +173,7 @@ class PhonemesConfig(DataClassJsonMixin):
     minor_break: typing.Optional[str] = IPA.BREAK_MINOR.value
     major_break: typing.Optional[str] = IPA.BREAK_MAJOR.value
     break_phonemes_into_graphemes: bool = False
+    break_phonemes_into_codepoints: bool = False
     drop_stress: bool = False
     symbols: typing.Optional[typing.List[str]] = None
 

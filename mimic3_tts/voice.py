@@ -34,7 +34,7 @@ from gruut_ipa import IPA
 
 from .config import Phonemizer, TrainingConfig
 from .const import DEFAULT_RATE
-from .utils import audio_float_to_int16
+from .utils import audio_float_to_int16, to_codepoints
 
 # -----------------------------------------------------------------------------
 
@@ -180,12 +180,7 @@ class Mimic3Voice(metaclass=ABCMeta):
         text_array = np.expand_dims(np.array(phoneme_ids, dtype=np.int64), 0)
         text_lengths_array = np.array([text_array.shape[1]], dtype=np.int64)
         scales_array = np.array(
-            [
-                noise_scale,
-                length_scale,
-                noise_w,
-            ],
-            dtype=np.float32,
+            [noise_scale, length_scale, noise_w,], dtype=np.float32,
         )
 
         inputs = {
@@ -524,7 +519,7 @@ class EspeakVoice(Mimic3Voice):
                     sent_phonemes = []
 
             if sent_phonemes:
-                yield sent_phonemes, BreakType.MAJOR
+                yield sent_phonemes, BreakType.NONE
         else:
             # No split
             yield all_word_phonemes, BreakType.UTTERANCE
@@ -735,9 +730,15 @@ class EpitranVoice(Mimic3Voice):
             self._epis[text_language] = epi
 
         phoneme_str = epi.transliterate(text)
-        all_word_phonemes = [
-            list(IPA.graphemes(wp_str)) for wp_str in phoneme_str.split()
-        ]
+
+        if self.config.phonemes.break_phonemes_into_codepoints:
+            all_word_phonemes = [
+                list(to_codepoints(wp_str)) for wp_str in phoneme_str.split()
+            ]
+        else:
+            all_word_phonemes = [
+                list(IPA.graphemes(wp_str)) for wp_str in phoneme_str.split()
+            ]
 
         minor_break = self.config.phonemes.minor_break
         major_break = self.config.phonemes.major_break

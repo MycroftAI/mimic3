@@ -17,6 +17,7 @@
 import hashlib
 import re
 import typing
+import unicodedata
 
 import numpy as np
 
@@ -61,3 +62,8 @@ def file_sha256_sum(fp: typing.BinaryIO, block_bytes: int = 4096) -> str:
         block = fp.read(block_bytes)
 
     return current_hash.hexdigest()
+
+
+def to_codepoints(s: str) -> typing.List[str]:
+    """Split string into a list of codepoints"""
+    return list(unicodedata.normalize("NFC", s))
