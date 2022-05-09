@@ -180,7 +180,12 @@ class Mimic3Voice(metaclass=ABCMeta):
         text_array = np.expand_dims(np.array(phoneme_ids, dtype=np.int64), 0)
         text_lengths_array = np.array([text_array.shape[1]], dtype=np.int64)
         scales_array = np.array(
-            [noise_scale, length_scale, noise_w,], dtype=np.float32,
+            [
+                noise_scale,
+                length_scale,
+                noise_w,
+            ],
+            dtype=np.float32,
         )
 
         inputs = {

@@ -28,11 +28,9 @@ from urllib.error import HTTPError
 
 from ._resources import _PACKAGE, _VOICES
 from .const import DEFAULT_VOICES_DOWNLOAD_DIR, DEFAULT_VOICES_URL_FORMAT
-from .utils import file_sha256_sum, wildcard_to_regex
+from .utils import WILDCARD, file_sha256_sum, wildcard_to_regex
 
 _LOGGER = logging.getLogger(__name__)
-
-_WILDCARD = "*"
 
 # -----------------------------------------------------------------------------
 
@@ -193,7 +191,7 @@ def main(argv=None):
         sys.exit(0)
 
     args.key = [
-        wildcard_to_regex(key, wildcard=_WILDCARD) if _WILDCARD in key else key
+        wildcard_to_regex(key, wildcard=WILDCARD) if WILDCARD in key else key
         for key in args.key
     ]
 

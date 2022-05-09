@@ -17,6 +17,7 @@
 import audioop
 import itertools
 import logging
+import re
 import typing
 from copy import deepcopy
 from dataclasses import dataclass, field
@@ -48,6 +49,7 @@ from .const import (
     DEFAULT_VOLUME,
 )
 from .download import VoiceFile, download_voice
+from .utils import WILDCARD, wildcard_to_regex
 from .voice import SPEAKER_TYPE, BreakType, Mimic3Voice
 
 _DIR = Path(__file__).parent
@@ -282,8 +284,30 @@ class Mimic3TextToSpeechSystem(TextToSpeechSystem):
             )
 
     def preload_voice(self, voice_key: str):
-        """Ensure voice is loaded in memory before synthesis"""
-        self._get_or_load_voice(voice_key)
+        """Ensure voice(s) are loaded in memory before synthesis.
+
+        Voice key may contain wildcards (*).
+        """
+        voice_keys = []
+
+        if WILDCARD in voice_key:
+            key_or_pattern = wildcard_to_regex(voice_key, wildcard=WILDCARD)
+            if isinstance(key_or_pattern, re.Pattern):
+                # Wildcards
+                for maybe_key in _VOICES.keys():
+                    if key_or_pattern.match(maybe_key):
+                        voice_keys.append(maybe_key)
+
+                _LOGGER.debug("%s matched %s", key_or_pattern, voice_keys)
+            else:
+                # Didn't contain wildcards
+                voice_keys.append(voice_key)
+        else:
+            # No wildcards
+            voice_keys.append(voice_key)
+
+        for key_to_load in voice_keys:
+            self._get_or_load_voice(key_to_load)
 
     # -------------------------------------------------------------------------
 

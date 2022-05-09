@@ -21,6 +21,8 @@ import unicodedata
 
 import numpy as np
 
+WILDCARD = "*"
+
 
 def audio_float_to_int16(
     audio: np.ndarray, max_wav_value: float = 32767.0
