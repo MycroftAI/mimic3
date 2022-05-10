@@ -296,17 +296,19 @@ def get_app(args: argparse.Namespace, request_queue: Queue, temp_dir: str):
         return Response(wav_bytes, mimetype="audio/wav")
 
     # Swagger UI
-    try:
-        api_doc(
-            app,
-            config_path=_DIR / "swagger.yaml",
-            url_prefix="/openapi",
-            title="Mimic 3",
-        )
-    except Exception:
-        # Fails with PyInstaller for some reason
-        _LOGGER.exception("Error setting up swagger UI page")
-        show_openapi = False
+    show_openapi = not args.no_show_openapi
+    if show_openapi:
+        try:
+            api_doc(
+                app,
+                config_path=_DIR / "swagger.yaml",
+                url_prefix="/openapi",
+                title="Mimic 3",
+            )
+        except Exception:
+            # Fails with PyInstaller for some reason
+            _LOGGER.exception("Error setting up swagger UI page")
+            show_openapi = False
 
     @app.errorhandler(Exception)
     async def handle_error(err) -> typing.Tuple[str, int]:
