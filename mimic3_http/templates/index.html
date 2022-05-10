@@ -101,6 +101,9 @@
                     <select id="speaker-list" name="speaker">
                     </select>
                 </div>
+                <div class="col">
+                    <button id="copy-voice" class="btn btn-info btn-sm" title="Copy voice key to clipboard">Copy</button>
+                </div>
             </div>
             <div id="audio-message" class="row mt-3" hidden>
                 <div class="col">
@@ -430,12 +433,26 @@
                  })
          }
 
+        function copyVoiceKey() {
+            var voiceName = q('#voice-name')
+            var speakerList = q('#speaker-list')
+
+            var voiceKey = voiceName.options[voiceName.selectedIndex].value
+            if (speakerList.options.length > 1) {
+                voiceKey += '#' + speakerList.options[speakerList.selectedIndex].value
+            }
+             
+
+            navigator.clipboard.writeText(voiceKey)
+        }
+
          window.addEventListener('load', function() {
              loadVoices()
 
              q('#voice-language').addEventListener('change', langChanged)
              q('#voice-name').addEventListener('change', nameChanged)
 
+             q('#copy-voice').addEventListener('click', copyVoiceKey)
          })
         </script>
 
