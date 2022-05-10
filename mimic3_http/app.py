@@ -36,6 +36,7 @@ from quart import (
 from swagger_ui import api_doc
 
 from mimic3_tts import DEFAULT_VOICE, Mimic3Settings, Mimic3TextToSpeechSystem
+from mimic3_tts.utils import LANG_NAMES
 
 from ._resources import _DIR, _PACKAGE
 from .args import _MISSING
@@ -157,6 +158,7 @@ def get_app(args: argparse.Namespace, request_queue: Queue, temp_dir: str):
             "index.html",
             show_openapi=show_openapi,
             max_text_length=args.max_text_length,
+            default_voice=args.default_voice,
         )
 
     @app.route("/api/tts", methods=["GET", "POST"])
@@ -225,9 +227,26 @@ def get_app(args: argparse.Namespace, request_queue: Queue, temp_dir: str):
 
     @app.route("/api/voices", methods=["GET"])
     async def api_voices():
-        voices_dict = {v.key: v for v in _MIMIC3.get_voices()}
-        voices = sorted(voices_dict.values(), key=lambda v: v.key)
-        return jsonify([dataclasses.asdict(v) for v in voices])
+        voices_by_key = {v.key: v for v in _MIMIC3.get_voices()}
+        sorted_voices = sorted(voices_by_key.values(), key=lambda v: v.key)
+        voice_dicts = [dataclasses.asdict(v) for v in sorted_voices]
+
+        # Add more fields to voices
+        for voice_dict in voice_dicts:
+            voice_lang = voice_dict["language"]
+            lang_name = LANG_NAMES.get(voice_lang, voice_lang)
+
+            if isinstance(lang_name, str):
+                # Native and English language name are the same
+                native_lang, english_lang = lang_name, lang_name
+            else:
+                # Native and English language name are different
+                native_lang, english_lang = lang_name
+
+            voice_dict["language_native"] = native_lang
+            voice_dict["language_english"] = english_lang
+
+        return jsonify(voice_dicts)
 
     @app.route("/process", methods=["GET", "POST"])
     async def api_process():

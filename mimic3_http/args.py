@@ -87,6 +87,10 @@ def get_args(argv=None) -> argparse.Namespace:
         help="Maximum length of input text to process (default: no limit)",
     )
     parser.add_argument(
+        "--default-voice",
+        help="Default voice key to select in web interface",
+    )
+    parser.add_argument(
         "--debug", action="store_true", help="Print DEBUG messages to console"
     )
     parser.add_argument(

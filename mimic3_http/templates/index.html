@@ -87,8 +87,13 @@
             </div>
             <div class="row mt-3">
                 <div class="col-auto">
-                    <label for="voice-list" title="Voice name">Voice:</label>
-                    <select id="voice-list" name="voices">
+                    <label for="voice-language" title="Voice language">Language:</label>
+                    <select id="voice-language" name="voice-language">
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <label for="voice-name" title="Voice name">Name:</label>
+                    <select id="voice-name" name="voice-name">
                     </select>
                 </div>
                 <div class="col-auto">
@@ -246,8 +251,8 @@
          q('#speak-button').addEventListener('click', do_tts)
 
          async function synthesize(text) {
-             var voiceList = q('#voice-list')
-             var voice = voiceList.options[voiceList.selectedIndex].value
+             var voiceName = q('#voice-name')
+             var voice = voiceName.options[voiceName.selectedIndex].value
 
              var noiseScale = q('#noise-scale').value || '0.667'
              var noiseW = q('#noise-w').value || '0.8'
@@ -289,8 +294,52 @@
              }
          }
 
-         function voiceChanged() {
-             var voiceList = q('#voice-list')
+         function langChanged(indexToSelect) {
+             // Called when voice language is changed
+
+             // If set, select a specific language by index
+             indexToSelect = indexToSelect === undefined ? -1 : indexToSelect
+             
+             var voiceLang = q('#voice-language')
+
+             // Reset names
+             var voiceName = q('#voice-name')
+             for (var i = voiceName.options.length - 1; i >= 0; i--) {
+                 voiceName.options[i].remove()
+             }
+
+             if (indexToSelect >= 0) {
+                 // Select specific language
+                 voiceLang.selectedIndex = indexToSelect
+             }
+
+             var selectedLang = voiceLang.options[voiceLang.selectedIndex].value
+             var nameIndexToSelect = -1
+
+             Object.values(voicesInfo).forEach(function(voice) {
+                 if (voice.language == selectedLang) {
+                     voiceName.insertAdjacentHTML(
+                         'beforeend', '<option value="' + voice.key + '">' + voice.name + '</option>'
+                     )
+
+                     if ((indexToSelect >= 0) && (voice.key == '{{ default_voice }}')) {
+                         // Record voice name index to select
+                         nameIndexToSelect = voiceName.options.length - 1                         
+                     }
+                 }
+             })
+                 
+             // Trigger voice name change
+             nameChanged(nameIndexToSelect)
+         }
+
+         function nameChanged(indexToSelect) {
+             // Called when voice name is changed
+
+             // If set, select a specific voice by index
+             indexToSelect = indexToSelect === undefined ? -1 : indexToSelect
+
+             var voiceName = q('#voice-name')
 
              // Reset audio
              q('#audio-message').hidden = true
@@ -304,7 +353,12 @@
                  speakerList.options[i].remove()
              }
 
-             var voiceKey = voiceList.options[voiceList.selectedIndex].value
+             if (indexToSelect >= 0) {
+                 // Select a specific voice by index
+                 voiceName.selectedIndex = indexToSelect
+             }
+
+             var voiceKey = voiceName.options[voiceName.selectedIndex].value
              var voice = voicesInfo[voiceKey]
 
              if (voice.speakers && voice.speakers.length > 0) {
@@ -329,16 +383,21 @@
              }
          }
 
-         q('#voice-list').addEventListener('change', voiceChanged)
-
          function loadVoices() {
              voicesInfo = {}
 
              // Remove previous voices
-             var voiceList = q('#voice-list')
-             for (var i = voiceList.options.length - 1; i >= 0; i--) {
-                 voiceList.options[i].remove()
+             var voiceLang = q('#voice-language')
+             for (var i = voiceLang.options.length - 1; i >= 0; i--) {
+                 voiceLang.options[i].remove()
              }
+
+             var voiceName = q('#voice-name')
+             for (var i = voiceName.options.length - 1; i >= 0; i--) {
+                 voiceName.options[i].remove()
+             }
+
+             var langs = new Set();
 
              fetch('api/voices')
                  .then(function(res) {
@@ -352,12 +411,19 @@
 
                      voices.forEach(function(voice) {
                          voicesInfo[voice.key] = voice
-                         voiceList.insertAdjacentHTML(
-                             'beforeend', '<option value="' + voice.key + '">' + voice.language + '/' + voice.name + '</option>'
-                         )
+                         if (!langs.has(voice.language)) {
+                             voiceLang.insertAdjacentHTML(
+                                 'beforeend', '<option value="' + voice.language + '" title="' + voice.language_english + '">' + voice.language_native + '</option>'
+                             )
+                             langs.add(voice.language)                            
+                         }
+
+                         if (voice.key == '{{ default_voice }}') {
+                             indexToSelect = voiceLang.options.length - 1
+                         }
                      })
 
-                     voiceChanged()
+                     langChanged(indexToSelect)
                  }).catch(function(err) {
                      q('#message').textContent = 'Error: ' + err.message
                      q('#speak-button').disabled = false
@@ -366,6 +432,10 @@
 
          window.addEventListener('load', function() {
              loadVoices()
+
+             q('#voice-language').addEventListener('change', langChanged)
+             q('#voice-name').addEventListener('change', nameChanged)
+
          })
         </script>
 
