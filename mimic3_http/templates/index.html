@@ -69,6 +69,11 @@
                   </h1>
                 </div>
             </div>
+            <div class="row">
+                <div class="col" style="text-align: center">
+                  <a class="btn btn-success" href="mailto:mimic@mycroft.ai" title="Send feedback e-mail">Feedback</a>
+                </div>
+            </div>
             <div class="row mt-3">
                 <div class="col">
                   <textarea id="text" placeholder="Type here..." class="form-control" rows="3" name="text" alt="Text to generate speech from"
@@ -212,7 +217,29 @@
                     </div>
                 </div>
             </details>
+
+            <details class="mt-3">
+              <summary>About the Beta</summary>
+                <p>
+                This website hosts a beta version of <a href="https://mycroft-ai.gitbook.io/docs/mycroft-technologies/mimic-tts/coming-soon-mimic-3">Mimic 3</a>, Mycroft's newest text to speech system developed for the <a href="https://mycroft.ai/product/mark-ii/">Mark II</a>.
+                When released, Mimic 3 will be available to run locally on Linux systems like the Raspberry Pi 4.
+                </p>
+                <p>
+                We are interested in <a href="mailto:mimic@mycroft.ai" title="Send feedback e-mail">hearing your feedback</a>, especially on the non-English language voices! We hope to improve the quality and accuracy of every voice over time &#128512;
+                </p>
+                <p>
+                Some notes on the performance of Mimic 3 and this website:
+                <ul>
+                    <li>Mimic 3 is running <strong>without</strong> any GPUs (CPU only)</li>
+                    <li>This website is shared among all beta reviewers</li>
+                    <li>Only the default voice (<tt>en_UK/apope_low</tt>) is pre-loaded into memory. Try a voice twice to check the speed!</li>
+                    <li>Caching is disabled, so each request is synthesized fresh</li>
+                </ul>
+                </p>
+            </details>
+
             <hr class="mt-5" />
+
             <div class="row mt-5 justify-content-center">
               <a href="https://mycroft.ai" title="Mycroft AI">
                 <img id="mycroft-logo" src="img/Mycroft_logo_two_typeonly.png" />
