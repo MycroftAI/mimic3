@@ -38,6 +38,23 @@
          #privacy {
              font-size: 1em;
          }
+
+         summary {
+             font-weight: bold;
+         }
+
+         #ssml-examples {
+             width: 100%;
+             border: 1px solid #888;
+         }
+
+         #ssml-examples tr {
+             border-top: 1px solid #888;
+         }
+         
+         #ssml-examples td {
+             padding: 5px;
+         }
         </style>
     </head>
 
@@ -64,6 +81,8 @@
                     <br/><br />
                     <a href="/openapi/" title="OpenAPI page" target="_blank" class="badge badge-info">API</a>
                     {% endif %}
+
+                    <a href="https://mycroft-ai.gitbook.io/docs/mycroft-technologies/mimic-tts/coming-soon-mimic-3" title="Mimic 3 documentation" target="_blank" class="badge">Docs</a>
                 </div>
             </div>
             <div class="row mt-3">
@@ -77,12 +96,6 @@
                     <select id="speaker-list" name="speaker">
                     </select>
                 </div>
-                <div class="col-auto">
-                  <input type="checkbox" id="ssml">
-                  <label class="ml-1" for="ssml">
-                    Enable SSML (<a target="_blank" href="https://mycroft-ai.gitbook.io/docs/mycroft-technologies/mimic-tts/coming-soon-mimic-3#ssml">what's this?</a>)
-                  </label>
-                </div>
             </div>
             <div id="audio-message" class="row mt-3" hidden>
                 <div class="col">
@@ -90,16 +103,107 @@
                     <p id="message"></p>
                 </div>
             </div>
-            <div class="row mt-3">
-                <div class="col-auto">
-                    <label for="length-scale" title="VITS length scale (< 1 is faster)">Speaking Rate:</label>
-                    <input type="number" id="length-scale" name="lengthScale" size="5" min="0" step="0.001" value="1">
-                    <label for="noise-scale" class="ml-3" title="VITS noise parameter (0-1)">Audio Volatility:</label>
-                    <input type="number" id="noise-scale" name="noiseScale" size="5" min="0" max="1" step="0.001" value="0.667">
-                    <label for="noise-w" class="ml-3" title="VITS noise W parameter (0-1)">Phoneme Duration Volatility:</label>
-                    <input type="number" id="noise-w" name="noiseW" size="5" min="0" max="1" step="0.001" value="0.8">
+            <details class="mt-3">
+              <summary>Advanced Settings</summary>
+                <div class="row mt-2">
+                    <div class="col-3">
+                    <input type="checkbox" id="ssml">
+                    <label class="ml-1" for="ssml">Enable SSML</label>
+                    </div>
+                    <div class="col">
+                      <details>
+                        <summary>More about SSML</summary>
+                        <p>
+                          Process some <a href="https://www.w3.org/TR/speech-synthesis11/" title="SSML standard">Speech Synthesis Markup Language</a> tags in the text above.
+                        </p>
+                        <table id="ssml-examples">
+                          <tr>
+                            <td>
+                              <strong>Examples:</strong>
+                            </td>
+                            <td>
+                              <a href="https://mycroft-ai.gitbook.io/docs/mycroft-technologies/mimic-tts/coming-soon-mimic-3#ssml" title="SSML documentation">Documentation</a>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <tt>&lt;break time=&quot;500ms&quot; /&gt;</tt>
+                            </td>
+                            <td>
+                              Insert pause
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <tt>&lt;prosody volume=&quot;50%&quot;&gt;...&lt;/prosody&gt;</tt>
+                            </td>
+                            <td>
+                              Change volume
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <tt>&lt;prosody rate=&quot;200%&quot;&gt;...&lt;/prosody&gt;</tt>
+                            </td>
+                            <td>
+                              Change speaking rate
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <tt>&lt;voice name=&quot;en_US/vctk_low#p239&quot;&gt;...&lt;/voice&gt;</tt>
+                            </td>
+                            <td>
+                              Change voice
+                            </td>
+                          </tr>
+                        </table>
+                      </details>
+                    </div>
                 </div>
-            </div>
+                <div class="row mt-2">
+                    <div class="col-3">
+                        <label for="length-scale" title="VITS length scale (< 1 is faster)">Speaking Rate:</label>
+                        <input type="number" id="length-scale" name="lengthScale" size="5" min="0" step="0.001" value="1">
+                    </div>
+                    <div class="col">
+                      <details>
+                        <summary>More about speaking rate</summary>
+                        <p>
+                          Controls how fast the voice speaks the text. A value of 1 is the speed of the training dataset. Less than 1 is faster, and more than 1 is slower.
+                        </p>
+                      </details>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-3">
+                        <label for="noise-scale" title="VITS noise parameter (0-1)">Audio Volatility:</label>
+                        <input type="number" id="noise-scale" name="noiseScale" size="5" min="0" max="1" step="0.001" value="0.667">
+                    </div>
+                    <div class="col">
+                      <details>
+                        <summary>More about audio volatility</summary>
+                        <p>
+                          The amount of noise added to the generated audio (0-1). Can help mask audio artifacts from the voice model. Multi-speaker models tend to sound better with a lower amount of noise than single speaker models.
+                        </p>
+                      </details>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-3">
+                        <label for="noise-w" title="VITS noise W parameter (0-1)">Phoneme Volatility:</label>
+                        <input type="number" id="noise-w" name="noiseW" size="5" min="0" max="1" step="0.001" value="0.8">
+                    </div>
+                    <div class="col">
+                      <details>
+                        <summary>More about phoneme volatility</summary>
+                        <p>
+                          The amount of noise used to generate phoneme durations (0-1). Allows for variable speaking cadance, with a value closer to 1 being more variable. Multi-speaker models tend to sound better with a lower amount of phoneme variability than single speaker models.
+                        </p>
+                      </details>
+                    </div>
+                </div>
+            </details>
             <hr class="mt-5" />
             <div class="row mt-5 justify-content-center">
               <a href="https://mycroft.ai" title="Mycroft AI">
