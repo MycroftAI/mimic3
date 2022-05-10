@@ -34,6 +34,10 @@
              margin-left: auto;
              margin-right: auto;
          }
+
+         #privacy {
+             font-size: 1em;
+         }
         </style>
     </head>
 
@@ -50,7 +54,7 @@
             </div>
             <div class="row mt-3">
                 <div class="col">
-                    <textarea id="text" placeholder="Type here..." class="form-control" rows="3" name="text" alt="Text to generate speech from"></textarea>
+                    <textarea id="text" placeholder="Type here..." class="form-control" rows="3" name="text" alt="Text to generate speech from" maxlength="5000"></textarea>
                 </div>
                 <div class="col-auto">
                     <button id="speak-button" name="speak" class="btn btn-lg btn-primary" alt="Generate speech">Speak</button>
@@ -74,7 +78,9 @@
                 </div>
                 <div class="col-auto">
                   <input type="checkbox" id="ssml">
-                  <label class="ml-1" for="ssml">SSML</label>
+                  <label class="ml-1" for="ssml">
+                    Enable SSML (<a target="_blank" href="https://mycroft-ai.gitbook.io/docs/mycroft-technologies/mimic-tts/coming-soon-mimic-3#ssml">what's this?</a>)
+                  </label>
                 </div>
             </div>
             <div id="audio-message" class="row mt-3" hidden>
@@ -85,12 +91,12 @@
             </div>
             <div class="row mt-3">
                 <div class="col-auto">
-                    <label for="noise-scale" title="Voice volatility">Noise:</label>
-                    <input type="number" id="noise-scale" name="noiseScale" size="5" min="0" max="1" step="0.001" value="0.667">
-                    <label for="noise-w" class="ml-2" title="Voice volatility 2">Noise W:</label>
-                    <input type="number" id="noise-w" name="noiseW" size="5" min="0" max="1" step="0.001" value="0.8">
-                    <label for="length-scale" class="ml-2" title="Voice speed (< 1 is faster)">Length:</label>
+                    <label for="length-scale" title="VITS length scale (< 1 is faster)">Speaking Rate:</label>
                     <input type="number" id="length-scale" name="lengthScale" size="5" min="0" step="0.001" value="1">
+                    <label for="noise-scale" class="ml-3" title="VITS noise parameter (0-1)">Audio Volatility:</label>
+                    <input type="number" id="noise-scale" name="noiseScale" size="5" min="0" max="1" step="0.001" value="0.667">
+                    <label for="noise-w" class="ml-3" title="VITS noise W parameter (0-1)">Phoneme Duration Volatility:</label>
+                    <input type="number" id="noise-w" name="noiseW" size="5" min="0" max="1" step="0.001" value="0.8">
                 </div>
             </div>
             <hr class="mt-5" />
@@ -101,6 +107,15 @@
             </div>
             <div class="row mt-3 justify-content-center">
               <a href="https://www.gnu.org/licenses/agpl-3.0.en.html" title="AGPLv3">License</a>
+              &nbsp;
+              &bull;
+              &nbsp;
+              <a href="https://mycroft.ai/embed-terms-of-use/" title="Terms of use">Terms of Use</a>
+            </div>
+            <div class="row mt-3 justify-content-center">
+              <p id="privacy">
+                <strong>Privacy:</strong> this website does not cache the text you send or the audio that is synthesized.
+              </p>
             </div>
         </div>
 
@@ -139,7 +154,7 @@
                  voice = voice + "#" + speaker
              }
 
-             var ssml = q('#ssml').value || 'false'
+             var ssml = q('#ssml').checked || 'false'
 
              q('#audio-message').hidden = false
 
