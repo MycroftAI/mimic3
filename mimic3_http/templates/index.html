@@ -54,7 +54,8 @@
             </div>
             <div class="row mt-3">
                 <div class="col">
-                    <textarea id="text" placeholder="Type here..." class="form-control" rows="3" name="text" alt="Text to generate speech from" maxlength="5000"></textarea>
+                  <textarea id="text" placeholder="Type here..." class="form-control" rows="3" name="text" alt="Text to generate speech from"
+                            {% if max_text_length is not none: %}maxlength="{{ max_text_length }}"{% endif %}></textarea>
                 </div>
                 <div class="col-auto">
                     <button id="speak-button" name="speak" class="btn btn-lg btn-primary" alt="Generate speech">Speak</button>

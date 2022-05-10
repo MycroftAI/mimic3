@@ -82,6 +82,11 @@ def get_args(argv=None) -> argparse.Namespace:
         help="Number of synthesis threads (default: 1)",
     )
     parser.add_argument(
+        "--max-text-length",
+        type=int,
+        help="Maximum length of input text to process (default: no limit)",
+    )
+    parser.add_argument(
         "--debug", action="store_true", help="Print DEBUG messages to console"
     )
     parser.add_argument(

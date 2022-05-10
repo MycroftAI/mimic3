@@ -153,7 +153,11 @@ def get_app(args: argparse.Namespace, request_queue: Queue, temp_dir: str):
     @app.route("/")
     async def app_index():
         """Main page."""
-        return await render_template("index.html", show_openapi=show_openapi)
+        return await render_template(
+            "index.html",
+            show_openapi=show_openapi,
+            max_text_length=args.max_text_length,
+        )
 
     @app.route("/api/tts", methods=["GET", "POST"])
     async def app_tts() -> Response:
@@ -206,6 +210,9 @@ def get_app(args: argparse.Namespace, request_queue: Queue, temp_dir: str):
 
         assert text, "No text provided"
 
+        if args.max_text_length is not None:
+            text = text[: args.max_text_length]
+
         # Cache settings
         no_cache_str = request.args.get("noCache", "")
         no_cache = _to_bool(no_cache_str)
@@ -236,6 +243,9 @@ def get_app(args: argparse.Namespace, request_queue: Queue, temp_dir: str):
         else:
             text = request.args.get("INPUT_TEXT", "")
             voice = str(request.args.get("VOICE", voice)).strip()
+
+        if args.max_text_length is not None:
+            text = text[: args.max_text_length]
 
         voice = voice or args.voice or DEFAULT_VOICE
 
