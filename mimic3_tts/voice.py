@@ -514,6 +514,9 @@ class EspeakVoice(Mimic3Voice):
             # Split on breaks
             sent_phonemes = []
             for word_phonemes in all_word_phonemes:
+                if not word_phonemes:
+                    continue
+
                 sent_phonemes.append(word_phonemes)
 
                 if minor_break and (word_phonemes[-1] == minor_break):
@@ -752,6 +755,9 @@ class EpitranVoice(Mimic3Voice):
             # Split on breaks
             sent_phonemes = []
             for word_phonemes in all_word_phonemes:
+                if not word_phonemes:
+                    continue
+
                 sent_phonemes.append(word_phonemes)
 
                 if minor_break and (word_phonemes[-1] == minor_break):

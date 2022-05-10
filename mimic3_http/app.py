@@ -18,6 +18,7 @@ import asyncio
 import dataclasses
 import json
 import logging
+import re
 import typing
 from pathlib import Path
 from queue import Queue
@@ -36,7 +37,7 @@ from quart import (
 from swagger_ui import api_doc
 
 from mimic3_tts import DEFAULT_VOICE, Mimic3Settings, Mimic3TextToSpeechSystem
-from mimic3_tts.utils import LANG_NAMES
+from mimic3_tts.utils import LANG_NAMES, SAMPLE_SENTENCES
 
 from ._resources import _DIR, _PACKAGE
 from .args import _MISSING
@@ -234,6 +235,11 @@ def get_app(args: argparse.Namespace, request_queue: Queue, temp_dir: str):
         # Add more fields to voices
         for voice_dict in voice_dicts:
             voice_lang = voice_dict["language"]
+
+            # en_US => en
+            short_lang = voice_lang.split("_", maxsplit=1)[0]
+
+            # en_US => English (US)
             lang_name = LANG_NAMES.get(voice_lang, voice_lang)
 
             if isinstance(lang_name, str):
@@ -245,6 +251,10 @@ def get_app(args: argparse.Namespace, request_queue: Queue, temp_dir: str):
 
             voice_dict["language_native"] = native_lang
             voice_dict["language_english"] = english_lang
+
+            sample_text = SAMPLE_SENTENCES.get(short_lang, "")
+            sample_text = re.sub(r"\s+", " ", sample_text)
+            voice_dict["sample_text"] = sample_text
 
         return jsonify(voice_dicts)
 

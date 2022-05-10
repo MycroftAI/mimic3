@@ -235,6 +235,7 @@
         <!-- Bootstrap core JavaScript -->
         <script>
          var voicesInfo = {}
+         var isUserText = false
 
          function q(selector) {return document.querySelector(selector)}
          q('#text').focus()
@@ -378,6 +379,12 @@
                 )
              }
 
+             var textArea = q('#text')
+             if ((textArea.value.length == 0) || !isUserText) {
+                 textArea.value = voice.sample_text
+                 isUserText = false
+             }
+
              // Update inference settings
              if (voice.properties) {
                  q('#length-scale').value = voice.properties.length_scale || 1.0
@@ -433,18 +440,22 @@
                  })
          }
 
-        function copyVoiceKey() {
-            var voiceName = q('#voice-name')
-            var speakerList = q('#speaker-list')
+         function copyVoiceKey() {
+             var voiceName = q('#voice-name')
+             var speakerList = q('#speaker-list')
 
-            var voiceKey = voiceName.options[voiceName.selectedIndex].value
-            if (speakerList.options.length > 1) {
-                voiceKey += '#' + speakerList.options[speakerList.selectedIndex].value
-            }
-             
+             var voiceKey = voiceName.options[voiceName.selectedIndex].value
+             if (speakerList.options.length > 1) {
+                 voiceKey += '#' + speakerList.options[speakerList.selectedIndex].value
+             }
+              
 
-            navigator.clipboard.writeText(voiceKey)
-        }
+             navigator.clipboard.writeText(voiceKey)
+         }
+
+         function textChanged() {
+             isUserText = true
+         }
 
          window.addEventListener('load', function() {
              loadVoices()
@@ -453,6 +464,7 @@
              q('#voice-name').addEventListener('change', nameChanged)
 
              q('#copy-voice').addEventListener('click', copyVoiceKey)
+             q('#text').addEventListener('change', textChanged)
          })
         </script>
 
