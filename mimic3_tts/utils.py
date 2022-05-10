@@ -83,15 +83,7 @@ SAMPLE_SENTENCES = {
         Farbverlauf ist das mehr oder weniger verweißlichte sichtbare Licht des
         Sonnenspektrums. Das Sonnenlicht wird beim Ein- und beim Austritt an
         jedem annähernd kugelförmigen Regentropfen abgelenkt und in Licht
-        mehrerer Farben zerlegt. Dazwischen wird es an der Tropfenrückseite
-        reflektiert. Das jeden Tropfen verlassende Licht ist in farbigen
-        Schichten konzentriert, die aufeinandergesteckte dünne Kegelmäntel
-        bilden. Der Beobachter hat die Regenwolke vor sich und die Sonne im
-        Rücken. Ihn erreicht Licht einer bestimmten Farbe aus Regentropfen, die
-        sich auf einem schmalen Kreisbogen am Himmel befinden. Der Winkel, unter
-        dem der Regenbogen gesehen wird, ist gleich wie der Winkel der
-        Kegelmäntel, in dem diese Farben beim Austritt am Regentropfen
-        konzentriert sind.""",
+        mehrerer Farben zerlegt.""",
     "en": """A rainbow is a meteorological phenomenon that is caused by
         reflection, refraction and dispersion of light in water droplets
         resulting in a spectrum of light appearing in the sky. It takes the form
@@ -107,11 +99,7 @@ SAMPLE_SENTENCES = {
         consiste en la aparición en el cielo de un arco de luz multicolor,
         originado por la descomposición de la luz solar en el espectro visible,
         la cual se produce por refracción, cuando los rayos del sol atraviesan
-        pequeñas gotas de agua contenidas en la atmósfera terrestre. Es un arco
-        compuesto de arcos concéntricos de colores, sin solución de continuidad
-        entre ellos, con el rojo hacia la parte exterior y el violeta hacia el
-        interior. A altitud suficiente, por ejemplo cuando se viaja en avión, el
-        arcoíris se puede observar en forma de círculo completo.""",
+        pequeñas gotas de agua contenidas en la atmósfera terrestre.""",
     "fa": """برای دیگر کاربردها رنگین‌کمان (ابهام‌زدایی) را ببینید.  رنگین‌کمان
         دوتایی و رنگین‌کمان‌های اضافی در درون کمان اصلی. سایهٔ سر عکاس مرکز دایرهٔ
         رنگین‌کمان را مشخص می‌کند (نقطهٔ پاد خورشیدی).  رنگین‌کمان پدیده‌ای نوری و
@@ -198,17 +186,7 @@ SAMPLE_SENTENCES = {
         um arco multicolorido com o vermelho em seu exterior e o violeta em seu
         interior. Por ser um espectro de dispersão da luz branca, o arco-íris
         contém uma quantidade infinita de cores sem qualquer delimitação entre
-        elas. Devido à necessidade humana de classificação dos fenômenos da
-        natureza, a capacidade finita de distinção de cores pela visão humana e
-        por questões didáticas, o arco-íris é mais conhecido por uma
-        simplificação criada culturalmente que resume o espectro em sete cores
-        na seguinte ordem: vermelho, laranja, amarelo, verde, azul, anil e
-        violeta. Tal simplificação foi proposta primeiramente por Isaac Newton,
-        que decidiu nomear apenas cinco cores e depois adicionou mais duas
-        apenas para fazer analogia com as sete notas musicais, os sete dias da
-        semana e os sete objetos do sistema solar conhecidos à época.  Para
-        informações sobre o espectro de cores do arco-íris, veja também o artigo
-        sobre cores.""",
+        elas.""",
     "ru": """Ра́дуга, атмосферное, оптическое и метеорологическое явление,
         наблюдаемое при освещении ярким источником света множества водяных
         капель.  Радуга выглядит как разноцветная дуга или окружность,
@@ -236,10 +214,7 @@ SAMPLE_SENTENCES = {
         ఉన్నట్టు, వృత్తాకారం ఆకాశం వైపుకున్నట్టు గోచరిస్తుంది.  సూర్యరశ్మి ద్వారా తయారయ్యే ఇంద్రధనుస్సు,
         ఎల్లపుడూ సూర్యునికి వ్యతిరేక దిశలోనే కనిపిస్తుంది. ఇక రంగుల అమరికను బట్టీ ఇంద్రధనుస్సుని
         రెండు రకాలుగా చెప్పొచ్చు. ఒకటి - ప్రాథమిక ఇంద్రధనుస్సు; రెండు ద్వితీయ ఇంద్రధనుస్సు. మొదటి
-        ఇంద్రధనుస్సులో వృత్తం పై భాగంలో ఎరుపు,, లోపలి భాగంలో ఊదా రంగులో ఉంటాయి. అదే ద్వితీయ
-        ఇంద్రధనుస్సులో ప్రాథమిక ఇంద్రధనుస్సుతో పాటు అదే వర్ణాలు తిరగవేసి కనిపిస్తాయి. మొదటి రకం ఇంద్ర
-        ధనుస్సు పరిపూర్ణ అంతఃపరావర్తనం ద్వారా జరిగితే, ద్వితీయ ఇంద్రధనుస్సు వాతావరణంలోని నీటి బిందువుల్లో
-        రెండు మార్లు పరావర్తనం అవటం వల్ల తయారవుతుంది.""",
+        ఇంద్రధనుస్సులో వృత్తం పై భాగంలో ఎరుపు,, లోపలి భాగంలో ఊదా రంగులో ఉంటాయి.""",
     "tn": """Batho botlhe ba tsetswe ba gololosegile le go lekalekana ka seriti
         le ditshwanelo. Ba abetswe go akanya le maikutlo, mme ba tshwanetse go
         direlana ka mowa wa bokaulengwe.""",
