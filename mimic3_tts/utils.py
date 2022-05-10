@@ -23,6 +23,36 @@ import numpy as np
 
 WILDCARD = "*"
 
+LANG_NAMES = {
+    "bn": ("বাংলা", "Bengali"),
+    "af_ZA": "Afrikaans",
+    "da_DK": ("Dansk", "Danish"),
+    "de_DE": ("Deutsch", "German"),
+    "en_UK": "English",
+    "en_US": "English",
+    "el_GR": ("Ελληνικά", "Greek"),
+    "es_ES": ("Español", "Spanish"),
+    "fa": ("فارسی", "Persian"),
+    "fi_FI": ("Suomi", "Finnish"),
+    "fr_FR": ("Français", "French"),
+    "gu_IN": ("ગુજરાતી", "Gujarati"),
+    "ha_NE": "Hausa",
+    "hu_HU": ("Magyar Nyelv", "Hungarian"),
+    "it_IT": ("Italiano", "Italian"),
+    "jv_ID": ("Basa Jawa", "Javanese"),
+    "ko_KO": ("한국어", "Korean"),
+    "ne_NP": ("नेपाली", "Nepali"),
+    "nl": ("Nederlands", "Dutch"),
+    "pl_PL": ("Polski", "Polish"),
+    "ru_RU": ("Русский", "Russian"),
+    "sw": "Kiswahili",
+    "te_IN": ("తెలుగు", "Telugu"),
+    "tn_ZA": "Setswana",
+    "uk_UK": ("украї́нська мо́ва", "Ukrainian"),
+    "vi_VN": ("Tiếng Việt", "Vietnamese"),
+    "yo": ("Èdè Yorùbá", "Yoruba"),
+}
+
 
 def audio_float_to_int16(
     audio: np.ndarray, max_wav_value: float = 32767.0
