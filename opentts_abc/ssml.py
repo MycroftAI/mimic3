@@ -489,6 +489,7 @@ class SSMLSpeaker:
         LOG.debug("prosody: %s", self._prosody)
 
         self.tts.volume = self._prosody.volume
+        self.tts.rate = self._prosody.rate
 
     # -------------------------------------------------------------------------
 
