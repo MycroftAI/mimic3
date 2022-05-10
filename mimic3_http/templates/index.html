@@ -55,6 +55,10 @@
          #ssml-examples td {
              padding: 5px;
          }
+
+         #audio {
+             width: 100%;
+         }
         </style>
     </head>
 
@@ -263,6 +267,7 @@
         <script>
          var voicesInfo = {}
          var isUserText = false
+         var elapsedTime = 0
 
          function q(selector) {return document.querySelector(selector)}
          q('#text').focus()
@@ -298,6 +303,7 @@
              var ssml = q('#ssml').checked || 'false'
 
              q('#audio-message').hidden = false
+             q('#audio').pause()
 
              var startTime = performance.now()
 
@@ -312,9 +318,9 @@
 
              if (res.ok) {
                  blob = await res.blob()
-                 var elapsedTime = performance.now() - startTime
+                 elapsedTime = performance.now() - startTime
 
-                 q('#message').textContent = (elapsedTime / 1000) + ' second(s)'
+                 q('#message').innerHTML = (elapsedTime / 1000).toFixed(3) + ' second(s)'
                  q('#speak-button').disabled = false
                  q('#audio').src = URL.createObjectURL(blob)
                  q('#audio').hidden = false
@@ -484,6 +490,12 @@
              isUserText = true
          }
 
+        function audioMetadataLoaded() {
+            var duration = q('#audio').duration
+            var rtf = (elapsedTime / 1000) / duration
+            q('#message').innerHTML += '&nbsp;&bull;&nbsp;<a href="https://mycroft-ai.gitbook.io/docs/mycroft-technologies/mimic-tts/coming-soon-mimic-3#real-time-factor" title="Real-time factor">RTF</a> = ' + rtf.toFixed(4)
+        }
+
          window.addEventListener('load', function() {
              loadVoices()
 
@@ -492,6 +504,7 @@
 
              q('#copy-voice').addEventListener('click', copyVoiceKey)
              q('#text').addEventListener('change', textChanged)
+             q('#audio').addEventListener('loadedmetadata', audioMetadataLoaded)
          })
         </script>
 
