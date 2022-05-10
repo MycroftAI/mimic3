@@ -14,7 +14,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 import argparse
-import asyncio
 import io
 import logging
 import threading
@@ -131,9 +130,7 @@ def do_synthesis_proc(args: argparse.Namespace, request_queue: Queue):
                     _LOGGER.exception("Error during inference")
 
                     # Signal error on main loop
-                    item.loop.call_soon_threadsafe(
-                        item.future.set_exception, e
-                    )
+                    item.loop.call_soon_threadsafe(item.future.set_exception, e)
 
     except Exception:
         _LOGGER.exception("Unexpected error in inference thread")

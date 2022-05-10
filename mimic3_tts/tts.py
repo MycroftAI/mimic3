@@ -364,13 +364,19 @@ class Mimic3TextToSpeechSystem(TextToSpeechSystem):
     def begin_utterance(self):
         pass
 
-    # pylint: disable=arguments-differ
     def speak_text(self, text: str, text_language: typing.Optional[str] = None):
         voice = self._get_or_load_voice(self.voice)
 
+        # Automatically append text (e.g., punctuation) if not present
+        append_text = voice.config.inference.auto_append_text
+        if append_text and (not text.endswith(append_text)):
+            text += append_text
+
+        # Automatic silence after major/minor breaks (optional)
         minor_break_ms = voice.config.inference.minor_break_ms
         major_break_ms = voice.config.inference.major_break_ms
 
+        # Process chunks
         for sent_phonemes, break_type in voice.text_to_phonemes(
             text, text_language=text_language
         ):

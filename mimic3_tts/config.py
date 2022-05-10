@@ -262,7 +262,13 @@ class InferenceConfig:
     noise_w: float = 0.8
 
     minor_break_ms: typing.Optional[int] = None
+    """Automatically add milliseconds of silence after a minor break (comma)"""
+
     major_break_ms: typing.Optional[int] = None
+    """Automatically add milliseconds of silence after a major break (period)"""
+
+    auto_append_text: typing.Optional[str] = None
+    """Automatically append text to the end of an utterance if not present (e.g., punctuation)"""
 
 
 @dataclass
