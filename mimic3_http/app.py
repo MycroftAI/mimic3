@@ -295,6 +295,11 @@ def get_app(args: argparse.Namespace, request_queue: Queue, temp_dir: str):
 
         return Response(wav_bytes, mimetype="audio/wav")
 
+    @app.route("/api/healthcheck", methods=["GET"])
+    async def api_healthcheck():
+        """Endpoint to check health status"""
+        return "OK"
+
     # Swagger UI
     show_openapi = not args.no_show_openapi
     if show_openapi:
