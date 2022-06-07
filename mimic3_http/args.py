@@ -91,6 +91,9 @@ def get_args(argv=None) -> argparse.Namespace:
         help="Default voice key to select in web interface",
     )
     parser.add_argument(
+        "--play-program", default="aplay -q", help="Program to play WAV audio on server"
+    )
+    parser.add_argument(
         "--no-show-openapi", action="store_true", help="Don't show OpenAPI link"
     )
     parser.add_argument(

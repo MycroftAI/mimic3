@@ -19,6 +19,8 @@ import dataclasses
 import json
 import logging
 import re
+import shlex
+import subprocess
 import typing
 from pathlib import Path
 from queue import Queue
@@ -163,7 +165,7 @@ def get_app(args: argparse.Namespace, request_queue: Queue, temp_dir: str):
         )
 
     @app.route("/api/tts", methods=["GET", "POST"])
-    async def app_tts() -> Response:
+    async def app_tts() -> typing.Union[Response, str]:
         """Speak text to WAV."""
         tts_args: typing.Dict[str, typing.Any] = {
             "length_scale": args.length_scale,
@@ -224,7 +226,15 @@ def get_app(args: argparse.Namespace, request_queue: Queue, temp_dir: str):
             TextToWavParams(text=text, **tts_args), no_cache=no_cache
         )
 
-        return Response(wav_bytes, mimetype="audio/wav")
+        audio_target = request.args.get("audioTarget", "client").strip().lower()
+        if audio_target == "client":
+            return Response(wav_bytes, mimetype="audio/wav")
+
+        # Play audio on server
+        play_cmd = shlex.split(args.play_program)
+        subprocess.run(play_cmd, input=wav_bytes, check=True)
+
+        return "OK"
 
     @app.route("/api/voices", methods=["GET"])
     async def api_voices():
