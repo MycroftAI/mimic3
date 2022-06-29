@@ -117,7 +117,7 @@ pipeline {
 
             steps {
                 // Publish to PyPI
-                sh 'twine upload --skip-existing --user ${PYPI_USR} ${PYPI_PSW} dist/mycroft_plugin_tts_mimic3-${PLUGIN_VERSION}.tar.gz'
+                sh 'twine upload --skip-existing --user ${PYPI_USR} --password ${PYPI_PSW} dist/mycroft_plugin_tts_mimic3-${PLUGIN_VERSION}.tar.gz'
 
                 // Delete release for tag, if it exists
                 sh 'scripts/delete-tagged-release.sh ${GITHUB_OWNER} ${GITHUB_REPO} ${PLUGIN_TAG_NAME} ${GITHUB_PSW}'
@@ -159,7 +159,7 @@ pipeline {
 
             steps {
                 // Publish to PyPI
-                sh 'twine upload --skip-existing --user ${PYPI_USR} ${PYPI_PSW} dist/mycroft_mimic3_tts-${MIMIC3_VERSION}.tar.gz'
+                sh 'twine upload --skip-existing --user ${PYPI_USR} --password ${PYPI_PSW} dist/mycroft_mimic3_tts-${MIMIC3_VERSION}.tar.gz'
 
                 // Delete release for tag, if it exists
                 sh 'scripts/delete-tagged-release.sh ${GITHUB_OWNER} ${GITHUB_REPO} ${MIMIC3_TAG_NAME} ${GITHUB_PSW}'
