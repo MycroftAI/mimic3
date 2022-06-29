@@ -102,6 +102,7 @@ def download_voice(
     for voice_file in voice_files:
         file_url = f"{url_base}/{voice_file.relative_path}"
         file_path = voice_dir / voice_file.relative_path
+        file_path.parent.mkdir(parents=True, exist_ok=True)
 
         if (not redownload) and voice_file.sha256_sum and file_path.is_file():
             # Check if file exists and has correct sha256
