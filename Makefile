@@ -36,7 +36,7 @@ install:
 docker:
 	echo "$(DOCKER_TAG)" | sed -e 's/,/\n/g' | \
         while read -r tag; do \
-            docker buildx build . -f Dockerfile --platform "$(DOCKER_PLATFORM)" --tag "${{tag}}" $(DOCKER_OUTPUT); \
+            docker buildx build . -f Dockerfile --platform "$(DOCKER_PLATFORM)" --tag "$${tag}" $(DOCKER_OUTPUT); \
         done
 
 # Create self-container Docker image with GPU support.
