@@ -137,13 +137,6 @@ pipeline {
             }
         }
 
-        // Build and publish Debian packages to Github
-        stage('Debian') {
-            steps {
-                sh 'make debian'
-            }
-        }
-
         // Create a new tagged Github release with source distribution and Debian packages
         stage('Publish mimic3') {
             environment {
@@ -159,7 +152,7 @@ pipeline {
 
             steps {
                 // Publish to PyPI
-                sh 'twine upload --skip-existing --user __token__ --password "${PYPI_PSW}" dist/mycroft_mimic3_tts-${MIMIC3_VERSION}.tar.gz'
+                sh 'twine upload --skip-existing --user __token__ --password "${PYPI_PSW}" dist/linux_amd64/mycroft_mimic3_tts-${MIMIC3_VERSION}.tar.gz'
 
                 // Delete release for tag, if it exists
                 sh 'scripts/delete-tagged-release.sh ${GITHUB_OWNER} ${GITHUB_REPO} ${MIMIC3_TAG_NAME} ${GITHUB_PSW}'
@@ -204,5 +197,11 @@ pipeline {
             }
         }
 
+        // Build and publish Debian packages to Github
+        stage('Debian') {
+            steps {
+                sh 'make debian'
+            }
+        }
     }
 }
