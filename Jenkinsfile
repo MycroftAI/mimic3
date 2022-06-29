@@ -137,6 +137,13 @@ pipeline {
             }
         }
 
+        // Build and publish Debian packages to Github
+        stage('Debian') {
+            steps {
+                sh 'make debian'
+            }
+        }
+
         // Create a new tagged Github release with source distribution and Debian packages
         stage('Publish mimic3') {
             environment {
@@ -197,11 +204,5 @@ pipeline {
             }
         }
 
-        // Build and publish Debian packages to Github
-        stage('Debian') {
-            steps {
-                sh 'make debian'
-            }
-        }
     }
 }
