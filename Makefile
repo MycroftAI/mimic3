@@ -34,7 +34,10 @@ install:
 # Create self-contained Docker image.
 # Also tests functionality.
 docker:
-	docker buildx build . -f Dockerfile --platform "$(DOCKER_PLATFORM)" --tag "$(DOCKER_TAG)" $(DOCKER_OUTPUT)
+	echo "$(DOCKER_TAG)" | sed -e 's/,/\n/g' | \
+        while read -r tag; do \
+            docker buildx build . -f Dockerfile --platform "$(DOCKER_PLATFORM)" --tag "${{tag}}" $(DOCKER_OUTPUT); \
+        done
 
 # Create self-container Docker image with GPU support.
 # Requires nvidia-docker.
