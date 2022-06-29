@@ -17,6 +17,9 @@ A fast and local neural text to speech system developed by [Mycroft](https://myc
 # Install system packages
 sudo apt-get install libespeak-ng1
 
+# Ensure that you're using the latest pip
+mycroft-pip install --upgrade pip
+
 # Install plugin
 mycroft-pip install mycroft-plugin-tts-mimic3[all]
 
