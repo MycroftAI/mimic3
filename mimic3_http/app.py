@@ -269,7 +269,7 @@ def get_app(args: argparse.Namespace, request_queue: Queue, temp_dir: str):
         return jsonify(voice_dicts)
 
     @app.route("/process", methods=["GET", "POST"])
-    async def api_process():
+    async def api_marytts_process():
         """MaryTTS-compatible /process endpoint"""
         voice = args.voice
 
@@ -304,6 +304,29 @@ def get_app(args: argparse.Namespace, request_queue: Queue, temp_dir: str):
         )
 
         return Response(wav_bytes, mimetype="audio/wav")
+
+    @app.route("/voices", methods=["GET"])
+    async def api_marytts_voices():
+        """MaryTTS-compatible /voices endpoint"""
+        voices_by_key = {v.key: v for v in _MIMIC3.get_voices()}
+        sorted_voices = sorted(voices_by_key.values(), key=lambda v: v.key)
+
+        # [voice] [language] [gender] [tech=hmm]
+        lines = []
+        gender = "NA"  # don't have this information for every speaker yet
+        tech = "vits"
+
+        for voice in sorted_voices:
+            if voice.is_multispeaker:
+                # List each speaker separately
+                for speaker in voice.speakers:
+                    lines.append(
+                        f"{voice.key}#{speaker} {voice.language} {gender} {tech}"
+                    )
+            else:
+                lines.append(f"{voice.key} {voice.language} {gender} {tech}")
+
+        return "\n".join(lines)
 
     @app.route("/api/healthcheck", methods=["GET"])
     async def api_healthcheck():
