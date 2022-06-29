@@ -96,6 +96,7 @@ RUN .venv/bin/pyinstaller \
     --collect-data 'panphon' \
     --collect-data 'mimic3_tts' \
     --collect-data 'mimic3_http' \
+    --add-data $(find /usr/lib -name libespeak-ng.so.1 | head -n1):. \
     pyinstaller/mimic3.py
 
 # Have to manually copy these over for some reason
