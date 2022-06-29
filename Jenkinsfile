@@ -28,10 +28,10 @@ pipeline {
         GITHUB = credentials('devops-mycroft')
 
         // Adds PYPI_USR and PYPI_PSW environment variables
-        // PYPI = credentials('pypi-mycroft')
+        PYPI = credentials('pypi-mycroft')
 
         // Adds DOCKER_USR and DOCKER_PSW environment variables
-        // DOCKER = credentials('dockerhub-mycroft')
+        DOCKER = credentials('dockerhub-mycroft')
 
         DOCKER_BUILDKIT = '1'
         DOCKER_PLATFORM = 'linux/amd64,linux/arm64,linux/arm/v7'
@@ -116,8 +116,8 @@ pipeline {
             }
 
             steps {
-                // TODO: Publish to PyPI
-                // sh 'twine upload --skip-existing --user ${PYPI_USR} ${PYPI_PSW} dist/mycroft_plugin_tts_mimic3-${PLUGIN_VERSION}.tar.gz'
+                // Publish to PyPI
+                sh 'twine upload --skip-existing --user ${PYPI_USR} ${PYPI_PSW} dist/mycroft_plugin_tts_mimic3-${PLUGIN_VERSION}.tar.gz'
 
                 // Delete release for tag, if it exists
                 sh 'scripts/delete-tagged-release.sh ${GITHUB_OWNER} ${GITHUB_REPO} ${PLUGIN_TAG_NAME} ${GITHUB_PSW}'
@@ -158,8 +158,8 @@ pipeline {
             }
 
             steps {
-                // TODO: Publish to PyPI
-                // sh 'twine upload --skip-existing --user ${PYPI_USR} ${PYPI_PSW} dist/mycroft_mimic3_tts-${MIMIC3_VERSION}.tar.gz'
+                // Publish to PyPI
+                sh 'twine upload --skip-existing --user ${PYPI_USR} ${PYPI_PSW} dist/mycroft_mimic3_tts-${MIMIC3_VERSION}.tar.gz'
 
                 // Delete release for tag, if it exists
                 sh 'scripts/delete-tagged-release.sh ${GITHUB_OWNER} ${GITHUB_REPO} ${MIMIC3_TAG_NAME} ${GITHUB_PSW}'
@@ -197,9 +197,9 @@ pipeline {
             }
 
             steps {
-                // TODO: Publish to DockerHub
-                // sh 'docker login --username "${DOCKER_USR}" --password "${DOCKER_PSW}"'
-                // sh 'make docker'
+                // Publish to DockerHub
+                sh 'docker login --username "${DOCKER_USR}" --password "${DOCKER_PSW}"'
+                sh 'make docker'
                 echo 'Published docker image'
             }
         }
