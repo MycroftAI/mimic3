@@ -36,6 +36,8 @@ See [documentation](https://mycroft-ai.gitbook.io/docs/mycroft-technologies/mimi
 ### Web Server
 
 ``` sh
+mkdir -p "${HOME}/.local/share/mycroft/mimic3"
+chmod a+rwx "${HOME}/.local/share/mycroft/mimic3"
 docker run \
        -it \
        -p 59125:59125 \
