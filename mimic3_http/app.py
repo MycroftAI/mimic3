@@ -317,6 +317,9 @@ def get_app(args: argparse.Namespace, request_queue: Queue, temp_dir: str):
         tech = "vits"
 
         for voice in sorted_voices:
+            if not voice.location or voice.location.startswith("https://"):
+                # Skip voices that are not yet installed
+                continue
             if voice.is_multispeaker:
                 # List each speaker separately
                 for speaker in voice.speakers:
