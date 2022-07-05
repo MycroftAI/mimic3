@@ -39,6 +39,7 @@ from quart import (
 from swagger_ui import api_doc
 
 from mimic3_tts import DEFAULT_VOICE, Mimic3Settings, Mimic3TextToSpeechSystem
+from mimic3_tts.download import is_voice_downloaded
 from mimic3_tts.utils import LANG_NAMES, SAMPLE_SENTENCES
 
 from ._resources import _DIR, _PACKAGE
@@ -317,7 +318,7 @@ def get_app(args: argparse.Namespace, request_queue: Queue, temp_dir: str):
         tech = "vits"
 
         for voice in sorted_voices:
-            if not voice.location or voice.location.startswith("https://"):
+            if not is_voice_downloaded(voice.location):
                 # Skip voices that are not yet installed
                 continue
             if voice.is_multispeaker:
