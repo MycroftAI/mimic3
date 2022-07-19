@@ -70,8 +70,8 @@ def download_voice(
     voice_key: str,
     url_base: str,
     voice_files: typing.Iterable[VoiceFile],
-    voices_dir: typing.Union[str, Path],
     voice_version: str,
+    voices_dir: typing.Optional[typing.Union[str, Path]] = None,
     chunk_bytes: int = 4096,
     redownload: bool = False,
 ):
@@ -82,6 +82,7 @@ def download_voice(
         # Remove final slash
         url_base = url_base[:-1]
 
+    voices_dir = voices_dir or DEFAULT_VOICES_DOWNLOAD_DIR
     voice_dir = Path(voices_dir) / voice_key
     voice_dir.mkdir(parents=True, exist_ok=True)
 
