@@ -47,7 +47,7 @@ COPY LICENSE MANIFEST.in README.md setup.py requirements.txt ./
 COPY install.sh ./
 
 # Use GPU version of onnxruntime
-RUN sed -i 's/onnxruntime/onnxruntime-gpu/' mimic3-tts/requirements.txt
+RUN sed -i 's/onnxruntime/onnxruntime-gpu/' ./requirements.txt
 
 # Install mimic3
 RUN --mount=type=cache,id=pip-requirements,target=/root/.cache/pip \
