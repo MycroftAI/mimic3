@@ -469,19 +469,35 @@ class Mimic3TextToSpeechSystem(TextToSpeechSystem):
 
     def end_utterance(self) -> typing.Iterable[BaseResult]:
         last_settings: typing.Optional[Mimic3Settings] = None
-
         sent_phonemes: PHONEMES_LIST_TYPE = []
 
         for result in self._results:
             if isinstance(result, Mimic3Phonemes):
-                if result.is_utterance or (result.current_settings != last_settings):
-                    if sent_phonemes:
+                if result.is_utterance:
+                    # Utterance boundary
+                    if (
+                        sent_phonemes
+                        and (last_settings is not None)
+                        and (result.current_settings != last_settings)
+                    ):
+                        # Not compatible with existing utterance.
+                        # Need to speak previous utterance first.
                         yield self._speak_sentence_phonemes(
                             sent_phonemes, settings=last_settings
                         )
                         sent_phonemes.clear()
 
-                sent_phonemes.extend(result.phonemes)
+                    # Current utterance
+                    sent_phonemes.extend(result.phonemes)
+                    if sent_phonemes:
+                        yield self._speak_sentence_phonemes(
+                            sent_phonemes, settings=last_settings
+                        )
+                        sent_phonemes.clear()
+                else:
+                    # Continue until utterance boundary
+                    sent_phonemes.extend(result.phonemes)
+
                 last_settings = result.current_settings
             else:
                 if sent_phonemes:
