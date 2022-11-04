@@ -132,17 +132,6 @@ def get_app(args: argparse.Namespace, request_queue: Queue, temp_dir: str):
     def _to_bool(s: str) -> bool:
         return s.strip().lower() in {"true", "1", "yes", "on"}
 
-    class VoiceEncoder(json.JSONEncoder):
-        """Encode a voice to JSON"""
-
-        def default(self, o):
-            if isinstance(o, set):
-                return list(o)
-
-            return json.JSONEncoder.default(self, o)
-
-    app.json_encoder = VoiceEncoder  # type: ignore
-
     @app.route("/img/<path:filename>", methods=["GET"])
     async def img(filename) -> Response:
         """Image static endpoint."""
@@ -266,6 +255,11 @@ def get_app(args: argparse.Namespace, request_queue: Queue, temp_dir: str):
             sample_text = SAMPLE_SENTENCES.get(short_lang, "")
             sample_text = re.sub(r"\s+", " ", sample_text)
             voice_dict["sample_text"] = sample_text
+
+            # Ensure aliases is not a set for JSON serialization
+            aliases = voice_dict.get("aliases")
+            if aliases is not None:
+                voice_dict["aliases"] = list(aliases)
 
         return jsonify(voice_dicts)
 
