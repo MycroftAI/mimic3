@@ -31,3 +31,4 @@
 !mimic3_http/*.py
 !mimic3_http/VERSION
 !mimic3_http/py.typed
+!mimic3_http/swagger.yaml
