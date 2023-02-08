@@ -85,6 +85,8 @@ RUN --mount=type=cache,id=apt-run,target=/var/cache/apt \
         python3 ca-certificates
 
 RUN useradd -ms /bin/bash mimic3
+RUN mkdir -p /home/mimic3/.local/share/mycroft/mimic3 && \
+    chown -R mimic3 /home/mimic3/.local/
 
 # Copy virtual environment and source code
 COPY --from=build /home/mimic3/app/ ./
