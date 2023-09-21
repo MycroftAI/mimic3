@@ -591,6 +591,8 @@ class Mimic3TextToSpeechSystem(TextToSpeechSystem):
         providers = None
         if self.settings.use_cuda:
             providers = ["CUDAExecutionProvider"]
+        else:
+            providers = ["CPUExecutionProvider"]
 
         voice = Mimic3Voice.load_from_directory(
             model_dir,
