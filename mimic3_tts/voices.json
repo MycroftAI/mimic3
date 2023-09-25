@@ -455,8 +455,8 @@
                 "sha256_sum": "e9dd8507f4bf0c6f42458e41aea833ad0bd3f6127272335eee9bf4d58541ed67"
             },
             "config.json": {
-                "size_bytes": 3550,
-                "sha256_sum": "e98bf4210293be786fc219612f6a0ac1a67b40bb2f5fa5f7c7ddbd595638c193"
+                "size_bytes": 3583,
+                "sha256_sum": "40d55cdef742aadff581b4418763db0b559e7c49d1602c39d552cfd8ae47c249"
             },
             "generator.onnx": {
                 "size_bytes": 76359777,
