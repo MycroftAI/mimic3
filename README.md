@@ -1,3 +1,7 @@
+# ⚠️ This project is no longer actively maintained
+
+Mycroft Mimic 3 is no longer maintained and may not work on your computer anymore. [Piper TTS](https://github.com/rhasspy/piper) is the spiritual successor to Mimic 3. 
+
 # Mimic 3
 
 ![mimic 3 mark 2](img/mimic3-hero.jpg)
