@@ -14,7 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 """Implementation of OpenTTS for Mimic 3"""
-import audioop
+import numpy
 import itertools
 import logging
 import re
@@ -540,7 +540,9 @@ class Mimic3TextToSpeechSystem(TextToSpeechSystem):
         audio_bytes = audio.tobytes()
 
         if settings.volume != DEFAULT_VOLUME:
-            audio_bytes = audioop.mul(audio_bytes, 2, settings.volume / 100.0)
+            audio_bytes = np.frombuffer(audio_bytes, dtype=np.int16)
+            audio_bytes = audio_bytes * (settings.volume / 100.0)
+            audio_bytes = audio_bytes.clip(-32768, 32767).astype(np.int16).tobytes()
 
         return AudioResult(
             sample_rate_hz=voice.config.audio.sample_rate,
