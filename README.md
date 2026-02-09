@@ -1,6 +1,5 @@
-# ⚠️ This project is no longer actively maintained
-
-Mycroft Mimic 3 is no longer maintained and may not work on your computer anymore. [Piper TTS](https://github.com/rhasspy/piper) is the spiritual successor to Mimic 3. 
+An independent & updated Python 3.13+ fork of Mycroft's fast local neural text to speech engine.
+Not affiliated with [Piper TTS](https://github.com/rhasspy/piper), another alternative you might try.
 
 # Mimic 3
 
@@ -77,8 +76,15 @@ pip3 install mycroft-mimic3-tts[all]
 Now you can run:
 
 ``` sh
-mimic3 'Hello world.' | aplay
+mimic3 'Hello world.'
 ```
+
+**Auto complete.**
+```sh
+source mimic3_completions.sh
+```
+
+Now you can type `mimic3 --voice [tab][tab] --speaker [tab][tab] to auto complete voices and speakers.
 
 Use `mimic3-server` and `mimic3 --remote ...` for repeated usage (much faster).
 
